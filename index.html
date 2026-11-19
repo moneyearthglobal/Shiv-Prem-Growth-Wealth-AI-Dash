@@ -60,7 +60,6 @@
             transition: background-color 0.25s ease, color 0.25s ease;
             min-height: 100vh;
         }
-        /* Ensure text in light mode stays dark/black instead of white */
         html:not(.dark) .text-white {
             color: #0f172a !important;
         }
@@ -94,36 +93,15 @@
 </head>
 <body class="antialiased pb-24 p-3 sm:p-6">
 
+    <!-- Hidden File Input for Import -->
+    <input type="file" id="importMemoryFile" accept=".json" class="hidden" onchange="handleImportMemory(event)">
+
     <!-- Toast Notification -->
     <div id="comicToast" class="fixed bottom-24 right-5 z-50 transform translate-y-28 opacity-0 transition-all duration-300 bg-posterYellow text-matteBlack border-2 border-slate-900 px-4 py-3 rounded-xl shadow-[5px_5px_0px_#3b82f6] flex items-center gap-3">
         <span class="text-xl">⚡</span>
         <div>
             <div id="toastTitle" class="font-poster text-sm">UPDATED!</div>
             <div id="toastDesc" class="text-xs font-bold">Dashboard synced.</div>
-        </div>
-    </div>
-
-    <!-- Side Expandable Quick-Access Menu (Portfolio, Personal Growth, Financial Growth, Growth Progress, Business) -->
-    <div class="fixed left-3 sm:left-4 top-1/2 -translate-y-1/2 z-40 flex flex-col items-start gap-2">
-        <button onclick="toggleSideQuickMenu()" class="w-11 h-11 rounded-full bg-posterYellow text-matteBlack border-2 border-slate-900 shadow-[3px_3px_0px_#000] flex items-center justify-center font-bold text-lg hover:scale-105 transition" title="Quick Sections">
-            ☰
-        </button>
-        <div id="sideQuickMenuDrawer" class="hidden flex-col gap-1.5 bg-panelDark/95 border-2 border-cyberBlue rounded-2xl p-2 shadow-[4px_4px_0px_#000] text-[11px] font-mono">
-            <button onclick="scrollToSection('sec-portfolio')" class="flex items-center gap-2 px-2.5 py-1.5 rounded-xl hover:bg-cyberBlue/20 text-white text-left whitespace-nowrap">
-                <span>💼</span> <span>Portfolio</span>
-            </button>
-            <button onclick="scrollToSection('sec-personal-growth')" class="flex items-center gap-2 px-2.5 py-1.5 rounded-xl hover:bg-cyberBlue/20 text-white text-left whitespace-nowrap">
-                <span>🌱</span> <span>Personal Growth</span>
-            </button>
-            <button onclick="scrollToSection('sec-financial-growth')" class="flex items-center gap-2 px-2.5 py-1.5 rounded-xl hover:bg-cyberBlue/20 text-white text-left whitespace-nowrap">
-                <span>📈</span> <span>Financial Growth</span>
-            </button>
-            <button onclick="scrollToSection('sec-growth-progress')" class="flex items-center gap-2 px-2.5 py-1.5 rounded-xl hover:bg-cyberBlue/20 text-white text-left whitespace-nowrap">
-                <span>📊</span> <span>Growth Progress</span>
-            </button>
-            <button onclick="scrollToSection('sec-business')" class="flex items-center gap-2 px-2.5 py-1.5 rounded-xl hover:bg-cyberBlue/20 text-white text-left whitespace-nowrap">
-                <span>🚀</span> <span>Business</span>
-            </button>
         </div>
     </div>
 
@@ -143,7 +121,7 @@
         </button>
     </div>
 
-    <!-- Bot Modal: Arranged Details + Tamil AI Coach -->
+    <!-- Bot Modal: Arranged Details + Financial Assistant / Personal Growth / Next Plan Tabs -->
     <div id="floatingBotModal" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-3">
         <div class="comic-card w-full max-w-2xl rounded-2xl p-4 sm:p-6 bg-matteBlack text-white max-h-[90vh] flex flex-col border-cyberBlue overflow-y-auto">
             <div class="flex items-center justify-between pb-3 border-b border-slate-700 mb-3">
@@ -158,8 +136,8 @@
                         <rect x="11" y="28" width="18" height="11" rx="4" fill="#1e293b" stroke="#3b82f6" stroke-width="1.8"/>
                     </svg>
                     <div>
-                        <h3 class="poster-title text-xl text-posterYellow" data-i18n="botTitle">ஷிவ் பிரேம் AI & விவரங்கள்</h3>
-                        <p class="text-xs text-slate-400" data-i18n="botSub">ஒழுங்குபடுத்தப்பட்ட டேஷ்போர்டு சுருக்கம் & ஆலோசகர்</p>
+                        <h3 class="poster-title text-xl text-posterYellow" data-i18n="botTitle">SHIV PREM AI & DETAILS</h3>
+                        <p class="text-xs text-slate-400" data-i18n="botSub">Arranged Dashboard Summary & AI Modes</p>
                     </div>
                 </div>
                 <button onclick="toggleFloatingBot()" class="text-slate-400 hover:text-white font-mono text-lg px-2">✕</button>
@@ -167,10 +145,23 @@
 
             <div id="botArrangedDetails" class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-mono mb-3"></div>
 
-            <div id="botChatWindow" class="bg-slate-900 border border-slate-700 rounded-xl p-3.5 h-48 overflow-y-auto space-y-3 mb-3 text-sm font-mono"></div>
+            <div class="grid grid-cols-3 gap-2 mb-3 text-xs font-mono">
+                <button onclick="switchBotTopic('finance')" id="bot-tab-finance" class="py-2 px-2 rounded-xl font-bold bg-posterYellow text-matteBlack transition" data-i18n="botTabFinance">
+                    Financial Assistant
+                </button>
+                <button onclick="switchBotTopic('growth')" id="bot-tab-growth" class="py-2 px-2 rounded-xl font-bold bg-slate-800 text-slate-200 hover:bg-slate-700 transition" data-i18n="botTabGrowth">
+                    Personal Growth
+                </button>
+                <button onclick="switchBotTopic('nextplan')" id="bot-tab-nextplan" class="py-2 px-2 rounded-xl font-bold bg-slate-800 text-slate-200 hover:bg-slate-700 transition" data-i18n="botTabNextPlan">
+                    Next Plan
+                </button>
+            </div>
+
+            <div id="botChatWindow" class="bg-slate-900 border border-slate-700 rounded-xl p-3.5 h-52 overflow-y-auto space-y-3 mb-3 text-sm font-mono"></div>
+
             <form onsubmit="handleBotSubmit(event)" class="flex gap-2">
-                <input type="text" id="botUserInput" required placeholder="தமிழில் கேள்விகளைக் கேட்கவும்..." class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-posterYellow font-mono">
-                <button type="submit" class="bg-cyberBlue hover:bg-blue-600 text-white font-poster text-sm px-5 py-2.5 rounded-xl tracking-wider" data-i18n="sendBtn">கேள் ⚡</button>
+                <input type="text" id="botUserInput" required data-i18n-placeholder="botPlaceholder" placeholder="Ask about finance, personal growth or next plan..." class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-posterYellow font-mono">
+                <button type="submit" class="bg-cyberBlue hover:bg-blue-600 text-white font-poster text-sm px-5 py-2.5 rounded-xl tracking-wider" data-i18n="sendBtn">ASK ⚡</button>
             </form>
         </div>
     </div>
@@ -189,17 +180,46 @@
     <!-- Main Container -->
     <div class="max-w-7xl mx-auto space-y-6">
 
-        <!-- 1. TOP NAV, LIVE DATE/TIME & LANGUAGE SWITCHER -->
-        <nav class="comic-card rounded-2xl px-4 py-3 flex flex-wrap items-center justify-between gap-3 border-cyberBlue">
+        <!-- 1. TOP NAV WITH TOP QUICK ICON, EXPORT/IMPORT, LIVE DATE/TIME & LANGUAGE SWITCHER -->
+        <nav class="comic-card rounded-2xl px-4 py-3 flex flex-wrap items-center justify-between gap-3 border-cyberBlue relative">
             <div class="flex items-center gap-2.5">
+                <button onclick="toggleTopQuickMenu()" class="w-9 h-9 rounded-xl bg-posterYellow text-matteBlack border border-slate-900 flex items-center justify-center font-bold text-base shadow hover:scale-105 transition" title="Quick Sections">
+                    ☰
+                </button>
                 <span class="w-3 h-3 rounded-full bg-cyberBlue animate-ping"></span>
                 <span class="poster-title text-base sm:text-lg tracking-wider" data-i18n="brandTitle">
                     SHIV PREM // AI GROWTH & WEALTH DASHBOARD
                 </span>
             </div>
 
+            <!-- Dropdown Menu Opened by Top Icon -->
+            <div id="topQuickMenuDrawer" class="hidden absolute left-4 top-16 z-40 flex flex-col gap-1 bg-panelDark border-2 border-cyberBlue rounded-2xl p-2 shadow-[4px_4px_0px_#000] text-xs font-mono min-w-[190px]">
+                <button onclick="scrollToSection('sec-portfolio')" class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-cyberBlue/20 text-white text-left">
+                    <span>💼</span> <span>Portfolio</span>
+                </button>
+                <button onclick="scrollToSection('sec-personal-growth')" class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-cyberBlue/20 text-white text-left">
+                    <span>🌱</span> <span>Personal Growth</span>
+                </button>
+                <button onclick="scrollToSection('sec-financial-growth')" class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-cyberBlue/20 text-white text-left">
+                    <span>📈</span> <span>Financial Growth</span>
+                </button>
+                <button onclick="scrollToSection('sec-growth-progress')" class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-cyberBlue/20 text-white text-left">
+                    <span>📊</span> <span>Growth Progress</span>
+                </button>
+                <button onclick="scrollToSection('sec-business')" class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-cyberBlue/20 text-white text-left">
+                    <span>🚀</span> <span>Business</span>
+                </button>
+            </div>
+
             <div class="flex flex-wrap items-center gap-2">
-                <!-- Live Date & Time Display -->
+                <!-- Export & Import Buttons -->
+                <button onclick="exportMemoryData()" class="px-3 py-1.5 rounded-xl bg-emeraldGrowth hover:bg-green-400 text-matteBlack font-mono text-xs font-extrabold shadow transition" data-i18n="exportBtn">
+                    ⬇ Export
+                </button>
+                <button onclick="triggerImportMemory()" class="px-3 py-1.5 rounded-xl bg-cyberBlue hover:bg-blue-600 text-white font-mono text-xs font-extrabold shadow transition" data-i18n="importBtn">
+                    ⬆ Import
+                </button>
+
                 <div class="inset-box px-3 py-1 rounded-xl font-mono text-xs font-bold text-cyberBlue flex items-center gap-2">
                     <span id="liveDateDisplay">---</span>
                     <span>•</span>
@@ -245,7 +265,6 @@
                     </div>
                 </div>
 
-                <!-- Small Box: Progress Percentage & Life/Financial Target -->
                 <div class="w-full lg:w-72 inset-box rounded-2xl p-3.5 flex flex-col justify-between border-cyberBlue font-mono">
                     <div class="flex items-center justify-between mb-1">
                         <span class="text-[11px] font-bold uppercase text-cyberBlue" data-i18n="heroProgPctLabel">PROGRESS %</span>
@@ -261,7 +280,65 @@
             </div>
         </header>
 
-        <!-- 3. FRONT DASHBOARD: LARGE WEALTH GROWTH & NET WORTH GRAPH -->
+        <!-- 3. PORTFOLIO OVERVIEW SECTION (ABOVE GRAPH) -->
+        <section id="sec-portfolio" class="comic-card rounded-2xl p-4 sm:p-6 border-cyberBlue space-y-4">
+            <div class="flex items-center justify-between gap-2">
+                <div>
+                    <span class="bg-cyberBlue text-white font-poster text-xs px-3 py-0.5 rounded uppercase" data-i18n="portTag">PORTFOLIO SUMMARY</span>
+                    <h2 class="poster-title text-2xl sm:text-3xl mt-1" data-i18n="portTitle">OVERALL PORTFOLIO</h2>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 text-xs font-mono">
+                <div class="inset-box p-3.5 rounded-xl border-l-4 border-l-emeraldGrowth">
+                    <div class="muted-text uppercase text-[11px]" data-i18n="portInvLabel">Overall Investment</div>
+                    <div id="portOverallInv" class="text-base font-extrabold text-emeraldGrowth mt-1">₹0</div>
+                </div>
+                <div class="inset-box p-3.5 rounded-xl border-l-4 border-l-red-500">
+                    <div class="muted-text uppercase text-[11px]" data-i18n="portDebtLabel">Overall Remaining Debt</div>
+                    <div id="portOverallDebt" class="text-base font-extrabold text-red-500 mt-1">-₹27,00,000</div>
+                </div>
+                <div class="inset-box p-3.5 rounded-xl border-l-4 border-l-posterYellow">
+                    <div class="muted-text uppercase text-[11px]" data-i18n="portExpLabel">Overall Expenses</div>
+                    <div id="portOverallExp" class="text-base font-extrabold text-posterYellow mt-1">₹0</div>
+                </div>
+                <div class="inset-box p-3.5 rounded-xl border-l-4 border-l-cyberBlue">
+                    <div class="muted-text uppercase text-[11px]" data-i18n="portIncLabel">Overall Income</div>
+                    <div id="portOverallInc" class="text-base font-extrabold text-cyberBlue mt-1">₹0</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. INCOME, EXPENSES & INVESTMENTS BOX (ABOVE GRAPH) -->
+        <section class="comic-card rounded-2xl p-4 sm:p-6 border-posterYellow space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                    <span class="bg-posterYellow text-matteBlack font-poster text-xs px-3 py-0.5 rounded uppercase" data-i18n="finTag">FINANCIAL PORTFOLIO DATABASE</span>
+                    <h2 class="poster-title text-2xl sm:text-3xl mt-1" data-i18n="finTitle">INCOME, EXPENSES & INVESTMENTS</h2>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <input type="text" id="txName" placeholder="Item Name..." class="inset-box rounded-xl px-3 py-2 text-xs font-mono w-36">
+                    <input type="number" id="txAmount" placeholder="Amount (₹)" class="inset-box rounded-xl px-3 py-2 text-xs font-mono w-24">
+                    <select id="txType" class="inset-box rounded-xl px-2 py-2 text-xs font-mono bg-slate-900 text-white">
+                        <option value="income" data-i18n="optInc">Income (+)</option>
+                        <option value="expense" data-i18n="optExp">Expense (-)</option>
+                        <option value="investment" data-i18n="optInv">Investment (📈)</option>
+                    </select>
+                    <button onclick="addTransaction()" class="bg-posterYellow hover:bg-yellow-300 text-matteBlack font-poster text-xs px-4 py-2 rounded-xl font-bold shadow" data-i18n="addBtn">+ ADD</button>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs font-mono">
+                <div class="inset-box p-3 rounded-xl"><span data-i18n="totInc">Total Income</span>: <strong id="calcTotalIncome" class="text-emeraldGrowth">₹0</strong></div>
+                <div class="inset-box p-3 rounded-xl"><span data-i18n="totExp">Total Expenses</span>: <strong id="calcTotalExpense" class="text-red-500">₹0</strong></div>
+                <div class="inset-box p-3 rounded-xl"><span data-i18n="totInv">Total Investments</span>: <strong id="calcTotalInvestment" class="text-posterYellow">₹0</strong></div>
+                <div class="inset-box p-3 rounded-xl border-emeraldGrowth"><span data-i18n="netSurplus">Monthly Net Surplus</span>: <strong id="calcNetSurplus" class="text-emeraldGrowth">₹0</strong></div>
+            </div>
+            <div class="inset-box p-3.5 rounded-xl border-l-4 border-l-posterYellow text-xs font-mono text-slate-300">
+                💡 <strong class="text-white" data-i18n="aiFinSugg">AI Financial Feedback:</strong> <span id="aiFinSuggestionText">Allocate at least 50% of surplus towards high-interest debt clearance to reach your ₹1 Crore goal.</span>
+            </div>
+            <div class="inset-box p-3 rounded-xl max-h-40 overflow-y-auto text-xs font-mono space-y-1.5" id="txList"></div>
+        </section>
+
+        <!-- 5. WEALTH GROWTH & NET WORTH GRAPH (BELOW PORTFOLIO & INCOME/EXPENSE/INVESTMENT BOXES) -->
         <section id="sec-financial-growth" class="grid grid-cols-1 gap-6">
             <div class="comic-card rounded-2xl p-4 sm:p-6 border-cyberBlue flex flex-col justify-between">
                 <div>
@@ -293,64 +370,6 @@
                     <div class="inset-box p-2.5 rounded-xl border-emeraldGrowth"><span data-i18n="goalLabel">2030 Goal</span>: <strong class="text-emeraldGrowth">₹1,00,00,000</strong></div>
                 </div>
             </div>
-        </section>
-
-        <!-- 4. PORTFOLIO OVERVIEW SECTION (INVESTMENT, DEBT, EXPENSES, INCOME) -->
-        <section id="sec-portfolio" class="comic-card rounded-2xl p-4 sm:p-6 border-cyberBlue space-y-4">
-            <div class="flex items-center justify-between gap-2">
-                <div>
-                    <span class="bg-cyberBlue text-white font-poster text-xs px-3 py-0.5 rounded uppercase" data-i18n="portTag">PORTFOLIO SUMMARY</span>
-                    <h2 class="poster-title text-2xl sm:text-3xl mt-1" data-i18n="portTitle">OVERALL PORTFOLIO</h2>
-                </div>
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 text-xs font-mono">
-                <div class="inset-box p-3.5 rounded-xl border-l-4 border-l-emeraldGrowth">
-                    <div class="muted-text uppercase text-[11px]" data-i18n="portInvLabel">Overall Investment</div>
-                    <div id="portOverallInv" class="text-base font-extrabold text-emeraldGrowth mt-1">₹0</div>
-                </div>
-                <div class="inset-box p-3.5 rounded-xl border-l-4 border-l-red-500">
-                    <div class="muted-text uppercase text-[11px]" data-i18n="portDebtLabel">Overall Remaining Debt</div>
-                    <div id="portOverallDebt" class="text-base font-extrabold text-red-500 mt-1">-₹27,00,000</div>
-                </div>
-                <div class="inset-box p-3.5 rounded-xl border-l-4 border-l-posterYellow">
-                    <div class="muted-text uppercase text-[11px]" data-i18n="portExpLabel">Overall Expenses</div>
-                    <div id="portOverallExp" class="text-base font-extrabold text-posterYellow mt-1">₹0</div>
-                </div>
-                <div class="inset-box p-3.5 rounded-xl border-l-4 border-l-cyberBlue">
-                    <div class="muted-text uppercase text-[11px]" data-i18n="portIncLabel">Overall Income</div>
-                    <div id="portOverallInc" class="text-base font-extrabold text-cyberBlue mt-1">₹0</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 5. FINANCIAL DATABASE -->
-        <section class="comic-card rounded-2xl p-4 sm:p-6 border-posterYellow space-y-4">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div>
-                    <span class="bg-posterYellow text-matteBlack font-poster text-xs px-3 py-0.5 rounded uppercase" data-i18n="finTag">FINANCIAL PORTFOLIO DATABASE</span>
-                    <h2 class="poster-title text-2xl sm:text-3xl mt-1" data-i18n="finTitle">INCOME, EXPENSES & INVESTMENTS</h2>
-                </div>
-                <div class="flex flex-wrap gap-2">
-                    <input type="text" id="txName" placeholder="Item Name..." class="inset-box rounded-xl px-3 py-2 text-xs font-mono w-36">
-                    <input type="number" id="txAmount" placeholder="Amount (₹)" class="inset-box rounded-xl px-3 py-2 text-xs font-mono w-24">
-                    <select id="txType" class="inset-box rounded-xl px-2 py-2 text-xs font-mono bg-slate-900 text-white">
-                        <option value="income" data-i18n="optInc">Income (+)</option>
-                        <option value="expense" data-i18n="optExp">Expense (-)</option>
-                        <option value="investment" data-i18n="optInv">Investment (📈)</option>
-                    </select>
-                    <button onclick="addTransaction()" class="bg-posterYellow hover:bg-yellow-300 text-matteBlack font-poster text-xs px-4 py-2 rounded-xl font-bold shadow" data-i18n="addBtn">+ ADD</button>
-                </div>
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs font-mono">
-                <div class="inset-box p-3 rounded-xl"><span data-i18n="totInc">Total Income</span>: <strong id="calcTotalIncome" class="text-emeraldGrowth">₹0</strong></div>
-                <div class="inset-box p-3 rounded-xl"><span data-i18n="totExp">Total Expenses</span>: <strong id="calcTotalExpense" class="text-red-500">₹0</strong></div>
-                <div class="inset-box p-3 rounded-xl"><span data-i18n="totInv">Total Investments</span>: <strong id="calcTotalInvestment" class="text-posterYellow">₹0</strong></div>
-                <div class="inset-box p-3 rounded-xl border-emeraldGrowth"><span data-i18n="netSurplus">Monthly Net Surplus</span>: <strong id="calcNetSurplus" class="text-emeraldGrowth">₹0</strong></div>
-            </div>
-            <div class="inset-box p-3.5 rounded-xl border-l-4 border-l-posterYellow text-xs font-mono text-slate-300">
-                💡 <strong class="text-white" data-i18n="aiFinSugg">AI Financial Feedback:</strong> <span id="aiFinSuggestionText">Allocate at least 50% of surplus towards high-interest debt clearance to reach your ₹1 Crore goal.</span>
-            </div>
-            <div class="inset-box p-3 rounded-xl max-h-40 overflow-y-auto text-xs font-mono space-y-1.5" id="txList"></div>
         </section>
 
         <!-- 6. DYNAMIC DEBT MANAGER -->
@@ -502,7 +521,6 @@
 
             <div id="lifeInsightCard" class="inset-box rounded-xl p-3.5 border-l-4 border-l-posterYellow text-xs font-mono"></div>
 
-            <!-- 3 Progress Cards: Personal, Finance & Life, Skill System -->
             <div id="sec-growth-progress" class="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono text-xs">
                 <div class="inset-box rounded-xl p-3.5 border-l-4 border-l-cyberBlue">
                     <div class="flex justify-between items-center mb-1.5">
@@ -540,7 +558,6 @@
                 </div>
             </div>
 
-            <!-- Timeline Milestones Add & List -->
             <div class="space-y-3 pt-2 border-t border-slate-800">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <h4 class="font-heading text-base uppercase text-posterYellow" data-i18n="storyTitle">📖 SHIV PREM — TIMELINE MILESTONES</h4>
@@ -588,6 +605,8 @@
         const i18n = {
             en: {
                 brandTitle: 'SHIV PREM // AI GROWTH & WEALTH DASHBOARD',
+                exportBtn: '⬇ Export',
+                importBtn: '⬆ Import',
                 themeWhite: 'White',
                 heroBannerTag: '⚡ “SYSTEM > SPEED — PERSONAL GROWTH & WEALTH DASHBOARD”',
                 heroSub: 'Life Evolution, Debt Avalanche & Investment Portfolio Tracker',
@@ -662,12 +681,18 @@
                 addAlgoBtn: '+ ADD STRATEGY',
                 algoTotalCapLabel: 'Total Strategy Capital',
                 algoTotalIncLabel: 'Total Algo Income Generated',
-                botTitle: 'ஷிவ் பிரேம் AI & விவரங்கள்',
-                botSub: 'ஒழுங்குபடுத்தப்பட்ட டேஷ்போர்டு சுருக்கம் & ஆலோசகர்',
-                sendBtn: 'கேள் ⚡'
+                botTitle: 'SHIV PREM AI & DETAILS',
+                botSub: 'Arranged Dashboard Summary & AI Modes',
+                botTabFinance: 'Financial Assistant',
+                botTabGrowth: 'Personal Growth',
+                botTabNextPlan: 'Next Plan',
+                botPlaceholder: 'Ask about finance, personal growth or next plan...',
+                sendBtn: 'ASK ⚡'
             },
             ta: {
                 brandTitle: 'ஷிவ் பிரேம் // AI வளர்ச்சி & செல்வ டேஷ்போர்டு',
+                exportBtn: '⬇ Export',
+                importBtn: '⬆ Import',
                 themeWhite: 'ஒயிட்',
                 heroBannerTag: '⚡ “சிஸ்டம் > வேகம் — தனிப்பட்ட வளர்ச்சி & செல்வ டேஷ்போர்டு”',
                 heroSub: 'வாழ்க்கை வளர்ச்சி, கடன் ஒழிப்பு மற்றும் முதலீட்டு போர்ட்ஃபோலியோ டிராக்கர்',
@@ -743,8 +768,37 @@
                 algoTotalCapLabel: 'மொத்த ஸ்ட்ராட்டஜி தொகை',
                 algoTotalIncLabel: 'ஆல்கோ மூலம் கிடைத்த வருமானம்',
                 botTitle: 'ஷிவ் பிரேம் AI & விவரங்கள்',
-                botSub: 'ஒழுங்குபடுத்தப்பட்ட டேஷ்போர்டு சுருக்கம் & ஆலோசகர்',
+                botSub: 'ஒழுங்குபடுத்தப்பட்ட டேஷ்போர்டு சுருக்கம் & பிரிவுகள்',
+                botTabFinance: 'Financial Assistant',
+                botTabGrowth: 'Personal Growth',
+                botTabNextPlan: 'Next Plan',
+                botPlaceholder: 'பைனான்ஸ், பர்சனல் க்ரோத் அல்லது நெக்ஸ்ட் பிளான் பற்றி கேளுங்கள்...',
                 sendBtn: 'கேள் ⚡'
+            }
+        };
+
+        const defaultBotThreads = {
+            en: {
+                finance: [
+                    { sender: 'ai', text: 'Financial Assistant active: Track Income, Expenses, Investments, Remaining Debt (red until cleared) and Algo Strategy earnings to grow your Net Worth towards ₹1 Crore.' }
+                ],
+                growth: [
+                    { sender: 'ai', text: 'Personal Growth active: From 2022 & 2024 challenges to building a disciplined system in 2026, your steady milestone tracking builds long-term resilience.' }
+                ],
+                nextplan: [
+                    { sender: 'ai', text: 'Next Plan active: Keep executing Goobro & driving cashflow, clear high-priority debt step by step, and export your data regularly before moving across devices.' }
+                ]
+            },
+            ta: {
+                finance: [
+                    { sender: 'ai', text: 'Financial Assistant செயலில் உள்ளது: வருமானம், செலவு, முதலீடு, பாக்கி கடன் (முடியும் வரை சிவப்பு) மற்றும் ஆல்கோ வருமானத்தைக் கவனித்து ₹1 கோடி இலக்கை நோக்கிச் செல்லுங்கள்.' }
+                ],
+                growth: [
+                    { sender: 'ai', text: 'Personal Growth செயலில் உள்ளது: 2022 & 2024 சவால்களைக் கடந்து 2026-ல் சிஸ்டம் உருவாக்கியுள்ள உங்கள் பயணம் நிலையான வளர்ச்சியைத் தரும்.' }
+                ],
+                nextplan: [
+                    { sender: 'ai', text: 'Next Plan செயலில் உள்ளது: Goobro & டிரைவிங் வருமானத்தைத் தொடருங்கள், கடன்களைத் திட்டமிட்டுக் குறையுங்கள்; வேறு சாதனத்திற்கு மாறும்போது Export / Import ஃபைலைப் பயன்படுத்துங்கள்.' }
+                ]
             }
         };
 
@@ -760,10 +814,13 @@
             { id: 'n9', cx: 418, cy: 85, color: '#facc15', year: '2026 (Current Point)', title: 'Son சிவருத்ரா & System Breakout (Current Point)', desc: 'Son born. Active driving + Goobro + Prem Diary. Current standing point.' }
         ];
 
-        let state = JSON.parse(localStorage.getItem('shivPremMasterOS_v19')) || {
+        const STORAGE_KEY = 'shivPremMasterOS_v22';
+
+        let state = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
             lang: 'en',
             theme: 'dark',
             selectedNodeId: 'n9',
+            activeBotTopic: 'finance',
             whatsapp: '',
             email: '',
             learnedSkills: ['System Architecture', 'Driving Logistics', 'Debt Avalanche Calculation'],
@@ -799,14 +856,72 @@
             planningTasks: [
                 { task: 'Complete 15-20 driving days this month', done: false }
             ],
-            chatHistory: [
-                { sender: 'ai', text: 'வணக்கம் சிவ்பிரேம்! 🙏 உங்கள் டேட்டா பிரவுசரில் உடனுக்குடன் சேமிக்கப்படும். சைட் மெனுவில் போர்ட்ஃபோலியோ, க்ரோத் மற்றும் பிசினஸ் பிரிவுகளுக்குச் செல்லலாம்.' }
-            ]
+            botThreads: {
+                en: {
+                    finance: [...defaultBotThreads.en.finance],
+                    growth: [...defaultBotThreads.en.growth],
+                    nextplan: [...defaultBotThreads.en.nextplan]
+                },
+                ta: {
+                    finance: [...defaultBotThreads.ta.finance],
+                    growth: [...defaultBotThreads.ta.growth],
+                    nextplan: [...defaultBotThreads.ta.nextplan]
+                }
+            }
         };
 
         function saveState() {
-            localStorage.setItem('shivPremMasterOS_v19', JSON.stringify(state));
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
             recalculateMetrics();
+        }
+
+        function exportMemoryData() {
+            const payload = {
+                exportedAt: new Date().toISOString(),
+                state: state,
+                personalNodes: personalNodes
+            };
+            const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            const dateStr = new Date().toISOString().slice(0, 10);
+            a.href = url;
+            a.download = `shiv-prem-dashboard-memory-${dateStr}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast('EXPORTED!', 'All dashboard memory downloaded as JSON.');
+        }
+
+        function triggerImportMemory() {
+            document.getElementById('importMemoryFile').click();
+        }
+
+        function handleImportMemory(event) {
+            const file = event.target.files && event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const parsed = JSON.parse(e.target.result);
+                    if (parsed && parsed.state) {
+                        state = parsed.state;
+                        if (Array.isArray(parsed.personalNodes) && parsed.personalNodes.length > 0) {
+                            personalNodes = parsed.personalNodes;
+                        }
+                        saveState();
+                        initDashboard();
+                        showToast('IMPORTED!', 'All saved data restored cleanly.');
+                    } else {
+                        showToast('ERROR', 'Invalid memory file.');
+                    }
+                } catch (err) {
+                    showToast('ERROR', 'Could not read JSON file.');
+                }
+                event.target.value = '';
+            };
+            reader.readAsText(file);
         }
 
         function updateLiveClock() {
@@ -823,14 +938,14 @@
             });
         }
 
-        function toggleSideQuickMenu() {
-            document.getElementById('sideQuickMenuDrawer').classList.toggle('hidden');
+        function toggleTopQuickMenu() {
+            document.getElementById('topQuickMenuDrawer').classList.toggle('hidden');
         }
 
         function scrollToSection(id) {
             const el = document.getElementById(id);
             if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            document.getElementById('sideQuickMenuDrawer').classList.add('hidden');
+            document.getElementById('topQuickMenuDrawer').classList.add('hidden');
         }
 
         function formatINR(val) {
@@ -858,11 +973,20 @@
                 const key = el.getAttribute('data-i18n');
                 if (dict[key]) el.innerText = dict[key];
             });
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                if (dict[key]) el.placeholder = dict[key];
+            });
 
             renderStory();
             renderPersonalNodes();
             renderBusinessBoard();
             renderLearnedSkills();
+            updateBotTabStyles();
+            if (!document.getElementById('floatingBotModal').classList.contains('hidden')) {
+                renderBotArrangedDetails();
+                renderBotChat();
+            }
             saveState();
         }
 
@@ -920,10 +1044,31 @@
             `;
         }
 
+        function updateBotTabStyles() {
+            const topics = ['finance', 'growth', 'nextplan'];
+            topics.forEach(t => {
+                const btn = document.getElementById(`bot-tab-${t}`);
+                if (!btn) return;
+                if (state.activeBotTopic === t) {
+                    btn.className = 'py-2 px-2 rounded-xl font-bold bg-posterYellow text-matteBlack transition';
+                } else {
+                    btn.className = 'py-2 px-2 rounded-xl font-bold bg-slate-800 text-slate-200 hover:bg-slate-700 transition';
+                }
+            });
+        }
+
+        function switchBotTopic(topic) {
+            state.activeBotTopic = topic;
+            updateBotTabStyles();
+            renderBotChat();
+            saveState();
+        }
+
         function toggleFloatingBot() {
             const modal = document.getElementById('floatingBotModal');
             modal.classList.toggle('hidden');
             if (!modal.classList.contains('hidden')) {
+                updateBotTabStyles();
                 renderBotArrangedDetails();
                 renderBotChat();
             }
@@ -1434,7 +1579,11 @@
         function renderBotChat() {
             const win = document.getElementById('botChatWindow');
             win.innerHTML = '';
-            state.chatHistory.forEach(msg => {
+            const lang = state.lang || 'en';
+            const topic = state.activeBotTopic || 'finance';
+            const thread = (state.botThreads && state.botThreads[lang] && state.botThreads[lang][topic]) || defaultBotThreads[lang][topic];
+
+            thread.forEach(msg => {
                 const isUser = msg.sender === 'user';
                 const row = document.createElement('div');
                 row.className = `flex ${isUser ? 'justify-end' : 'justify-start'}`;
@@ -1449,17 +1598,36 @@
             const input = document.getElementById('botUserInput');
             const q = input.value.trim();
             if (!q) return;
-            state.chatHistory.push({ sender: 'user', text: q });
+
+            const lang = state.lang || 'en';
+            const topic = state.activeBotTopic || 'finance';
+            if (!state.botThreads) state.botThreads = JSON.parse(JSON.stringify(defaultBotThreads));
+            if (!state.botThreads[lang]) state.botThreads[lang] = JSON.parse(JSON.stringify(defaultBotThreads[lang]));
+            if (!state.botThreads[lang][topic]) state.botThreads[lang][topic] = [];
+
+            state.botThreads[lang][topic].push({ sender: 'user', text: q });
             input.value = '';
 
-            let botReply = 'வணக்கம்! உங்கள் டேட்டா பிரவுசரில் பாதுகாப்பாக அப்டேட் ஆகிறது. எதிர்காலத்தில் பப்ளிக் ஆப்பாக மாற்றும்போது தனியாக Login & Backend இணைத்துக் கொள்ளலாம்.';
-            if (q.includes('கடன்') || q.includes('debt')) {
-                botReply = 'கடன் முழுமையாக முடியும் வரை சிவப்பு நிறத்தில் இருக்கும். அடைத்த பிறகு பச்சை நிறமாக மாறும்!';
-            } else if (q.includes('ஆல்கோ') || q.includes('algo')) {
-                botReply = 'ஆல்கோ டிரேடிங் ஸ்ட்ராட்டஜியின் மூலம் வரும் வருமானத்தை கடன் குறைப்பு மற்றும் முதலீட்டிற்குப் பகிர்ந்து வழங்குங்கள்.';
+            let reply = '';
+            if (lang === 'ta') {
+                if (topic === 'finance') {
+                    reply = `Financial Assistant: "${q}" குறித்து கவனிக்க — கடன் முழுமையாக முடியும் வரை சிவப்பு நிறத்திலேயே இருக்கும். வருமானம், செலவு, முதலீடு மற்றும் ஆல்கோ வருமானத்தைக் கொண்டு கடன் குறைப்பிலும் முதலீட்டிலும் கவனம் செலுத்துங்கள்.`;
+                } else if (topic === 'growth') {
+                    reply = `Personal Growth: "${q}" தொடர்பாக — உங்கள் டைம்லைன் மைல்கற்கள் மற்றும் புதிய திறன்களைத் தொடர்ந்து சேர்த்து, சிஸ்டம் மூலம் முன்னேற்றத்தைத் தக்கவைத்துக் கொள்ளுங்கள்.`;
+                } else {
+                    reply = `Next Plan: "${q}" குறித்த அடுத்த படி — Goobro & டிரைவிங் செயல்பாடுகளைத் தொடர்ந்து, கடன் குறைப்பு மற்றும் திட்டமிடல் பணிகளை வாராந்திர இலக்குகளாக நிறைவேற்றுங்கள்.`;
+                }
+            } else {
+                if (topic === 'finance') {
+                    reply = `Financial Assistant: Regarding "${q}" — keep remaining debt red until cleared, balance expenses and investments, and channel surplus & algo gains steadily.`;
+                } else if (topic === 'growth') {
+                    reply = `Personal Growth: Regarding "${q}" — log new skills and timeline milestones regularly to reinforce your system-driven progress.`;
+                } else {
+                    reply = `Next Plan: Regarding "${q}" — focus on consistent Goobro & driving execution, step-by-step debt reduction, and future public/cloud readiness.`;
+                }
             }
 
-            state.chatHistory.push({ sender: 'ai', text: botReply });
+            state.botThreads[lang][topic].push({ sender: 'ai', text: reply });
             saveState();
             renderBotChat();
         }
