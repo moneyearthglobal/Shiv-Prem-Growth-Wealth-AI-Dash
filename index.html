@@ -37,7 +37,7 @@
             --bg-card: #ffffff;
             --bg-inset: #f1f5f9;
             --text-primary: #0f172a;
-            --text-secondary: #475569;
+            --text-secondary: #334155;
             --border-card: #cbd5e1;
             --shadow-card: 5px 5px 0px #1e3a8a;
             --grid-dot: rgba(15, 23, 42, 0.06);
@@ -60,24 +60,36 @@
             transition: background-color 0.25s ease, color 0.25s ease;
             min-height: 100vh;
         }
+        /* Ensure text in light mode stays dark/black instead of white */
+        html:not(.dark) .text-white {
+            color: #0f172a !important;
+        }
+        html:not(.dark) .text-slate-100,
+        html:not(.dark) .text-slate-200,
+        html:not(.dark) .text-slate-300 {
+            color: #1e293b !important;
+        }
+        html:not(.dark) .bg-slate-900 {
+            background-color: #e2e8f0 !important;
+            color: #0f172a !important;
+        }
+
         .poster-title { font-family: 'Anton', 'Oswald', 'Noto Sans Tamil', sans-serif; letter-spacing: 0.03em; text-transform: uppercase; }
         .comic-card { background-color: var(--bg-card); border: 2px solid var(--border-card); box-shadow: var(--shadow-card); }
         .inset-box { background-color: var(--bg-inset); border: 1.5px solid var(--border-card); }
         .muted-text { color: var(--text-secondary); }
-        
-        @keyframes funRobotWink {
-            0%, 70%, 100% { transform: scale(1); }
-            75% { transform: scale(1.08) rotate(3deg); }
-            80% { transform: scale(0.95) rotate(-3deg); }
-            85% { transform: scale(1.05); }
-        }
-        .fun-robot-avatar { animation: funRobotWink 3.5s infinite ease-in-out; }
 
-        @keyframes liveDotBlink {
-            0%, 100% { transform: scale(1); opacity: 1; filter: drop-shadow(0 0 4px #3b82f6); }
-            50% { transform: scale(1.6); opacity: 0.4; filter: drop-shadow(0 0 10px #facc15); }
+        @keyframes botGentleFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-4px); }
         }
-        .live-blinking-dot { animation: liveDotBlink 1.4s infinite ease-in-out; transform-origin: center; }
+        .bot-figure-anim { animation: botGentleFloat 2.8s infinite ease-in-out; }
+
+        @keyframes stablePulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.55; }
+        }
+        .stable-current-dot { animation: stablePulse 1.8s infinite ease-in-out; }
     </style>
 </head>
 <body class="antialiased pb-24 p-3 sm:p-6">
@@ -91,34 +103,71 @@
         </div>
     </div>
 
-    <!-- Floating Clean AI Bot Assistant -->
+    <!-- Side Expandable Quick-Access Menu (Portfolio, Personal Growth, Financial Growth, Growth Progress, Business) -->
+    <div class="fixed left-3 sm:left-4 top-1/2 -translate-y-1/2 z-40 flex flex-col items-start gap-2">
+        <button onclick="toggleSideQuickMenu()" class="w-11 h-11 rounded-full bg-posterYellow text-matteBlack border-2 border-slate-900 shadow-[3px_3px_0px_#000] flex items-center justify-center font-bold text-lg hover:scale-105 transition" title="Quick Sections">
+            ☰
+        </button>
+        <div id="sideQuickMenuDrawer" class="hidden flex-col gap-1.5 bg-panelDark/95 border-2 border-cyberBlue rounded-2xl p-2 shadow-[4px_4px_0px_#000] text-[11px] font-mono">
+            <button onclick="scrollToSection('sec-portfolio')" class="flex items-center gap-2 px-2.5 py-1.5 rounded-xl hover:bg-cyberBlue/20 text-white text-left whitespace-nowrap">
+                <span>💼</span> <span>Portfolio</span>
+            </button>
+            <button onclick="scrollToSection('sec-personal-growth')" class="flex items-center gap-2 px-2.5 py-1.5 rounded-xl hover:bg-cyberBlue/20 text-white text-left whitespace-nowrap">
+                <span>🌱</span> <span>Personal Growth</span>
+            </button>
+            <button onclick="scrollToSection('sec-financial-growth')" class="flex items-center gap-2 px-2.5 py-1.5 rounded-xl hover:bg-cyberBlue/20 text-white text-left whitespace-nowrap">
+                <span>📈</span> <span>Financial Growth</span>
+            </button>
+            <button onclick="scrollToSection('sec-growth-progress')" class="flex items-center gap-2 px-2.5 py-1.5 rounded-xl hover:bg-cyberBlue/20 text-white text-left whitespace-nowrap">
+                <span>📊</span> <span>Growth Progress</span>
+            </button>
+            <button onclick="scrollToSection('sec-business')" class="flex items-center gap-2 px-2.5 py-1.5 rounded-xl hover:bg-cyberBlue/20 text-white text-left whitespace-nowrap">
+                <span>🚀</span> <span>Business</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Floating Bot Figure Only (No Surrounding Blue Circle) -->
     <div class="fixed bottom-6 right-6 z-40">
-        <button onclick="toggleFloatingBot()" class="w-16 h-16 rounded-full bg-cyberBlue border-3 border-posterYellow shadow-[5px_5px_0px_#000] flex items-center justify-center hover:scale-110 transition fun-robot-avatar" title="Shiv Prem AI Coach">
-            <svg viewBox="0 0 36 36" class="w-9 h-9" xmlns="http://www.w3.org/2000/svg">
-                <rect x="7" y="9" width="22" height="18" rx="6" fill="#0f172a" stroke="#facc15" stroke-width="2"/>
-                <line x1="18" y1="4" x2="18" y2="9" stroke="#facc15" stroke-width="2" stroke-linecap="round"/>
-                <circle cx="18" cy="3.5" r="2" fill="#facc15"/>
-                <circle cx="13.5" cy="17" r="2.3" fill="#38bdf8"/>
-                <circle cx="22.5" cy="17" r="2.3" fill="#38bdf8"/>
-                <path d="M 13.5 22.5 Q 18 25.5 22.5 22.5" stroke="#facc15" stroke-width="2" stroke-linecap="round" fill="none"/>
+        <button onclick="toggleFloatingBot()" class="p-1.5 rounded-2xl bg-slate-900/90 border-2 border-posterYellow shadow-[4px_4px_0px_#000] flex items-center justify-center hover:scale-105 transition bot-figure-anim" title="Shiv Prem AI & Details">
+            <svg viewBox="0 0 40 44" class="w-11 h-11" xmlns="http://www.w3.org/2000/svg">
+                <line x1="20" y1="3" x2="20" y2="9" stroke="#facc15" stroke-width="2.4" stroke-linecap="round"/>
+                <circle cx="20" cy="3" r="2.2" fill="#facc15"/>
+                <rect x="8" y="9" width="24" height="17" rx="6" fill="#3b82f6" stroke="#facc15" stroke-width="2"/>
+                <circle cx="15" cy="17.5" r="2.3" fill="#ffffff"/>
+                <circle cx="25" cy="17.5" r="2.3" fill="#ffffff"/>
+                <path d="M 15.5 22 Q 20 24.5 24.5 22" stroke="#facc15" stroke-width="2" stroke-linecap="round" fill="none"/>
+                <rect x="11" y="28" width="18" height="11" rx="4" fill="#1e293b" stroke="#3b82f6" stroke-width="1.8"/>
+                <circle cx="20" cy="33.5" r="2" fill="#22c55e"/>
             </svg>
         </button>
     </div>
 
-    <!-- AI Chat Modal -->
-    <div id="floatingBotModal" class="hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-3">
-        <div class="comic-card w-full max-w-2xl rounded-2xl p-4 sm:p-6 bg-matteBlack text-white max-h-[90vh] flex flex-col border-cyberBlue">
+    <!-- Bot Modal: Arranged Details + Tamil AI Coach -->
+    <div id="floatingBotModal" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-3">
+        <div class="comic-card w-full max-w-2xl rounded-2xl p-4 sm:p-6 bg-matteBlack text-white max-h-[90vh] flex flex-col border-cyberBlue overflow-y-auto">
             <div class="flex items-center justify-between pb-3 border-b border-slate-700 mb-3">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-cyberBlue border-2 border-posterYellow flex items-center justify-center text-xl fun-robot-avatar">🤖</div>
+                    <svg viewBox="0 0 40 44" class="w-9 h-10 bot-figure-anim" xmlns="http://www.w3.org/2000/svg">
+                        <line x1="20" y1="3" x2="20" y2="9" stroke="#facc15" stroke-width="2.4" stroke-linecap="round"/>
+                        <circle cx="20" cy="3" r="2.2" fill="#facc15"/>
+                        <rect x="8" y="9" width="24" height="17" rx="6" fill="#3b82f6" stroke="#facc15" stroke-width="2"/>
+                        <circle cx="15" cy="17.5" r="2.3" fill="#ffffff"/>
+                        <circle cx="25" cy="17.5" r="2.3" fill="#ffffff"/>
+                        <path d="M 15.5 22 Q 20 24.5 24.5 22" stroke="#facc15" stroke-width="2" stroke-linecap="round" fill="none"/>
+                        <rect x="11" y="28" width="18" height="11" rx="4" fill="#1e293b" stroke="#3b82f6" stroke-width="1.8"/>
+                    </svg>
                     <div>
-                        <h3 class="poster-title text-xl text-posterYellow" data-i18n="botTitle">ஷிவ் பிரேம் AI தமிழ்க் கோச்</h3>
-                        <p class="text-xs text-slate-400" data-i18n="botSub">செல்வ வளர்ச்சி & ஸ்டார்ட்அப் ஆலோசகர்</p>
+                        <h3 class="poster-title text-xl text-posterYellow" data-i18n="botTitle">ஷிவ் பிரேம் AI & விவரங்கள்</h3>
+                        <p class="text-xs text-slate-400" data-i18n="botSub">ஒழுங்குபடுத்தப்பட்ட டேஷ்போர்டு சுருக்கம் & ஆலோசகர்</p>
                     </div>
                 </div>
                 <button onclick="toggleFloatingBot()" class="text-slate-400 hover:text-white font-mono text-lg px-2">✕</button>
             </div>
-            <div id="botChatWindow" class="bg-slate-900 border border-slate-700 rounded-xl p-3.5 h-64 overflow-y-auto space-y-3 mb-3 text-sm font-mono"></div>
+
+            <div id="botArrangedDetails" class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-mono mb-3"></div>
+
+            <div id="botChatWindow" class="bg-slate-900 border border-slate-700 rounded-xl p-3.5 h-48 overflow-y-auto space-y-3 mb-3 text-sm font-mono"></div>
             <form onsubmit="handleBotSubmit(event)" class="flex gap-2">
                 <input type="text" id="botUserInput" required placeholder="தமிழில் கேள்விகளைக் கேட்கவும்..." class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-posterYellow font-mono">
                 <button type="submit" class="bg-cyberBlue hover:bg-blue-600 text-white font-poster text-sm px-5 py-2.5 rounded-xl tracking-wider" data-i18n="sendBtn">கேள் ⚡</button>
@@ -140,7 +189,7 @@
     <!-- Main Container -->
     <div class="max-w-7xl mx-auto space-y-6">
 
-        <!-- 1. TOP NAV & LANGUAGE SWITCHER -->
+        <!-- 1. TOP NAV, LIVE DATE/TIME & LANGUAGE SWITCHER -->
         <nav class="comic-card rounded-2xl px-4 py-3 flex flex-wrap items-center justify-between gap-3 border-cyberBlue">
             <div class="flex items-center gap-2.5">
                 <span class="w-3 h-3 rounded-full bg-cyberBlue animate-ping"></span>
@@ -148,7 +197,15 @@
                     SHIV PREM // AI GROWTH & WEALTH DASHBOARD
                 </span>
             </div>
-            <div class="flex items-center gap-2">
+
+            <div class="flex flex-wrap items-center gap-2">
+                <!-- Live Date & Time Display -->
+                <div class="inset-box px-3 py-1 rounded-xl font-mono text-xs font-bold text-cyberBlue flex items-center gap-2">
+                    <span id="liveDateDisplay">---</span>
+                    <span>•</span>
+                    <span id="liveTimeDisplay" class="text-posterYellow">--:--:--</span>
+                </div>
+
                 <div class="flex items-center rounded-xl border-2 border-slate-700 overflow-hidden bg-slate-900 p-0.5">
                     <button onclick="setLanguage('en')" id="lang-en" class="px-3 py-1 rounded-lg text-xs font-bold bg-posterYellow text-matteBlack transition">EN</button>
                     <button onclick="setLanguage('ta')" id="lang-ta" class="px-3 py-1 rounded-lg text-xs font-bold text-slate-300 hover:text-white transition">தமிழ்</button>
@@ -182,7 +239,7 @@
                             Life Evolution, Debt Avalanche & Investment Portfolio Tracker
                         </p>
                         <div class="mt-3 flex flex-wrap justify-center sm:justify-start gap-2 text-xs font-mono">
-                            <span class="px-2.5 py-1 rounded-lg bg-cyberBlue/15 text-cyberBlue border border-cyberBlue/30 font-bold"><span data-i18n="statDebt">Total Debt</span>: <span id="topDebtStat">₹27,00,000</span></span>
+                            <span class="px-2.5 py-1 rounded-lg bg-red-500/15 text-red-500 border border-red-500/30 font-bold"><span data-i18n="statDebt">Total Debt</span>: <span id="topDebtStat">-₹27,00,000</span></span>
                             <span class="px-2.5 py-1 rounded-lg bg-emeraldGrowth/15 text-emeraldGrowth border border-emeraldGrowth/30 font-bold"><span data-i18n="statInv">Investments</span>: <span id="topInvStat">₹0</span></span>
                         </div>
                     </div>
@@ -198,14 +255,14 @@
                         <div id="overallProgressBar" class="h-full rounded bg-gradient-to-r from-cyberBlue via-posterYellow to-emeraldGrowth transition-all duration-500" style="width: 15%;"></div>
                     </div>
                     <div class="text-[11px] text-slate-200 leading-snug" data-i18n="heroTargetBox">
-                        🎯 <strong>Life & Financial Target:</strong> Clear ₹27L debt & build ₹1 Cr wealth with Goobro & Shiv Foundation.
+                        🎯 Life & Financial Target: Clear ₹27L debt & build ₹1 Cr wealth with Goobro & Shiv Foundation.
                     </div>
                 </div>
             </div>
         </header>
 
         <!-- 3. FRONT DASHBOARD: LARGE WEALTH GROWTH & NET WORTH GRAPH -->
-        <section class="grid grid-cols-1 gap-6">
+        <section id="sec-financial-growth" class="grid grid-cols-1 gap-6">
             <div class="comic-card rounded-2xl p-4 sm:p-6 border-cyberBlue flex flex-col justify-between">
                 <div>
                     <div class="flex items-center justify-between gap-2 mb-3">
@@ -226,19 +283,47 @@
                             <line x1="70" y1="168" x2="870" y2="168" stroke="#facc15" stroke-width="1.6" stroke-dasharray="6 4"/>
                             <g id="wealthSvgDynamicLayer"></g>
                             <g fill="#94a3b8" font-family="JetBrains Mono" font-size="10.5" text-anchor="middle">
-                                <text x="140" y="240" fill="#ef4444">2025</text><text x="320" y="240" fill="#facc15" font-weight="bold">2026 (Live)</text>
+                                <text x="140" y="240" fill="#ef4444">2025</text><text x="320" y="240" fill="#facc15" font-weight="bold">2026 (Current Point)</text>
                             </g>
                         </svg>
                     </div>
                 </div>
                 <div class="grid grid-cols-2 gap-3 text-center text-xs sm:text-sm font-mono">
-                    <div class="inset-box p-2.5 rounded-xl"><span data-i18n="netWorthLabel">Net Worth</span>: <strong id="netWorthDisplay" class="text-crimsonRed">-₹27,00,000</strong></div>
+                    <div class="inset-box p-2.5 rounded-xl"><span data-i18n="netWorthLabel">Net Worth</span>: <strong id="netWorthDisplay" class="text-red-500">-₹27,00,000</strong></div>
                     <div class="inset-box p-2.5 rounded-xl border-emeraldGrowth"><span data-i18n="goalLabel">2030 Goal</span>: <strong class="text-emeraldGrowth">₹1,00,00,000</strong></div>
                 </div>
             </div>
         </section>
 
-        <!-- 4. FINANCIAL DATABASE -->
+        <!-- 4. PORTFOLIO OVERVIEW SECTION (INVESTMENT, DEBT, EXPENSES, INCOME) -->
+        <section id="sec-portfolio" class="comic-card rounded-2xl p-4 sm:p-6 border-cyberBlue space-y-4">
+            <div class="flex items-center justify-between gap-2">
+                <div>
+                    <span class="bg-cyberBlue text-white font-poster text-xs px-3 py-0.5 rounded uppercase" data-i18n="portTag">PORTFOLIO SUMMARY</span>
+                    <h2 class="poster-title text-2xl sm:text-3xl mt-1" data-i18n="portTitle">OVERALL PORTFOLIO</h2>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 text-xs font-mono">
+                <div class="inset-box p-3.5 rounded-xl border-l-4 border-l-emeraldGrowth">
+                    <div class="muted-text uppercase text-[11px]" data-i18n="portInvLabel">Overall Investment</div>
+                    <div id="portOverallInv" class="text-base font-extrabold text-emeraldGrowth mt-1">₹0</div>
+                </div>
+                <div class="inset-box p-3.5 rounded-xl border-l-4 border-l-red-500">
+                    <div class="muted-text uppercase text-[11px]" data-i18n="portDebtLabel">Overall Remaining Debt</div>
+                    <div id="portOverallDebt" class="text-base font-extrabold text-red-500 mt-1">-₹27,00,000</div>
+                </div>
+                <div class="inset-box p-3.5 rounded-xl border-l-4 border-l-posterYellow">
+                    <div class="muted-text uppercase text-[11px]" data-i18n="portExpLabel">Overall Expenses</div>
+                    <div id="portOverallExp" class="text-base font-extrabold text-posterYellow mt-1">₹0</div>
+                </div>
+                <div class="inset-box p-3.5 rounded-xl border-l-4 border-l-cyberBlue">
+                    <div class="muted-text uppercase text-[11px]" data-i18n="portIncLabel">Overall Income</div>
+                    <div id="portOverallInc" class="text-base font-extrabold text-cyberBlue mt-1">₹0</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. FINANCIAL DATABASE -->
         <section class="comic-card rounded-2xl p-4 sm:p-6 border-posterYellow space-y-4">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
@@ -258,7 +343,7 @@
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs font-mono">
                 <div class="inset-box p-3 rounded-xl"><span data-i18n="totInc">Total Income</span>: <strong id="calcTotalIncome" class="text-emeraldGrowth">₹0</strong></div>
-                <div class="inset-box p-3 rounded-xl"><span data-i18n="totExp">Total Expenses</span>: <strong id="calcTotalExpense" class="text-crimsonRed">₹0</strong></div>
+                <div class="inset-box p-3 rounded-xl"><span data-i18n="totExp">Total Expenses</span>: <strong id="calcTotalExpense" class="text-red-500">₹0</strong></div>
                 <div class="inset-box p-3 rounded-xl"><span data-i18n="totInv">Total Investments</span>: <strong id="calcTotalInvestment" class="text-posterYellow">₹0</strong></div>
                 <div class="inset-box p-3 rounded-xl border-emeraldGrowth"><span data-i18n="netSurplus">Monthly Net Surplus</span>: <strong id="calcNetSurplus" class="text-emeraldGrowth">₹0</strong></div>
             </div>
@@ -268,27 +353,40 @@
             <div class="inset-box p-3 rounded-xl max-h-40 overflow-y-auto text-xs font-mono space-y-1.5" id="txList"></div>
         </section>
 
-        <!-- 5. DYNAMIC DEBT MANAGER -->
-        <section class="comic-card rounded-2xl p-4 sm:p-6 border-crimsonRed space-y-4">
+        <!-- 6. DYNAMIC DEBT MANAGER -->
+        <section class="comic-card rounded-2xl p-4 sm:p-6 border-red-500 space-y-4">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
-                    <span class="bg-crimsonRed text-white font-poster text-xs px-3 py-0.5 rounded uppercase" data-i18n="debtTag">AVALANCHE DEBT MANAGER</span>
+                    <span class="bg-red-600 text-white font-poster text-xs px-3 py-0.5 rounded uppercase" data-i18n="debtTag">AVALANCHE DEBT MANAGER</span>
                     <h2 class="poster-title text-2xl sm:text-3xl mt-1" data-i18n="debtTitle">ADD & MANAGE LENDERS / DEBTS</h2>
                 </div>
                 <div class="flex gap-2">
                     <input type="text" id="newLenderName" placeholder="Lender Name..." class="inset-box rounded-xl px-3 py-2 text-xs font-mono w-40">
                     <input type="number" id="newLenderAmt" placeholder="Amount (₹)" class="inset-box rounded-xl px-3 py-2 text-xs font-mono w-28">
-                    <button onclick="addNewDebt()" class="bg-crimsonRed hover:bg-red-500 text-white font-poster text-xs px-4 py-2 rounded-xl font-bold shadow" data-i18n="addDebtBtn">+ ADD DEBT</button>
+                    <button onclick="addNewDebt()" class="bg-red-600 hover:bg-red-500 text-white font-poster text-xs px-4 py-2 rounded-xl font-bold shadow" data-i18n="addDebtBtn">+ ADD DEBT</button>
                 </div>
             </div>
-            <div class="inset-box p-3.5 rounded-xl border-l-4 border-l-crimsonRed text-xs font-mono text-slate-300">
-                💡 <strong class="text-white" data-i18n="aiDebtSugg">AI Debt Feedback:</strong> <span id="aiDebtSuggDesc">Focus extra cashflow towards private and gold loans to clear them before 2026 ends.</span>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs font-mono">
+                <div class="inset-box p-3 rounded-xl border-red-500">
+                    <span data-i18n="overallDebtLabel">Overall Remaining Debt</span>: <strong id="overallRemainingDebt" class="text-red-500 text-sm">-₹27,00,000</strong>
+                </div>
+                <div class="inset-box p-3 rounded-xl border-emeraldGrowth">
+                    <span data-i18n="overallClearedLabel">Total Debt Cleared</span>: <strong id="overallClearedDebt" class="text-emeraldGrowth text-sm">₹0</strong>
+                </div>
+                <div class="inset-box p-3 rounded-xl border-posterYellow">
+                    <span data-i18n="overallInitialLabel">Total Initial Debt</span>: <strong id="overallInitialDebt" class="text-posterYellow text-sm">₹27,00,000</strong>
+                </div>
+            </div>
+
+            <div class="inset-box p-3.5 rounded-xl border-l-4 border-l-red-500 text-xs font-mono text-slate-300">
+                💡 <strong class="text-white" data-i18n="aiDebtSugg">AI Debt Feedback:</strong> <span id="aiDebtSuggDesc">Remaining debt stays red until 100% cleared. Once cleared, status turns green.</span>
             </div>
             <div id="avalancheDebtGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5"></div>
         </section>
 
-        <!-- 6. STARTUP BRANDS BOARD -->
-        <section class="comic-card rounded-2xl p-4 sm:p-6 border-cyberBlue space-y-4">
+        <!-- 7. STARTUP BRANDS BOARD -->
+        <section id="sec-business" class="comic-card rounded-2xl p-4 sm:p-6 border-cyberBlue space-y-4">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
                     <span class="bg-cyberBlue text-white font-poster text-xs px-3 py-0.5 rounded uppercase" data-i18n="bizTag">STARTUP & BUSINESS BRANDS</span>
@@ -310,7 +408,7 @@
             <div id="businessBoardGrid" class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 text-xs font-mono"></div>
         </section>
 
-        <!-- 7. SYSTEMATIC PLANNING BOARD -->
+        <!-- 8. SYSTEMATIC PLANNING BOARD -->
         <section class="comic-card rounded-2xl p-4 sm:p-6 border-posterYellow space-y-4">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
@@ -328,7 +426,7 @@
             <div id="planningTaskList" class="space-y-2 text-xs font-mono"></div>
         </section>
 
-        <!-- 8. GOOGLE CALENDAR & WHATSAPP / EMAIL NOTIFICATION SYNC -->
+        <!-- 9. GOOGLE CALENDAR & WHATSAPP / EMAIL NOTIFICATION SYNC -->
         <section class="comic-card rounded-2xl p-4 sm:p-6 border-posterYellow space-y-4">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
@@ -352,7 +450,7 @@
             <div id="calendarEventsList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs font-mono"></div>
         </section>
 
-        <!-- 9. GOOBRO RIDE CALENDAR & MONTHLY INCOME RADAR -->
+        <!-- 10. GOOBRO RIDE CALENDAR & MONTHLY INCOME RADAR -->
         <section class="comic-card rounded-2xl p-4 sm:p-6 border-cyberBlue space-y-4">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
@@ -376,8 +474,8 @@
             <div id="radarRidesList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs font-mono"></div>
         </section>
 
-        <!-- 10. END SECTION: PERSONAL EVOLUTION, TIMELINE MILESTONES & PROGRESS TRACKERS -->
-        <section class="comic-card rounded-2xl p-4 sm:p-6 border-cyberBlue space-y-5">
+        <!-- 11. PERSONAL EVOLUTION, TIMELINE MILESTONES & GROWTH PROGRESS TRACKERS -->
+        <section id="sec-personal-growth" class="comic-card rounded-2xl p-4 sm:p-6 border-cyberBlue space-y-5">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div>
                     <span class="bg-posterYellow text-matteBlack font-poster text-xs px-3 py-0.5 rounded uppercase" data-i18n="leftGraphTag">CHRONOLOGICAL GROWTH & LIVE STAGE</span>
@@ -397,7 +495,7 @@
                     <path d="M 48,160 L 95,140 L 142,120 L 188,165 L 235,100 L 282,205 L 328,115 L 372,210 L 418,85" fill="none" stroke="#3b82f6" stroke-width="3.2" stroke-linecap="round"/>
                     <g id="personalNodesGroup"></g>
                     <g fill="#94a3b8" font-family="JetBrains Mono" font-size="9" text-anchor="middle">
-                        <text x="48" y="222">1993</text><text x="95" y="222">2010</text><text x="142" y="222">2015</text><text x="188" y="222">2017</text><text x="235" y="222">2020</text><text x="282" y="222" fill="#ef4444">Aug 2022</text><text x="328" y="222">2023</text><text x="372" y="222" fill="#ef4444">Nov 2024</text><text x="418" y="222" fill="#facc15" font-weight="bold">2026 (Live)</text>
+                        <text x="48" y="222">1993</text><text x="95" y="222">2010</text><text x="142" y="222">2015</text><text x="188" y="222">2017</text><text x="235" y="222">2020</text><text x="282" y="222" fill="#ef4444">Aug 2022</text><text x="328" y="222">2023</text><text x="372" y="222" fill="#ef4444">Nov 2024</text><text x="418" y="222" fill="#facc15" font-weight="bold">2026 (Current Point)</text>
                     </g>
                 </svg>
             </div>
@@ -405,7 +503,7 @@
             <div id="lifeInsightCard" class="inset-box rounded-xl p-3.5 border-l-4 border-l-posterYellow text-xs font-mono"></div>
 
             <!-- 3 Progress Cards: Personal, Finance & Life, Skill System -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono text-xs">
+            <div id="sec-growth-progress" class="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono text-xs">
                 <div class="inset-box rounded-xl p-3.5 border-l-4 border-l-cyberBlue">
                     <div class="flex justify-between items-center mb-1.5">
                         <strong class="text-white" data-i18n="persProgLabel">PERSONAL PROGRESS</strong>
@@ -456,6 +554,33 @@
             </div>
         </section>
 
+        <!-- 12. ALGO TRADING & STRATEGY PERFORMANCE BOX (AT BOTTOM) -->
+        <section class="comic-card rounded-2xl p-4 sm:p-6 border-emeraldGrowth space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                    <span class="bg-emeraldGrowth text-matteBlack font-poster text-xs px-3 py-0.5 rounded uppercase" data-i18n="algoTag">ALGO & STRATEGY ENGINE</span>
+                    <h2 class="poster-title text-2xl sm:text-3xl mt-1" data-i18n="algoHeader">ALGO TRADING & STRATEGY PERFORMANCE</h2>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <input type="text" id="algoStrategyName" placeholder="Strategy Name..." class="inset-box rounded-xl px-3 py-2 text-xs font-mono w-36">
+                    <input type="number" id="algoCapitalAmt" placeholder="Amount (₹)" class="inset-box rounded-xl px-3 py-2 text-xs font-mono w-28">
+                    <input type="number" id="algoGeneratedIncome" placeholder="Income Gen (₹)" class="inset-box rounded-xl px-3 py-2 text-xs font-mono w-32">
+                    <button onclick="addAlgoStrategy()" class="bg-emeraldGrowth hover:bg-green-400 text-matteBlack font-poster text-xs px-4 py-2 rounded-xl font-bold shadow" data-i18n="addAlgoBtn">+ ADD STRATEGY</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-mono">
+                <div class="inset-box p-3 rounded-xl border-cyberBlue">
+                    <span data-i18n="algoTotalCapLabel">Total Strategy Capital</span>: <strong id="algoTotalCapital" class="text-cyberBlue text-sm">₹0</strong>
+                </div>
+                <div class="inset-box p-3 rounded-xl border-emeraldGrowth">
+                    <span data-i18n="algoTotalIncLabel">Total Algo Income Generated</span>: <strong id="algoTotalIncome" class="text-emeraldGrowth text-sm">₹0</strong>
+                </div>
+            </div>
+
+            <div id="algoStrategiesList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs font-mono"></div>
+        </section>
+
     </div>
 
     <!-- JavaScript Engine -->
@@ -470,6 +595,12 @@
                 statInv: 'Investments',
                 heroProgPctLabel: 'PROGRESS %',
                 heroTargetBox: '🎯 Life & Financial Target: Clear ₹27L debt & build ₹1 Cr wealth with Goobro & Shiv Foundation.',
+                portTag: 'PORTFOLIO SUMMARY',
+                portTitle: 'OVERALL PORTFOLIO',
+                portInvLabel: 'Overall Investment',
+                portDebtLabel: 'Overall Remaining Debt',
+                portExpLabel: 'Overall Expenses',
+                portIncLabel: 'Overall Income',
                 leftGraphTag: 'CHRONOLOGICAL GROWTH & LIVE STAGE',
                 leftGraphTitle: 'PERSONAL EVOLUTION, TIMELINE & PROGRESS',
                 zoomBtn: '🔍 Zoom',
@@ -477,6 +608,9 @@
                 rightGraphTitle: 'WEALTH GROWTH & NET WORTH',
                 netWorthLabel: 'Net Worth',
                 goalLabel: '2030 Goal',
+                overallDebtLabel: 'Overall Remaining Debt',
+                overallClearedLabel: 'Total Debt Cleared',
+                overallInitialLabel: 'Total Initial Debt',
                 persProgLabel: 'PERSONAL PROGRESS',
                 finLifeProgLabel: 'FINANCE & LIFE PROGRESS',
                 skillSysProgLabel: 'SKILL SYSTEM PROGRESS',
@@ -498,7 +632,7 @@
                 debtTitle: 'ADD & MANAGE LENDERS / DEBTS',
                 addDebtBtn: '+ ADD DEBT',
                 aiDebtSugg: 'AI Debt Feedback:',
-                aiDebtSuggDesc: 'Focus extra cashflow towards private and gold loans to clear them before 2026 ends.',
+                aiDebtSuggDesc: 'Remaining debt stays red until 100% cleared. Once cleared, status turns green.',
                 bizTag: 'STARTUP & BUSINESS BRANDS',
                 bizHeader: 'BUSINESS LAUNCH & PRIORITY BOARD',
                 optActive: 'Active / Scaling',
@@ -523,8 +657,13 @@
                 optGoobro: 'Goobro',
                 addRideBtn: '+ ADD RIDE',
                 monthlyRadarSum: 'Monthly Ride & Goobro Total Income:',
-                botTitle: 'ஷிவ் பிரேம் AI தமிழ்க் கோச்',
-                botSub: 'செல்வ வளர்ச்சி & ஸ்டார்ட்அப் ஆலோசகர்',
+                algoTag: 'ALGO & STRATEGY ENGINE',
+                algoHeader: 'ALGO TRADING & STRATEGY PERFORMANCE',
+                addAlgoBtn: '+ ADD STRATEGY',
+                algoTotalCapLabel: 'Total Strategy Capital',
+                algoTotalIncLabel: 'Total Algo Income Generated',
+                botTitle: 'ஷிவ் பிரேம் AI & விவரங்கள்',
+                botSub: 'ஒழுங்குபடுத்தப்பட்ட டேஷ்போர்டு சுருக்கம் & ஆலோசகர்',
                 sendBtn: 'கேள் ⚡'
             },
             ta: {
@@ -536,6 +675,12 @@
                 statInv: 'முதலீடுகள்',
                 heroProgPctLabel: 'முன்னேற்ற சதவீதம்',
                 heroTargetBox: '🎯 வாழ்க்கை & நிதி இலக்கு: ₹27L கடனை அடைத்து Goobro & சிவ அறக்கட்டளை மூலம் ₹1 கோடி செல்வம் உருவாக்குதல்.',
+                portTag: 'போர்ட்ஃபோலியோ சுருக்கம்',
+                portTitle: 'ஒட்டுமொத்த போர்ட்ஃபோலியோ',
+                portInvLabel: 'ஒட்டுமொத்த முதலீடு',
+                portDebtLabel: 'ஒட்டுமொத்த மீதமுள்ள கடன்',
+                portExpLabel: 'ஒட்டுமொத்த செலவுகள்',
+                portIncLabel: 'ஒட்டுமொத்த வருமானம்',
                 leftGraphTag: 'காலவரிசை வளர்ச்சி & தற்போதைய நிலை',
                 leftGraphTitle: 'தனிப்பட்ட வளர்ச்சி, டைம்லைன் & ப்ராக்ரஸ்',
                 zoomBtn: '🔍 பெரிதாக்கு',
@@ -543,6 +688,9 @@
                 rightGraphTitle: 'செல்வ வளர்ச்சி & நிகர சொத்து மதிப்பு',
                 netWorthLabel: 'நிகர சொத்து',
                 goalLabel: '2030 இலக்கு',
+                overallDebtLabel: 'ஒட்டுமொத்த மீதமுள்ள கடன்',
+                overallClearedLabel: 'அடைக்கப்பட்ட மொத்த கடன்',
+                overallInitialLabel: 'தொடக்க மொத்த கடன்',
                 persProgLabel: 'தனிப்பட்ட முன்னேற்றம்',
                 finLifeProgLabel: 'நிதி & வாழ்க்கை முன்னேற்றம்',
                 skillSysProgLabel: 'திறன் & சிஸ்டம் முன்னேற்றம்',
@@ -564,7 +712,7 @@
                 debtTitle: 'கடன்களைச் சேர்த்து நிர்வகிக்கவும்',
                 addDebtBtn: '+ கடன் சேர்',
                 aiDebtSugg: 'AI கடன் ஃபீட்பேக்:',
-                aiDebtSuggDesc: 'அதிக வட்டி உள்ள கடன்களை விரைவாக முடிக்க தீவிரமாக செயல்படுங்கள்.',
+                aiDebtSuggDesc: 'கடன் முழுமையாக முடியும் வரை சிவப்பு நிறத்திலேயே இருக்கும்; முடிந்த பிறகே பச்சை நிறமாக மாறும்.',
                 bizTag: 'ஸ்டார்ட்அப் & பிசினஸ் பிராண்டுகள்',
                 bizHeader: 'பிசினஸ் தொடக்கம் & முன்னுரிமை பலகை',
                 optActive: 'செயலில் / வளர்ச்சி',
@@ -589,8 +737,13 @@
                 optGoobro: 'Goobro',
                 addRideBtn: '+ ரைடு சேர்',
                 monthlyRadarSum: 'மாதாந்திர ரைடு & Goobro மொத்த வருமானம்:',
-                botTitle: 'ஷிவ் பிரேம் AI தமிழ்க் கோச்',
-                botSub: 'செல்வ வளர்ச்சி & ஸ்டார்ட்அப் ஆலோசகர்',
+                algoTag: 'ஆல்கோ & ஸ்ட்ராட்டஜி இன்ஜின்',
+                algoHeader: 'ஆல்கோ டிரேடிங் & ஸ்ட்ராட்டஜி பெர்ஃபார்மன்ஸ்',
+                addAlgoBtn: '+ ஸ்ட்ராட்டஜி சேர்',
+                algoTotalCapLabel: 'மொத்த ஸ்ட்ராட்டஜி தொகை',
+                algoTotalIncLabel: 'ஆல்கோ மூலம் கிடைத்த வருமானம்',
+                botTitle: 'ஷிவ் பிரேம் AI & விவரங்கள்',
+                botSub: 'ஒழுங்குபடுத்தப்பட்ட டேஷ்போர்டு சுருக்கம் & ஆலோசகர்',
                 sendBtn: 'கேள் ⚡'
             }
         };
@@ -604,10 +757,10 @@
             { id: 'n6', cx: 282, cy: 205, color: '#ef4444', year: 'Aug 2022', title: 'Struggle Peak: COVID & Loss', desc: 'Severe financial crunch & heavy personal losses.' },
             { id: 'n7', cx: 328, cy: 115, color: '#3b82f6', year: '2023', title: 'Marriage & Investing', desc: 'Demat opening & investor mindset.' },
             { id: 'n8', cx: 372, cy: 210, color: '#ef4444', year: 'Nov 2024', title: 'Struggle Peak: ₹27L Debt', desc: 'Intense trading loss & mental breakdown.' },
-            { id: 'n9', cx: 418, cy: 85, color: '#facc15', year: '2026 (Live)', title: 'Son சிவருத்ரா & System Breakout (Current Stage)', desc: 'Son born. Active driving + Goobro + Prem Diary. Current live operational stage.' }
+            { id: 'n9', cx: 418, cy: 85, color: '#facc15', year: '2026 (Current Point)', title: 'Son சிவருத்ரா & System Breakout (Current Point)', desc: 'Son born. Active driving + Goobro + Prem Diary. Current standing point.' }
         ];
 
-        let state = JSON.parse(localStorage.getItem('shivPremMasterOS_v17')) || {
+        let state = JSON.parse(localStorage.getItem('shivPremMasterOS_v19')) || {
             lang: 'en',
             theme: 'dark',
             selectedNodeId: 'n9',
@@ -619,11 +772,14 @@
                 { id: 's2', title: 'Nov 2024 (₹27L Debt Crisis)', desc: 'The darkest struggle period with trading loss, turning into a disciplined System Builder.' }
             ],
             calendarEvents: [
-                { date: '2026-06-12', title: 'Health Checkup & Insurance Review (WhatsApp/Email Sync Active)' }
+                { date: '2026-11-19', title: 'Health Checkup & Insurance Review (WhatsApp/Email Sync Active)' }
             ],
             radarRides: [
                 { customer: 'Ramesh Kumar', amount: 1500, category: 'Driving' },
                 { customer: 'Senthil Vel', amount: 2500, category: 'Goobro' }
+            ],
+            algoStrategies: [
+                { strategy: 'Intraday Trend Algo v1', amount: 50000, income: 8500 }
             ],
             debts: [
                 { id: 'd1', lender: 'Gold Loan', total: 1500000, remaining: 1500000, tag: 'Priority #1 • Secured' },
@@ -644,13 +800,37 @@
                 { task: 'Complete 15-20 driving days this month', done: false }
             ],
             chatHistory: [
-                { sender: 'ai', text: 'வணக்கம் சிவ்பிரேம்! 🙏 உங்கள் முழு டேஷ்போர்டும் அப்டேட் செய்யப்பட்டுள்ளது.' }
+                { sender: 'ai', text: 'வணக்கம் சிவ்பிரேம்! 🙏 உங்கள் டேட்டா பிரவுசரில் உடனுக்குடன் சேமிக்கப்படும். சைட் மெனுவில் போர்ட்ஃபோலியோ, க்ரோத் மற்றும் பிசினஸ் பிரிவுகளுக்குச் செல்லலாம்.' }
             ]
         };
 
         function saveState() {
-            localStorage.setItem('shivPremMasterOS_v17', JSON.stringify(state));
+            localStorage.setItem('shivPremMasterOS_v19', JSON.stringify(state));
             recalculateMetrics();
+        }
+
+        function updateLiveClock() {
+            const now = new Date();
+            document.getElementById('liveDateDisplay').innerText = now.toLocaleDateString('en-IN', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric'
+            });
+            document.getElementById('liveTimeDisplay').innerText = now.toLocaleTimeString('en-IN', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+        }
+
+        function toggleSideQuickMenu() {
+            document.getElementById('sideQuickMenuDrawer').classList.toggle('hidden');
+        }
+
+        function scrollToSection(id) {
+            const el = document.getElementById(id);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            document.getElementById('sideQuickMenuDrawer').classList.add('hidden');
         }
 
         function formatINR(val) {
@@ -707,9 +887,46 @@
             saveState();
         }
 
+        function renderBotArrangedDetails() {
+            const remDebt = state.debts.reduce((s, d) => s + Number(d.remaining || 0), 0);
+            let totInv = 0, totInc = 0, totExp = 0;
+            state.transactions.forEach(tx => {
+                if (tx.type === 'investment') totInv += tx.amount;
+                else if (tx.type === 'income') totInc += tx.amount;
+                else if (tx.type === 'expense') totExp += tx.amount;
+            });
+            state.radarRides.forEach(r => { totInc += r.amount; });
+            state.algoStrategies.forEach(a => { totInc += a.income; });
+            const netWorth = totInv - remDebt;
+
+            const box = document.getElementById('botArrangedDetails');
+            box.innerHTML = `
+                <div class="inset-box p-2.5 rounded-xl">
+                    <div class="text-[10px] muted-text">NET WORTH</div>
+                    <div class="font-extrabold ${netWorth < 0 ? 'text-red-500' : 'text-emeraldGrowth'}">${formatINR(netWorth)}</div>
+                </div>
+                <div class="inset-box p-2.5 rounded-xl">
+                    <div class="text-[10px] muted-text">DEBT LEFT</div>
+                    <div class="font-extrabold ${remDebt > 0 ? 'text-red-500' : 'text-emeraldGrowth'}">${remDebt > 0 ? '-' + formatINR(remDebt) : '₹0'}</div>
+                </div>
+                <div class="inset-box p-2.5 rounded-xl">
+                    <div class="text-[10px] muted-text">INVESTMENTS</div>
+                    <div class="font-extrabold text-emeraldGrowth">${formatINR(totInv)}</div>
+                </div>
+                <div class="inset-box p-2.5 rounded-xl">
+                    <div class="text-[10px] muted-text">INCOME / EXP</div>
+                    <div class="font-extrabold text-cyberBlue">${formatINR(totInc)} / <span class="text-red-500">${formatINR(totExp)}</span></div>
+                </div>
+            `;
+        }
+
         function toggleFloatingBot() {
-            document.getElementById('floatingBotModal').classList.toggle('hidden');
-            renderBotChat();
+            const modal = document.getElementById('floatingBotModal');
+            modal.classList.toggle('hidden');
+            if (!modal.classList.contains('hidden')) {
+                renderBotArrangedDetails();
+                renderBotChat();
+            }
         }
 
         function openZoomModal(type) {
@@ -782,7 +999,7 @@
                         <strong class="text-posterYellow">📅 ${ev.date}</strong>
                         <div class="text-white mt-0.5">${ev.title}</div>
                     </div>
-                    <button onclick="deleteCalendarEvent(${idx})" class="text-slate-500 hover:text-crimsonRed font-bold text-sm">✕</button>
+                    <button onclick="deleteCalendarEvent(${idx})" class="text-slate-500 hover:text-red-500 font-bold text-sm">✕</button>
                 `;
                 list.appendChild(row);
             });
@@ -797,6 +1014,7 @@
             state.radarRides.push({ customer, amount, category });
             saveState();
             renderRadarRides();
+            renderTransactions();
             showToast('RIDE ADDED', `${customer} - ${formatINR(amount)}`);
             document.getElementById('radarCustName').value = '';
             document.getElementById('radarAmount').value = '';
@@ -806,6 +1024,7 @@
             state.radarRides.splice(idx, 1);
             saveState();
             renderRadarRides();
+            renderTransactions();
             showToast('REMOVED', 'Customer ride deleted.');
         }
 
@@ -823,11 +1042,58 @@
                         <div class="text-white font-bold">${r.customer}</div>
                         <div class="text-emeraldGrowth font-mono font-extrabold">+${formatINR(r.amount)}</div>
                     </div>
-                    <button onclick="deleteRadarRide(${idx})" class="text-slate-500 hover:text-crimsonRed font-bold text-sm">✕</button>
+                    <button onclick="deleteRadarRide(${idx})" class="text-slate-500 hover:text-red-500 font-bold text-sm">✕</button>
                 `;
                 list.appendChild(card);
             });
             document.getElementById('monthlyRadarTotal').innerText = formatINR(monthlyTotal);
+        }
+
+        function addAlgoStrategy() {
+            const strategy = document.getElementById('algoStrategyName').value.trim();
+            const amount = Number(document.getElementById('algoCapitalAmt').value);
+            const income = Number(document.getElementById('algoGeneratedIncome').value);
+            if (!strategy || !amount) return showToast('Error', 'Enter strategy name and amount.');
+
+            state.algoStrategies.push({ strategy, amount, income: income || 0 });
+            saveState();
+            renderAlgoStrategies();
+            renderTransactions();
+            showToast('ALGO ADDED', strategy);
+            document.getElementById('algoStrategyName').value = '';
+            document.getElementById('algoCapitalAmt').value = '';
+            document.getElementById('algoGeneratedIncome').value = '';
+        }
+
+        function deleteAlgoStrategy(idx) {
+            state.algoStrategies.splice(idx, 1);
+            saveState();
+            renderAlgoStrategies();
+            renderTransactions();
+            showToast('REMOVED', 'Strategy deleted.');
+        }
+
+        function renderAlgoStrategies() {
+            const list = document.getElementById('algoStrategiesList');
+            list.innerHTML = '';
+            let totalCap = 0, totalInc = 0;
+            state.algoStrategies.forEach((a, idx) => {
+                totalCap += Number(a.amount || 0);
+                totalInc += Number(a.income || 0);
+                const card = document.createElement('div');
+                card.className = 'inset-box p-3 rounded-xl flex justify-between items-center border-l-4 border-l-emeraldGrowth';
+                card.innerHTML = `
+                    <div>
+                        <div class="text-white font-bold">${a.strategy}</div>
+                        <div class="text-[11px] muted-text mt-0.5">Amount: <strong class="text-cyberBlue">${formatINR(a.amount)}</strong></div>
+                        <div class="text-[11px] text-emeraldGrowth font-extrabold mt-0.5">Income Generated: +${formatINR(a.income)}</div>
+                    </div>
+                    <button onclick="deleteAlgoStrategy(${idx})" class="text-slate-500 hover:text-red-500 font-bold text-sm">✕</button>
+                `;
+                list.appendChild(card);
+            });
+            document.getElementById('algoTotalCapital').innerText = formatINR(totalCap);
+            document.getElementById('algoTotalIncome').innerText = formatINR(totalInc);
         }
 
         function addCustomStory() {
@@ -867,7 +1133,7 @@
                 html += `
                     <div class="flex justify-between items-center inset-box p-2 rounded-lg">
                         <span class="text-amber-400"><strong>⚡ [Milestone]: ${s.title}</strong> — ${s.desc}</span>
-                        <button onclick="deleteCustomStory('${s.id}')" class="text-slate-500 hover:text-crimsonRed text-xs font-bold">✕ DELETE</button>
+                        <button onclick="deleteCustomStory('${s.id}')" class="text-slate-500 hover:text-red-500 text-xs font-bold">✕ DELETE</button>
                     </div>
                 `;
             });
@@ -883,11 +1149,11 @@
                 const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
                 c.setAttribute('cx', node.cx);
                 c.setAttribute('cy', node.cy);
-                c.setAttribute('r', isLast ? '9' : (active ? '8' : '5'));
+                c.setAttribute('r', isLast ? '8.5' : (active ? '7.5' : '5'));
                 c.setAttribute('fill', isLast ? '#facc15' : (active ? '#ffffff' : node.color));
                 c.setAttribute('stroke', isLast ? '#3b82f6' : (active ? '#3b82f6' : '#090a0f'));
                 c.setAttribute('stroke-width', isLast ? '3' : '2');
-                if (isLast) c.setAttribute('class', 'live-blinking-dot');
+                if (isLast) c.setAttribute('class', 'stable-current-dot');
                 c.style.cursor = 'pointer';
                 c.onclick = () => {
                     state.selectedNodeId = node.id;
@@ -900,7 +1166,7 @@
             document.getElementById('lifeInsightCard').innerHTML = `
                 <div class="flex items-center justify-between mb-1">
                     <span class="font-mono text-[11px] font-bold text-amber-500">Period: ${activeNode.year}</span>
-                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-posterYellow/20 text-amber-500 font-bold">CURRENT STAGE (LIVE)</span>
+                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-posterYellow/20 text-amber-500 font-bold">CURRENT STANDING POINT</span>
                 </div>
                 <div class="font-heading text-base uppercase tracking-wide">${activeNode.title}</div>
                 <p class="text-xs muted-text mt-1">${activeNode.desc}</p>
@@ -923,7 +1189,7 @@
             const y2025 = 215, yNow = mapNwToY(netWorth);
             const points = `140,${y2025} 320,${yNow}`;
             const areaPoints = `140,218 ${points} 320,218`;
-            const nwColor = netWorth >= 0 ? '#22c55e' : '#ef4444';
+            const nwColor = netWorth < 0 ? '#ef4444' : '#22c55e';
 
             layer.innerHTML = `
                 <defs>
@@ -935,8 +1201,8 @@
                 <polygon points="${areaPoints}" fill="url(#wealthGrad)"/>
                 <polyline points="${points}" fill="none" stroke="${nwColor}" stroke-width="3.5" stroke-linecap="round"/>
                 <circle cx="140" cy="${y2025}" r="5.5" fill="#ef4444"/>
-                <circle cx="320" cy="${yNow}" r="9.5" fill="#facc15" stroke="#3b82f6" stroke-width="3" class="live-blinking-dot"/>
-                <text x="320" y="${yNow - 14}" fill="${nwColor}" font-family="JetBrains Mono" font-size="10.5" font-weight="bold" text-anchor="middle">${formatINR(netWorth)} (Live)</text>
+                <circle cx="320" cy="${yNow}" r="8.5" fill="${nwColor}" stroke="#facc15" stroke-width="2.5" class="stable-current-dot"/>
+                <text x="320" y="${yNow - 14}" fill="${nwColor}" font-family="JetBrains Mono" font-size="10.5" font-weight="bold" text-anchor="middle">${formatINR(netWorth)} (Standing Here)</text>
             `;
         }
 
@@ -967,7 +1233,7 @@
                 if (tx.type === 'income') totInc += tx.amount;
                 else if (tx.type === 'expense') totExp += tx.amount;
                 else if (tx.type === 'investment') totInv += tx.amount;
-                const badgeColor = tx.type === 'income' ? 'text-emeraldGrowth' : tx.type === 'expense' ? 'text-crimsonRed' : 'text-posterYellow';
+                const badgeColor = tx.type === 'income' ? 'text-emeraldGrowth' : tx.type === 'expense' ? 'text-red-500' : 'text-posterYellow';
                 const sign = tx.type === 'income' ? '+' : tx.type === 'expense' ? '-' : '📈';
                 const row = document.createElement('div');
                 row.className = 'inset-box p-2 rounded-lg flex justify-between items-center';
@@ -975,20 +1241,24 @@
                     <span>${tx.type === 'income' ? '🟢' : tx.type === 'expense' ? '🔴' : '📊'} ${tx.name}</span>
                     <div class="flex items-center gap-2">
                         <strong class="${badgeColor}">${sign}${formatINR(tx.amount)}</strong>
-                        <button onclick="deleteTransaction(${idx})" class="text-slate-500 hover:text-crimsonRed">✕</button>
+                        <button onclick="deleteTransaction(${idx})" class="text-slate-500 hover:text-red-500">✕</button>
                     </div>
                 `;
                 list.appendChild(row);
             });
-            let radarSum = 0;
-            state.radarRides.forEach(r => { radarSum += r.amount; });
-            totInc += radarSum;
+            state.radarRides.forEach(r => { totInc += Number(r.amount || 0); });
+            state.algoStrategies.forEach(a => { totInc += Number(a.income || 0); });
 
             const surplus = totInc - (totExp + totInv);
             document.getElementById('calcTotalIncome').innerText = formatINR(totInc);
             document.getElementById('calcTotalExpense').innerText = formatINR(totExp);
             document.getElementById('calcTotalInvestment').innerText = formatINR(totInv);
             document.getElementById('calcNetSurplus').innerText = formatINR(surplus);
+
+            document.getElementById('portOverallInv').innerText = formatINR(totInv);
+            document.getElementById('portOverallExp').innerText = formatINR(totExp);
+            document.getElementById('portOverallInc').innerText = formatINR(totInc);
+
             state.totalInvestments = totInv;
             recalculateMetrics();
         }
@@ -1015,32 +1285,51 @@
         function renderDebtGrid() {
             const grid = document.getElementById('avalancheDebtGrid');
             grid.innerHTML = '';
+
+            let totalInitial = 0, totalRem = 0, totalCleared = 0;
+            state.debts.forEach(d => {
+                totalInitial += Number(d.total || 0);
+                totalRem += Number(d.remaining || 0);
+                totalCleared += Math.max(0, Number(d.total || 0) - Number(d.remaining || 0));
+            });
+
+            document.getElementById('overallRemainingDebt').innerText = totalRem > 0 ? '-' + formatINR(totalRem) : '₹0';
+            document.getElementById('overallRemainingDebt').className = totalRem > 0 ? 'text-red-500 text-sm font-extrabold' : 'text-emeraldGrowth text-sm font-extrabold';
+            document.getElementById('overallClearedDebt').innerText = formatINR(totalCleared);
+            document.getElementById('overallInitialDebt').innerText = formatINR(totalInitial);
+            document.getElementById('portOverallDebt').innerText = totalRem > 0 ? '-' + formatINR(totalRem) : '₹0';
+            document.getElementById('portOverallDebt').className = totalRem > 0 ? 'text-base font-extrabold text-red-500 mt-1' : 'text-base font-extrabold text-emeraldGrowth mt-1';
+
             state.debts.forEach((d, idx) => {
                 const paid = Math.max(0, d.total - d.remaining);
                 const pct = d.total > 0 ? Math.min(100, Math.round((paid / d.total) * 100)) : 100;
                 const done = d.remaining <= 0;
+                const amountColor = done ? 'text-emeraldGrowth' : 'text-red-500';
+                const barColor = done ? 'bg-emeraldGrowth' : 'bg-red-500';
+                const displayAmt = done ? '₹0' : '-' + formatINR(d.remaining);
+
                 const card = document.createElement('div');
-                card.className = `inset-box rounded-xl p-3.5 flex flex-col justify-between ${done ? 'border-emeraldGrowth' : ''}`;
+                card.className = `inset-box rounded-xl p-3.5 flex flex-col justify-between ${done ? 'border-emeraldGrowth' : 'border-red-500/50'}`;
                 card.innerHTML = `
                     <div>
                         <div class="flex items-center justify-between gap-1 mb-1">
-                            <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded ${done ? 'bg-emeraldGrowth text-matteBlack' : 'bg-crimsonRed/20 text-crimsonRed'}">${done ? '✅ CLEARED' : d.tag}</span>
-                            <button onclick="deleteDebt(${idx})" class="text-slate-500 hover:text-crimsonRed text-xs">✕</button>
+                            <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded ${done ? 'bg-emeraldGrowth text-matteBlack' : 'bg-red-500/20 text-red-500'}">${done ? '✅ CLEARED' : d.tag}</span>
+                            <button onclick="deleteDebt(${idx})" class="text-slate-500 hover:text-red-500 text-xs">✕</button>
                         </div>
                         <div class="font-heading text-base uppercase tracking-wide ${done ? 'line-through muted-text' : ''}">${idx + 1}. ${d.lender}</div>
                         <div class="flex justify-between items-baseline mt-2 mb-1">
                             <span class="text-[10px] font-mono muted-text">${pct}%</span>
-                            <span class="font-mono text-sm font-extrabold ${done ? 'text-emeraldGrowth' : 'text-crimsonRed'}">${formatINR(d.remaining)}</span>
+                            <span class="font-mono text-sm font-extrabold ${amountColor}">${displayAmt}</span>
                         </div>
                         <div class="w-full h-2 bg-slate-900 rounded-full overflow-hidden mb-3">
-                            <div class="h-full ${done ? 'bg-emeraldGrowth' : 'bg-crimsonRed'} transition-all duration-300" style="width: ${pct}%"></div>
+                            <div class="h-full ${barColor} transition-all duration-300" style="width: ${pct}%"></div>
                         </div>
                     </div>
                     <div class="flex gap-1.5">
                         ${!done ? `
                             <button onclick="payDebtChunk(${idx}, 10000)" class="flex-1 bg-slate-900 hover:bg-posterYellow hover:text-matteBlack text-posterYellow border border-posterYellow/40 py-1 rounded-lg font-mono text-[11px] font-bold">-₹10K</button>
-                            <button onclick="payDebtChunk(${idx}, 50000)" class="flex-1 bg-crimsonRed hover:bg-red-500 text-white py-1 rounded-lg font-mono text-[11px] font-bold">-₹50K</button>
-                        ` : `<div class="w-full text-center font-poster text-xs text-emeraldGrowth">100% DESTROYED</div>`}
+                            <button onclick="payDebtChunk(${idx}, 50000)" class="flex-1 bg-red-600 hover:bg-red-500 text-white py-1 rounded-lg font-mono text-[11px] font-bold">-₹50K</button>
+                        ` : `<div class="w-full text-center font-poster text-xs text-emeraldGrowth">100% CLEARED</div>`}
                     </div>
                 `;
                 grid.appendChild(card);
@@ -1054,7 +1343,7 @@
             debt.remaining -= actual;
             saveState();
             renderDebtGrid();
-            showToast('💥 DEBT DESTROYED!', `Paid ${formatINR(actual)} toward ${debt.lender}!`);
+            showToast('💥 DEBT REDUCED!', `Paid ${formatINR(actual)} toward ${debt.lender}!`);
         }
 
         function addBusinessBrand() {
@@ -1088,13 +1377,13 @@
             document.getElementById('skillAiPredictionText').innerText = predText;
 
             state.businesses.forEach((b, idx) => {
-                const color = b.status === 'active' ? 'text-cyberBlue border-cyberBlue' : b.status === 'success' ? 'text-posterYellow border-posterYellow' : 'text-crimsonRed border-crimsonRed';
+                const color = b.status === 'active' ? 'text-cyberBlue border-cyberBlue' : b.status === 'success' ? 'text-posterYellow border-posterYellow' : 'text-red-500 border-red-500';
                 const card = document.createElement('div');
                 card.className = `inset-box p-3 rounded-xl flex flex-col justify-between border-l-4 ${color}`;
                 card.innerHTML = `
                     <div class="flex justify-between items-center mb-1">
                         <strong class="text-white">${b.name}</strong>
-                        <button onclick="deleteBusiness(${idx})" class="text-slate-500 hover:text-crimsonRed">✕</button>
+                        <button onclick="deleteBusiness(${idx})" class="text-slate-500 hover:text-red-500">✕</button>
                     </div>
                     <span class="text-[10px] uppercase font-bold text-slate-400">Status: ${b.status}</span>
                     <p class="text-[11px] muted-text mt-1">${b.note}</p>
@@ -1136,7 +1425,7 @@
                         <input type="checkbox" ${t.done ? 'checked' : ''} onchange="toggleTask(${idx})" class="cursor-pointer">
                         <span class="${t.done ? 'line-through muted-text' : 'text-white'}">${t.task}</span>
                     </div>
-                    <button onclick="deleteTask(${idx})" class="text-slate-500 hover:text-crimsonRed text-xs">✕</button>
+                    <button onclick="deleteTask(${idx})" class="text-slate-500 hover:text-red-500 text-xs">✕</button>
                 `;
                 list.appendChild(row);
             });
@@ -1163,11 +1452,11 @@
             state.chatHistory.push({ sender: 'user', text: q });
             input.value = '';
 
-            let botReply = 'வணக்கம்! உங்கள் ₹1 கோடி இலக்கை அடைய Goobro வருமானத்தை முதலீட்டிலும், கடனை அடைப்பதிலும் சரியாகப் பயன்படுத்துங்கள்.';
+            let botReply = 'வணக்கம்! உங்கள் டேட்டா பிரவுசரில் பாதுகாப்பாக அப்டேட் ஆகிறது. எதிர்காலத்தில் பப்ளிக் ஆப்பாக மாற்றும்போது தனியாக Login & Backend இணைத்துக் கொள்ளலாம்.';
             if (q.includes('கடன்') || q.includes('debt')) {
-                botReply = 'முதலில் அதிக வட்டி உள்ள நகைக்கடன் மற்றும் தனிநபர் கடன்களை அவலஞ்ச் முறையில் அடைக்கப் பாருங்கள்!';
-            } else if (q.includes('பிசினஸ்') || q.includes('business')) {
-                botReply = 'Goobro லாபத்தை வைத்து அடுத்ததாக உங்கள் Money Earth Global பிராண்டை ஸ்கேல் செய்யலாம்!';
+                botReply = 'கடன் முழுமையாக முடியும் வரை சிவப்பு நிறத்தில் இருக்கும். அடைத்த பிறகு பச்சை நிறமாக மாறும்!';
+            } else if (q.includes('ஆல்கோ') || q.includes('algo')) {
+                botReply = 'ஆல்கோ டிரேடிங் ஸ்ட்ராட்டஜியின் மூலம் வரும் வருமானத்தை கடன் குறைப்பு மற்றும் முதலீட்டிற்குப் பகிர்ந்து வழங்குங்கள்.';
             }
 
             state.chatHistory.push({ sender: 'ai', text: botReply });
@@ -1184,10 +1473,17 @@
             const remDebt = state.debts.reduce((s, d) => s + Number(d.remaining || 0), 0);
             const netWorth = totInv - remDebt;
 
-            document.getElementById('topDebtStat').innerText = formatINR(remDebt);
+            const topDebtEl = document.getElementById('topDebtStat');
+            topDebtEl.innerText = remDebt > 0 ? '-' + formatINR(remDebt) : '₹0';
+            topDebtEl.parentElement.className = remDebt > 0
+                ? 'px-2.5 py-1 rounded-lg bg-red-500/15 text-red-500 border border-red-500/30 font-bold'
+                : 'px-2.5 py-1 rounded-lg bg-emeraldGrowth/15 text-emeraldGrowth border border-emeraldGrowth/30 font-bold';
+
             document.getElementById('topInvStat').innerText = formatINR(totInv);
-            document.getElementById('netWorthDisplay').innerText = formatINR(netWorth);
-            document.getElementById('netWorthDisplay').className = netWorth >= 0 ? 'text-emeraldGrowth font-extrabold' : 'text-crimsonRed font-extrabold';
+
+            const nwEl = document.getElementById('netWorthDisplay');
+            nwEl.innerText = formatINR(netWorth);
+            nwEl.className = netWorth < 0 ? 'text-red-500 font-extrabold' : 'text-emeraldGrowth font-extrabold';
 
             const clearedDebts = state.debts.filter(d => d.remaining <= 0).length;
             const finLifePct = Math.min(100, Math.round((clearedDebts / Math.max(1, state.debts.length)) * 50 + (totInv / 1000000) * 50));
@@ -1207,16 +1503,22 @@
             document.getElementById('skillSystemProgressBar').style.width = `${skillPct}%`;
 
             renderWealthGraph(remDebt, totInv);
+            if (!document.getElementById('floatingBotModal').classList.contains('hidden')) {
+                renderBotArrangedDetails();
+            }
         }
 
         function initDashboard() {
             applyTheme();
             setLanguage(state.lang || 'en');
+            updateLiveClock();
+            setInterval(updateLiveClock, 1000);
             document.getElementById('calDate').value = new Date().toISOString().split('T')[0];
             document.getElementById('userWhatsApp').value = state.whatsapp || '';
             document.getElementById('userEmail').value = state.email || '';
             renderCalendarEvents();
             renderRadarRides();
+            renderAlgoStrategies();
             renderStory();
             renderPersonalNodes();
             renderDebtGrid();
