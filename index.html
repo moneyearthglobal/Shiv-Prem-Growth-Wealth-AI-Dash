@@ -91,16 +91,16 @@
         </div>
     </div>
 
-    <!-- Floating Fun Expressive Blue Robot Assistant -->
+    <!-- Floating Clean AI Bot Assistant -->
     <div class="fixed bottom-6 right-6 z-40">
         <button onclick="toggleFloatingBot()" class="w-16 h-16 rounded-full bg-cyberBlue border-3 border-posterYellow shadow-[5px_5px_0px_#000] flex items-center justify-center hover:scale-110 transition fun-robot-avatar" title="Shiv Prem AI Coach">
-            <svg viewBox="0 0 32 32" class="w-10 h-10 fill-white" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="16" cy="16" r="14" fill="#2563eb" stroke="#facc15" stroke-width="2"/>
-                <circle cx="11" cy="13" r="2.5" fill="#facc15"/>
-                <circle cx="21" cy="13" r="2.5" fill="#facc15"/>
-                <path d="M 11 20 Q 16 24 21 20" stroke="#facc15" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-                <line x1="16" y1="2" x2="16" y2="6" stroke="#facc15" stroke-width="2.5" stroke-linecap="round"/>
-                <circle cx="16" cy="2" r="1.5" fill="#facc15"/>
+            <svg viewBox="0 0 36 36" class="w-9 h-9" xmlns="http://www.w3.org/2000/svg">
+                <rect x="7" y="9" width="22" height="18" rx="6" fill="#0f172a" stroke="#facc15" stroke-width="2"/>
+                <line x1="18" y1="4" x2="18" y2="9" stroke="#facc15" stroke-width="2" stroke-linecap="round"/>
+                <circle cx="18" cy="3.5" r="2" fill="#facc15"/>
+                <circle cx="13.5" cy="17" r="2.3" fill="#38bdf8"/>
+                <circle cx="22.5" cy="17" r="2.3" fill="#38bdf8"/>
+                <path d="M 13.5 22.5 Q 18 25.5 22.5 22.5" stroke="#facc15" stroke-width="2" stroke-linecap="round" fill="none"/>
             </svg>
         </button>
     </div>
@@ -159,7 +159,7 @@
             </div>
         </nav>
 
-        <!-- 2. PROFILE HERO BANNER -->
+        <!-- 2. PROFILE HERO BANNER + COMPACT PROGRESS & TARGET BOX -->
         <header class="comic-card rounded-2xl p-4 sm:p-6 border-cyberBlue relative overflow-hidden">
             <div class="flex flex-col lg:flex-row items-center lg:items-start justify-between gap-6">
                 <div class="flex flex-col sm:flex-row items-center gap-5">
@@ -188,104 +188,57 @@
                     </div>
                 </div>
 
-                <!-- Mini Progress & Skill Learning Tracker -->
-                <div class="w-full lg:w-80 inset-box rounded-2xl p-4 flex flex-col justify-between border-cyberBlue">
+                <!-- Small Box: Progress Percentage & Life/Financial Target -->
+                <div class="w-full lg:w-72 inset-box rounded-2xl p-3.5 flex flex-col justify-between border-cyberBlue font-mono">
                     <div class="flex items-center justify-between mb-1">
-                        <span class="font-heading text-xs uppercase tracking-wider text-cyberBlue" data-i18n="skillProgTitle">SKILL & SYSTEM PROGRESS</span>
-                        <span id="overallProgressPct" class="font-mono text-sm font-extrabold text-emeraldGrowth">15%</span>
+                        <span class="text-[11px] font-bold uppercase text-cyberBlue" data-i18n="heroProgPctLabel">PROGRESS %</span>
+                        <span id="overallProgressPct" class="text-sm font-extrabold text-emeraldGrowth">15%</span>
                     </div>
-                    <div class="w-full h-3 bg-slate-900 rounded-lg border border-slate-700 p-0.5 overflow-hidden mb-2">
+                    <div class="w-full h-2.5 bg-slate-900 rounded-lg border border-slate-700 p-0.5 overflow-hidden mb-2">
                         <div id="overallProgressBar" class="h-full rounded bg-gradient-to-r from-cyberBlue via-posterYellow to-emeraldGrowth transition-all duration-500" style="width: 15%;"></div>
                     </div>
-                    <div class="flex gap-1.5 mb-2">
-                        <input type="text" id="newSkillInput" placeholder="New Skill Learned..." class="inset-box rounded-lg px-2 py-1 text-[11px] font-mono flex-1">
-                        <button onclick="addLearnedSkill()" class="bg-cyberBlue text-white text-[11px] font-bold px-2.5 py-1 rounded-lg">+ SKILL</button>
-                    </div>
-                    <div class="text-[11px] font-mono muted-text" id="learnedSkillsDisplay">
-                        🎯 Learned: System Architecture, Driving Ops.
+                    <div class="text-[11px] text-slate-200 leading-snug" data-i18n="heroTargetBox">
+                        🎯 <strong>Life & Financial Target:</strong> Clear ₹27L debt & build ₹1 Cr wealth with Goobro & Shiv Foundation.
                     </div>
                 </div>
             </div>
         </header>
 
-        <!-- 3. DUAL SPLIT GRAPHS (WITH LIVE BLINKING CURRENT DOT) -->
-        <section class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            <!-- Left Graph -->
-            <div class="lg:col-span-6 comic-card rounded-2xl p-4 sm:p-5 border-posterYellow flex flex-col justify-between">
+        <!-- 3. FRONT DASHBOARD: LARGE WEALTH GROWTH & NET WORTH GRAPH -->
+        <section class="grid grid-cols-1 gap-6">
+            <div class="comic-card rounded-2xl p-4 sm:p-6 border-cyberBlue flex flex-col justify-between">
                 <div>
-                    <div class="flex items-center justify-between gap-2 mb-2">
+                    <div class="flex items-center justify-between gap-2 mb-3">
                         <div>
-                            <span class="bg-posterYellow text-matteBlack font-poster text-[11px] px-2.5 py-0.5 rounded uppercase" data-i18n="leftGraphTag">CHRONOLOGICAL GROWTH & LIVE STAGE</span>
-                            <h2 class="poster-title text-xl sm:text-2xl mt-1" data-i18n="leftGraphTitle">PERSONAL EVOLUTION & LIVE STAGE</h2>
+                            <span class="bg-cyberBlue text-white font-poster text-xs px-3 py-0.5 rounded uppercase" data-i18n="rightGraphTag">FINANCIAL WEALTH & LIVE STAGE</span>
+                            <h2 class="poster-title text-2xl sm:text-3xl mt-1" data-i18n="rightGraphTitle">WEALTH GROWTH & NET WORTH</h2>
                         </div>
-                        <button onclick="openZoomModal('personal')" class="px-2.5 py-1 rounded-lg bg-posterYellow text-matteBlack font-bold text-xs shadow" data-i18n="zoomBtn">🔍 Zoom</button>
+                        <button onclick="openZoomModal('wealth')" class="px-3 py-1.5 rounded-lg bg-cyberBlue text-white font-bold text-xs shadow" data-i18n="zoomBtn">🔍 Zoom</button>
                     </div>
-                    <div class="bg-matteBlack border-2 border-slate-800 rounded-xl p-2.5 mb-3 cursor-pointer" onclick="openZoomModal('personal')">
-                        <svg id="personalGrowthSvg" viewBox="0 0 540 235" class="w-full h-auto select-none" xmlns="http://www.w3.org/2000/svg">
+                    <div class="bg-matteBlack border-2 border-slate-800 rounded-xl p-3 mb-3 cursor-pointer" onclick="openZoomModal('wealth')">
+                        <svg id="wealthGrowthSvg" viewBox="0 0 900 260" class="w-full h-auto select-none" xmlns="http://www.w3.org/2000/svg">
                             <g stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3">
-                                <line x1="35" y1="195" x2="520" y2="195"/><line x1="35" y1="145" x2="520" y2="145"/><line x1="35" y1="95" x2="520" y2="95"/><line x1="35" y1="45" x2="520" y2="45"/>
+                                <line x1="70" y1="35" x2="870" y2="35"/><line x1="70" y1="80" x2="870" y2="80"/><line x1="70" y1="125" x2="870" y2="125"/><line x1="70" y1="168" x2="870" y2="168"/><line x1="70" y1="215" x2="870" y2="215"/>
                             </g>
-                            <line x1="35" y1="110" x2="520" y2="110" stroke="#facc15" stroke-width="1.3" stroke-dasharray="5 4"/>
-                            <text x="42" y="104" fill="#facc15" font-family="Oswald" font-size="10">BREAKOUT LINE (SYSTEM BUILT)</text>
-                            <path d="M 48,160 L 95,140 L 142,120 L 188,165 L 235,100 L 282,205 L 328,115 L 372,210 L 418,85 L 418,225 L 48,225 Z" fill="rgba(59,130,246,0.18)"/>
-                            <path d="M 48,160 L 95,140 L 142,120 L 188,165 L 235,100 L 282,205 L 328,115 L 372,210 L 418,85" fill="none" stroke="#3b82f6" stroke-width="3.2" stroke-linecap="round"/>
-                            <g id="personalNodesGroup"></g>
-                            <g fill="#94a3b8" font-family="JetBrains Mono" font-size="9" text-anchor="middle">
-                                <text x="48" y="222">1993</text><text x="95" y="222">2010</text><text x="142" y="222">2015</text><text x="188" y="222">2017</text><text x="235" y="222">2020</text><text x="282" y="222" fill="#ef4444">Aug 2022</text><text x="328" y="222">2023</text><text x="372" y="222" fill="#ef4444">Nov 2024</text><text x="418" y="222" fill="#facc15" font-weight="bold">2026 (Live)</text>
+                            <g fill="#94a3b8" font-family="JetBrains Mono" font-size="10.5" text-anchor="end">
+                                <text x="62" y="39" fill="#22c55e">+₹1 Cr</text><text x="62" y="172" fill="#facc15" font-weight="bold">₹0</text><text x="62" y="219" fill="#ef4444">-₹27L</text>
                             </g>
-                        </svg>
-                    </div>
-                </div>
-                <div id="lifeInsightCard" class="inset-box rounded-xl p-3.5 border-l-4 border-l-posterYellow text-xs font-mono"></div>
-            </div>
-
-            <!-- Right Graph -->
-            <div class="lg:col-span-6 comic-card rounded-2xl p-4 sm:p-5 border-cyberBlue flex flex-col justify-between">
-                <div>
-                    <div class="flex items-center justify-between gap-2 mb-2">
-                        <div>
-                            <span class="bg-cyberBlue text-white font-poster text-[11px] px-2.5 py-0.5 rounded uppercase" data-i18n="rightGraphTag">FINANCIAL WEALTH & LIVE STAGE</span>
-                            <h2 class="poster-title text-xl sm:text-2xl mt-1" data-i18n="rightGraphTitle">WEALTH GROWTH & NET WORTH</h2>
-                        </div>
-                        <button onclick="openZoomModal('wealth')" class="px-2.5 py-1 rounded-lg bg-cyberBlue text-white font-bold text-xs shadow" data-i18n="zoomBtn">🔍 Zoom</button>
-                    </div>
-                    <div class="bg-matteBlack border-2 border-slate-800 rounded-xl p-2.5 mb-3 cursor-pointer" onclick="openZoomModal('wealth')">
-                        <svg id="wealthGrowthSvg" viewBox="0 0 540 235" class="w-full h-auto select-none" xmlns="http://www.w3.org/2000/svg">
-                            <g stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3">
-                                <line x1="55" y1="32" x2="515" y2="32"/><line x1="55" y1="72" x2="515" y2="72"/><line x1="55" y1="112" x2="515" y2="112"/><line x1="55" y1="150" x2="515" y2="150"/><line x1="55" y1="192" x2="515" y2="192"/>
-                            </g>
-                            <g fill="#94a3b8" font-family="JetBrains Mono" font-size="9.5" text-anchor="end">
-                                <text x="48" y="36" fill="#22c55e">+₹1 Cr</text><text x="48" y="154" fill="#facc15" font-weight="bold">₹0</text><text x="48" y="196" fill="#ef4444">-₹27L</text>
-                            </g>
-                            <line x1="55" y1="150" x2="515" y2="150" stroke="#facc15" stroke-width="1.6" stroke-dasharray="6 4"/>
+                            <line x1="70" y1="168" x2="870" y2="168" stroke="#facc15" stroke-width="1.6" stroke-dasharray="6 4"/>
                             <g id="wealthSvgDynamicLayer"></g>
-                            <g fill="#94a3b8" font-family="JetBrains Mono" font-size="9.5" text-anchor="middle">
-                                <text x="75" y="212" fill="#ef4444">2025</text><text x="155" y="212" fill="#facc15" font-weight="bold">2026 (Live)</text>
+                            <g fill="#94a3b8" font-family="JetBrains Mono" font-size="10.5" text-anchor="middle">
+                                <text x="140" y="240" fill="#ef4444">2025</text><text x="320" y="240" fill="#facc15" font-weight="bold">2026 (Live)</text>
                             </g>
                         </svg>
                     </div>
                 </div>
-                <div class="grid grid-cols-2 gap-2 text-center text-xs font-mono">
-                    <div class="inset-box p-2 rounded-xl"><span data-i18n="netWorthLabel">Net Worth</span>: <strong id="netWorthDisplay" class="text-crimsonRed">-₹27,00,000</strong></div>
-                    <div class="inset-box p-2 rounded-xl border-emeraldGrowth"><span data-i18n="goalLabel">2030 Goal</span>: <strong class="text-emeraldGrowth">₹1,00,00,000</strong></div>
+                <div class="grid grid-cols-2 gap-3 text-center text-xs sm:text-sm font-mono">
+                    <div class="inset-box p-2.5 rounded-xl"><span data-i18n="netWorthLabel">Net Worth</span>: <strong id="netWorthDisplay" class="text-crimsonRed">-₹27,00,000</strong></div>
+                    <div class="inset-box p-2.5 rounded-xl border-emeraldGrowth"><span data-i18n="goalLabel">2030 Goal</span>: <strong class="text-emeraldGrowth">₹1,00,00,000</strong></div>
                 </div>
             </div>
         </section>
 
-        <!-- 4. LIFE STORY & STRUGGLE MILESTONES (WITH DELETE OPTION) -->
-        <section class="comic-card rounded-2xl p-4 sm:p-6 border-posterYellow space-y-4">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <h3 class="poster-title text-xl text-posterYellow" data-i18n="storyTitle">📖 SHIV PREM — STRUGGLE TIMELINE & MILESTONES</h3>
-                <div class="flex gap-2">
-                    <input type="text" id="newStoryTitle" placeholder="Month & Year..." class="inset-box rounded-xl px-3 py-2 text-xs font-mono w-36">
-                    <input type="text" id="newStoryDesc" placeholder="Struggle / Growth details..." class="inset-box rounded-xl px-3 py-2 text-xs font-mono w-52">
-                    <button onclick="addCustomStory()" class="bg-posterYellow hover:bg-yellow-300 text-matteBlack font-poster text-xs px-4 py-2 rounded-xl font-bold shadow" data-i18n="addStoryBtn">+ ADD</button>
-                </div>
-            </div>
-            <div id="storyContent" class="text-xs sm:text-sm muted-text space-y-2 leading-relaxed font-mono"></div>
-        </section>
-
-        <!-- 5. FINANCIAL DATABASE -->
+        <!-- 4. FINANCIAL DATABASE -->
         <section class="comic-card rounded-2xl p-4 sm:p-6 border-posterYellow space-y-4">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
@@ -315,7 +268,7 @@
             <div class="inset-box p-3 rounded-xl max-h-40 overflow-y-auto text-xs font-mono space-y-1.5" id="txList"></div>
         </section>
 
-        <!-- 6. DYNAMIC DEBT MANAGER -->
+        <!-- 5. DYNAMIC DEBT MANAGER -->
         <section class="comic-card rounded-2xl p-4 sm:p-6 border-crimsonRed space-y-4">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
@@ -334,7 +287,7 @@
             <div id="avalancheDebtGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5"></div>
         </section>
 
-        <!-- 7. STARTUP BRANDS BOARD -->
+        <!-- 6. STARTUP BRANDS BOARD -->
         <section class="comic-card rounded-2xl p-4 sm:p-6 border-cyberBlue space-y-4">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
@@ -357,7 +310,7 @@
             <div id="businessBoardGrid" class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 text-xs font-mono"></div>
         </section>
 
-        <!-- 8. SYSTEMATIC PLANNING BOARD -->
+        <!-- 7. SYSTEMATIC PLANNING BOARD -->
         <section class="comic-card rounded-2xl p-4 sm:p-6 border-posterYellow space-y-4">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
@@ -375,7 +328,7 @@
             <div id="planningTaskList" class="space-y-2 text-xs font-mono"></div>
         </section>
 
-        <!-- 9. GOOGLE CALENDAR & WHATSAPP / EMAIL NOTIFICATION SYNC (AT BOTTOM) -->
+        <!-- 8. GOOGLE CALENDAR & WHATSAPP / EMAIL NOTIFICATION SYNC -->
         <section class="comic-card rounded-2xl p-4 sm:p-6 border-posterYellow space-y-4">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
@@ -399,7 +352,7 @@
             <div id="calendarEventsList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs font-mono"></div>
         </section>
 
-        <!-- 10. GOOBRO RIDE CALENDAR & MONTHLY INCOME RADAR (AT BOTTOM) -->
+        <!-- 9. GOOBRO RIDE CALENDAR & MONTHLY INCOME RADAR -->
         <section class="comic-card rounded-2xl p-4 sm:p-6 border-cyberBlue space-y-4">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
@@ -416,12 +369,91 @@
                     <button onclick="addRadarRide()" class="bg-cyberBlue hover:bg-blue-600 text-white font-poster text-xs px-4 py-2 rounded-xl font-bold shadow" data-i18n="addRideBtn">+ ADD RIDE</button>
                 </div>
             </div>
-            <!-- Monthly Income Overview Box -->
             <div class="inset-box p-3.5 rounded-xl border-emeraldGrowth flex items-center justify-between font-mono text-xs">
                 <span>📅 <strong class="text-white" data-i18n="monthlyRadarSum">Monthly Ride & Goobro Total Income:</strong></span>
                 <span id="monthlyRadarTotal" class="text-emeraldGrowth text-sm font-extrabold">₹0</span>
             </div>
             <div id="radarRidesList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs font-mono"></div>
+        </section>
+
+        <!-- 10. END SECTION: PERSONAL EVOLUTION, TIMELINE MILESTONES & PROGRESS TRACKERS -->
+        <section class="comic-card rounded-2xl p-4 sm:p-6 border-cyberBlue space-y-5">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                    <span class="bg-posterYellow text-matteBlack font-poster text-xs px-3 py-0.5 rounded uppercase" data-i18n="leftGraphTag">CHRONOLOGICAL GROWTH & LIVE STAGE</span>
+                    <h3 class="poster-title text-xl sm:text-2xl mt-1" data-i18n="leftGraphTitle">PERSONAL EVOLUTION, TIMELINE & PROGRESS</h3>
+                </div>
+                <button onclick="openZoomModal('personal')" class="px-3 py-1.5 rounded-lg bg-posterYellow text-matteBlack font-bold text-xs shadow" data-i18n="zoomBtn">🔍 Zoom</button>
+            </div>
+
+            <div class="bg-matteBlack border-2 border-slate-800 rounded-xl p-3 cursor-pointer" onclick="openZoomModal('personal')">
+                <svg id="personalGrowthSvg" viewBox="0 0 540 235" class="w-full h-auto select-none" xmlns="http://www.w3.org/2000/svg">
+                    <g stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3">
+                        <line x1="35" y1="195" x2="520" y2="195"/><line x1="35" y1="145" x2="520" y2="145"/><line x1="35" y1="95" x2="520" y2="95"/><line x1="35" y1="45" x2="520" y2="45"/>
+                    </g>
+                    <line x1="35" y1="110" x2="520" y2="110" stroke="#facc15" stroke-width="1.3" stroke-dasharray="5 4"/>
+                    <text x="42" y="104" fill="#facc15" font-family="Oswald" font-size="10">BREAKOUT LINE (SYSTEM BUILT)</text>
+                    <path d="M 48,160 L 95,140 L 142,120 L 188,165 L 235,100 L 282,205 L 328,115 L 372,210 L 418,85 L 418,225 L 48,225 Z" fill="rgba(59,130,246,0.18)"/>
+                    <path d="M 48,160 L 95,140 L 142,120 L 188,165 L 235,100 L 282,205 L 328,115 L 372,210 L 418,85" fill="none" stroke="#3b82f6" stroke-width="3.2" stroke-linecap="round"/>
+                    <g id="personalNodesGroup"></g>
+                    <g fill="#94a3b8" font-family="JetBrains Mono" font-size="9" text-anchor="middle">
+                        <text x="48" y="222">1993</text><text x="95" y="222">2010</text><text x="142" y="222">2015</text><text x="188" y="222">2017</text><text x="235" y="222">2020</text><text x="282" y="222" fill="#ef4444">Aug 2022</text><text x="328" y="222">2023</text><text x="372" y="222" fill="#ef4444">Nov 2024</text><text x="418" y="222" fill="#facc15" font-weight="bold">2026 (Live)</text>
+                    </g>
+                </svg>
+            </div>
+
+            <div id="lifeInsightCard" class="inset-box rounded-xl p-3.5 border-l-4 border-l-posterYellow text-xs font-mono"></div>
+
+            <!-- 3 Progress Cards: Personal, Finance & Life, Skill System -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono text-xs">
+                <div class="inset-box rounded-xl p-3.5 border-l-4 border-l-cyberBlue">
+                    <div class="flex justify-between items-center mb-1.5">
+                        <strong class="text-white" data-i18n="persProgLabel">PERSONAL PROGRESS</strong>
+                        <span id="personalProgressPct" class="text-cyberBlue font-extrabold">35%</span>
+                    </div>
+                    <div class="w-full h-2.5 bg-slate-900 rounded-full overflow-hidden">
+                        <div id="personalProgressBar" class="h-full bg-cyberBlue transition-all duration-300" style="width: 35%;"></div>
+                    </div>
+                </div>
+
+                <div class="inset-box rounded-xl p-3.5 border-l-4 border-l-emeraldGrowth">
+                    <div class="flex justify-between items-center mb-1.5">
+                        <strong class="text-white" data-i18n="finLifeProgLabel">FINANCE & LIFE PROGRESS</strong>
+                        <span id="financeLifeProgressPct" class="text-emeraldGrowth font-extrabold">20%</span>
+                    </div>
+                    <div class="w-full h-2.5 bg-slate-900 rounded-full overflow-hidden">
+                        <div id="financeLifeProgressBar" class="h-full bg-emeraldGrowth transition-all duration-300" style="width: 20%;"></div>
+                    </div>
+                </div>
+
+                <div class="inset-box rounded-xl p-3.5 border-l-4 border-l-posterYellow">
+                    <div class="flex justify-between items-center mb-1.5">
+                        <strong class="text-white" data-i18n="skillSysProgLabel">SKILL SYSTEM PROGRESS</strong>
+                        <span id="skillSystemProgressPct" class="text-posterYellow font-extrabold">40%</span>
+                    </div>
+                    <div class="w-full h-2.5 bg-slate-900 rounded-full overflow-hidden mb-2">
+                        <div id="skillSystemProgressBar" class="h-full bg-posterYellow transition-all duration-300" style="width: 40%;"></div>
+                    </div>
+                    <div class="flex gap-1.5">
+                        <input type="text" id="newSkillInput" placeholder="New Skill Learned..." class="inset-box rounded-lg px-2 py-1 text-[11px] flex-1">
+                        <button onclick="addLearnedSkill()" class="bg-cyberBlue text-white text-[11px] font-bold px-2.5 py-1 rounded-lg" data-i18n="addSkillBtn">+ SKILL</button>
+                    </div>
+                    <div id="learnedSkillsDisplay" class="text-[11px] muted-text mt-1.5"></div>
+                </div>
+            </div>
+
+            <!-- Timeline Milestones Add & List -->
+            <div class="space-y-3 pt-2 border-t border-slate-800">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <h4 class="font-heading text-base uppercase text-posterYellow" data-i18n="storyTitle">📖 SHIV PREM — TIMELINE MILESTONES</h4>
+                    <div class="flex gap-2">
+                        <input type="text" id="newStoryTitle" placeholder="Month & Year..." class="inset-box rounded-xl px-3 py-1.5 text-xs font-mono w-36">
+                        <input type="text" id="newStoryDesc" placeholder="Struggle / Growth details..." class="inset-box rounded-xl px-3 py-1.5 text-xs font-mono w-52">
+                        <button onclick="addCustomStory()" class="bg-posterYellow hover:bg-yellow-300 text-matteBlack font-poster text-xs px-4 py-1.5 rounded-xl font-bold shadow" data-i18n="addStoryBtn">+ ADD</button>
+                    </div>
+                </div>
+                <div id="storyContent" class="text-xs sm:text-sm muted-text space-y-2 leading-relaxed font-mono"></div>
+            </div>
         </section>
 
     </div>
@@ -434,19 +466,22 @@
                 themeWhite: 'White',
                 heroBannerTag: '⚡ “SYSTEM > SPEED — PERSONAL GROWTH & WEALTH DASHBOARD”',
                 heroSub: 'Life Evolution, Debt Avalanche & Investment Portfolio Tracker',
-                skillProgTitle: 'SKILL & SYSTEM PROGRESS',
                 statDebt: 'Total Debt',
                 statInv: 'Investments',
-                progTitle: 'SYSTEM PROGRESS',
-                progDesc: '⚡ Focus: Clear high-interest debt & scale investments.',
+                heroProgPctLabel: 'PROGRESS %',
+                heroTargetBox: '🎯 Life & Financial Target: Clear ₹27L debt & build ₹1 Cr wealth with Goobro & Shiv Foundation.',
                 leftGraphTag: 'CHRONOLOGICAL GROWTH & LIVE STAGE',
-                leftGraphTitle: 'PERSONAL EVOLUTION & LIVE STAGE',
+                leftGraphTitle: 'PERSONAL EVOLUTION, TIMELINE & PROGRESS',
                 zoomBtn: '🔍 Zoom',
                 rightGraphTag: 'FINANCIAL WEALTH & LIVE STAGE',
                 rightGraphTitle: 'WEALTH GROWTH & NET WORTH',
                 netWorthLabel: 'Net Worth',
                 goalLabel: '2030 Goal',
-                storyTitle: '📖 SHIV PREM — STRUGGLE TIMELINE & MILESTONES',
+                persProgLabel: 'PERSONAL PROGRESS',
+                finLifeProgLabel: 'FINANCE & LIFE PROGRESS',
+                skillSysProgLabel: 'SKILL SYSTEM PROGRESS',
+                addSkillBtn: '+ SKILL',
+                storyTitle: '📖 SHIV PREM — TIMELINE MILESTONES',
                 addStoryBtn: '+ ADD',
                 finTag: 'FINANCIAL PORTFOLIO DATABASE',
                 finTitle: 'INCOME, EXPENSES & INVESTMENTS',
@@ -497,19 +532,22 @@
                 themeWhite: 'ஒயிட்',
                 heroBannerTag: '⚡ “சிஸ்டம் > வேகம் — தனிப்பட்ட வளர்ச்சி & செல்வ டேஷ்போர்டு”',
                 heroSub: 'வாழ்க்கை வளர்ச்சி, கடன் ஒழிப்பு மற்றும் முதலீட்டு போர்ட்ஃபோலியோ டிராக்கர்',
-                skillProgTitle: 'திறன் & சிஸ்டம் முன்னேற்றம்',
                 statDebt: 'மொத்த கடன்',
                 statInv: 'முதலீடுகள்',
-                progTitle: 'சிஸ்டம் முன்னேற்றம்',
-                progDesc: '⚡ கவனம்: அதிக வட்டி கடன்களை அடைத்து முதலீட்டை பெருக்குங்கள்.',
+                heroProgPctLabel: 'முன்னேற்ற சதவீதம்',
+                heroTargetBox: '🎯 வாழ்க்கை & நிதி இலக்கு: ₹27L கடனை அடைத்து Goobro & சிவ அறக்கட்டளை மூலம் ₹1 கோடி செல்வம் உருவாக்குதல்.',
                 leftGraphTag: 'காலவரிசை வளர்ச்சி & தற்போதைய நிலை',
-                leftGraphTitle: 'தனிப்பட்ட வளர்ச்சி & லைவ் ஸ்டேஜ்',
+                leftGraphTitle: 'தனிப்பட்ட வளர்ச்சி, டைம்லைன் & ப்ராக்ரஸ்',
                 zoomBtn: '🔍 பெரிதாக்கு',
                 rightGraphTag: 'செல்வ வளர்ச்சி & தற்போதைய நிலை',
                 rightGraphTitle: 'செல்வ வளர்ச்சி & நிகர சொத்து மதிப்பு',
                 netWorthLabel: 'நிகர சொத்து',
                 goalLabel: '2030 இலக்கு',
-                storyTitle: '📖 சிவ்பிரேம் — ஸ்ட்ரகிள் டைம்லைன் & மைல்கற்கள்',
+                persProgLabel: 'தனிப்பட்ட முன்னேற்றம்',
+                finLifeProgLabel: 'நிதி & வாழ்க்கை முன்னேற்றம்',
+                skillSysProgLabel: 'திறன் & சிஸ்டம் முன்னேற்றம்',
+                addSkillBtn: '+ திறன்',
+                storyTitle: '📖 சிவ்பிரேம் — டைம்லைன் மைல்கற்கள்',
                 addStoryBtn: '+ சேர்',
                 finTag: 'நிதி போர்ட்ஃபோலியோ டேட்டாபேஸ்',
                 finTitle: 'வருமானம், செலவுகள் & முதலீடுகள்',
@@ -526,7 +564,7 @@
                 debtTitle: 'கடன்களைச் சேர்த்து நிர்வகிக்கவும்',
                 addDebtBtn: '+ கடன் சேர்',
                 aiDebtSugg: 'AI கடன் ஃபீட்பேக்:',
-                aiDebtSuggDesc: 'அதிக வட்டி உள்ள கடன்களை 2026 முடிவுக்குள் முடிக்க தீவிரமாக செயல்படுங்கள்.',
+                aiDebtSuggDesc: 'அதிக வட்டி உள்ள கடன்களை விரைவாக முடிக்க தீவிரமாக செயல்படுங்கள்.',
                 bizTag: 'ஸ்டார்ட்அப் & பிசினஸ் பிராண்டுகள்',
                 bizHeader: 'பிசினஸ் தொடக்கம் & முன்னுரிமை பலகை',
                 optActive: 'செயலில் / வளர்ச்சி',
@@ -569,7 +607,7 @@
             { id: 'n9', cx: 418, cy: 85, color: '#facc15', year: '2026 (Live)', title: 'Son சிவருத்ரா & System Breakout (Current Stage)', desc: 'Son born. Active driving + Goobro + Prem Diary. Current live operational stage.' }
         ];
 
-        let state = JSON.parse(localStorage.getItem('shivPremMasterOS_v16')) || {
+        let state = JSON.parse(localStorage.getItem('shivPremMasterOS_v17')) || {
             lang: 'en',
             theme: 'dark',
             selectedNodeId: 'n9',
@@ -606,12 +644,12 @@
                 { task: 'Complete 15-20 driving days this month', done: false }
             ],
             chatHistory: [
-                { sender: 'ai', text: 'வணக்கம் சிவ்பிரேம்! 🙏 அனிமேட்டட் ஃபன் ரோபோ பாட், டைம்லைன் நீக்கும் வசதி மற்றும் லைவ் பிளிங்கிங் கிராஃப்கள் வெற்றிகரமாக அப்டேட் செய்யப்பட்டுள்ளன!' }
+                { sender: 'ai', text: 'வணக்கம் சிவ்பிரேம்! 🙏 உங்கள் முழு டேஷ்போர்டும் அப்டேட் செய்யப்பட்டுள்ளது.' }
             ]
         };
 
         function saveState() {
-            localStorage.setItem('shivPremMasterOS_v16', JSON.stringify(state));
+            localStorage.setItem('shivPremMasterOS_v17', JSON.stringify(state));
             recalculateMetrics();
         }
 
@@ -715,7 +753,6 @@
             showToast('SYNCED!', `WhatsApp (${state.whatsapp}) & Email (${state.email}) synced.`);
         }
 
-        // --- CALENDAR ---
         function addCalendarEvent() {
             const date = document.getElementById('calDate').value;
             const title = document.getElementById('calEventTitle').value.trim() + ' (Alerts sent to WhatsApp/Email)';
@@ -751,7 +788,6 @@
             });
         }
 
-        // --- RADAR RIDES & MONTHLY INCOME ---
         function addRadarRide() {
             const customer = document.getElementById('radarCustName').value.trim();
             const amount = Number(document.getElementById('radarAmount').value);
@@ -794,7 +830,6 @@
             document.getElementById('monthlyRadarTotal').innerText = formatINR(monthlyTotal);
         }
 
-        // --- STORY WITH DELETE OPTION ---
         function addCustomStory() {
             const title = document.getElementById('newStoryTitle').value.trim();
             const desc = document.getElementById('newStoryDesc').value.trim();
@@ -806,7 +841,7 @@
             saveState();
             renderStory();
             renderPersonalNodes();
-            showToast('ADDED', 'Struggle milestone added!');
+            showToast('ADDED', 'Timeline milestone added!');
             document.getElementById('newStoryTitle').value = '';
             document.getElementById('newStoryDesc').value = '';
         }
@@ -817,25 +852,21 @@
             saveState();
             renderStory();
             renderPersonalNodes();
-            showToast('REMOVED', 'Struggle milestone deleted.');
+            showToast('REMOVED', 'Timeline milestone deleted.');
         }
 
         function renderStory() {
             const container = document.getElementById('storyContent');
             let html = '';
             if (state.lang === 'ta') {
-                html = `
-                    <p><strong>1993 - 2010 (வேர்கள் & பள்ளிப் பருவம்):</strong> தென்காசியில் எளிய குடும்பத்தில் பிறப்பு.</p>
-                `;
+                html = `<p><strong>1993 - 2010 (வேர்கள் & பள்ளிப் பருவம்):</strong> தென்காசியில் எளிய குடும்பத்தில் பிறப்பு.</p>`;
             } else {
-                html = `
-                    <p><strong>1993 - 2010 (Roots & Early Adaptability):</strong> Born in Tenkasi.</p>
-                `;
+                html = `<p><strong>1993 - 2010 (Roots & Early Adaptability):</strong> Born in Tenkasi.</p>`;
             }
             state.customStories.forEach(s => {
                 html += `
                     <div class="flex justify-between items-center inset-box p-2 rounded-lg">
-                        <span class="text-amber-400"><strong>⚡ [Struggle/Growth]: ${s.title}</strong> — ${s.desc}</span>
+                        <span class="text-amber-400"><strong>⚡ [Milestone]: ${s.title}</strong> — ${s.desc}</span>
                         <button onclick="deleteCustomStory('${s.id}')" class="text-slate-500 hover:text-crimsonRed text-xs font-bold">✕ DELETE</button>
                     </div>
                 `;
@@ -883,15 +914,15 @@
             function mapNwToY(nw) {
                 if (nw >= 0) {
                     const ratio = Math.min(1, nw / 10000000);
-                    return 150 - (ratio * 118);
+                    return 168 - (ratio * 133);
                 } else {
                     const ratio = Math.min(1, Math.abs(nw) / 2700000);
-                    return 150 + (ratio * 42);
+                    return 168 + (ratio * 47);
                 }
             }
-            const y2025 = 192, yNow = mapNwToY(netWorth);
-            const points = `75,${y2025} 155,${yNow}`;
-            const areaPoints = `75,195 ${points} 155,195`;
+            const y2025 = 215, yNow = mapNwToY(netWorth);
+            const points = `140,${y2025} 320,${yNow}`;
+            const areaPoints = `140,218 ${points} 320,218`;
             const nwColor = netWorth >= 0 ? '#22c55e' : '#ef4444';
 
             layer.innerHTML = `
@@ -902,14 +933,13 @@
                     </linearGradient>
                 </defs>
                 <polygon points="${areaPoints}" fill="url(#wealthGrad)"/>
-                <polyline points="${points}" fill="none" stroke="${nwColor}" stroke-width="3.2" stroke-linecap="round"/>
-                <circle cx="75" cy="${y2025}" r="5" fill="#ef4444"/>
-                <circle cx="155" cy="${yNow}" r="9" fill="#facc15" stroke="#3b82f6" stroke-width="3" class="live-blinking-dot"/>
-                <text x="155" y="${yNow - 13}" fill="${nwColor}" font-family="JetBrains Mono" font-size="9.5" font-weight="bold" text-anchor="middle">${formatINR(netWorth)} (Live)</text>
+                <polyline points="${points}" fill="none" stroke="${nwColor}" stroke-width="3.5" stroke-linecap="round"/>
+                <circle cx="140" cy="${y2025}" r="5.5" fill="#ef4444"/>
+                <circle cx="320" cy="${yNow}" r="9.5" fill="#facc15" stroke="#3b82f6" stroke-width="3" class="live-blinking-dot"/>
+                <text x="320" y="${yNow - 14}" fill="${nwColor}" font-family="JetBrains Mono" font-size="10.5" font-weight="bold" text-anchor="middle">${formatINR(netWorth)} (Live)</text>
             `;
         }
 
-        // --- TRANSACTIONS ---
         function addTransaction() {
             const name = document.getElementById('txName').value.trim();
             const amount = Number(document.getElementById('txAmount').value);
@@ -963,7 +993,6 @@
             recalculateMetrics();
         }
 
-        // --- DEBTS ---
         function addNewDebt() {
             const lender = document.getElementById('newLenderName').value.trim();
             const total = Number(document.getElementById('newLenderAmt').value);
@@ -1028,7 +1057,6 @@
             showToast('💥 DEBT DESTROYED!', `Paid ${formatINR(actual)} toward ${debt.lender}!`);
         }
 
-        // --- BUSINESS BOARD ---
         function addBusinessBrand() {
             const name = document.getElementById('newBizName').value.trim();
             const status = document.getElementById('newBizStatus').value;
@@ -1075,7 +1103,6 @@
             });
         }
 
-        // --- PLANNING TASKS ---
         function addPlanningTask() {
             const task = document.getElementById('newPlanTask').value.trim();
             if (!task) return showToast('Error', 'Enter task.');
@@ -1118,7 +1145,6 @@
         function renderBotChat() {
             const win = document.getElementById('botChatWindow');
             win.innerHTML = '';
-            state.chatHistory.push({ sender: 'ai', text: 'வணக்கம் சிவ்பிரேம்! 🙏 உங்கள் டேஷ்போர்டில் லைவ் பிளிங்கிங் கிராஃப் மற்றும் அனிமேட்டட் ரோபோ பாட் வெற்றிகரமாக இணைக்கப்பட்டுள்ளது!' });
             state.chatHistory.forEach(msg => {
                 const isUser = msg.sender === 'user';
                 const row = document.createElement('div');
@@ -1164,9 +1190,21 @@
             document.getElementById('netWorthDisplay').className = netWorth >= 0 ? 'text-emeraldGrowth font-extrabold' : 'text-crimsonRed font-extrabold';
 
             const clearedDebts = state.debts.filter(d => d.remaining <= 0).length;
-            const progressPct = Math.min(100, Math.round((clearedDebts / Math.max(1, state.debts.length)) * 50 + (totInv / 1000000) * 50));
-            document.getElementById('overallProgressPct').innerText = `${progressPct}%`;
-            document.getElementById('overallProgressBar').style.width = `${Math.max(5, progressPct)}%`;
+            const finLifePct = Math.min(100, Math.round((clearedDebts / Math.max(1, state.debts.length)) * 50 + (totInv / 1000000) * 50));
+            const personalPct = Math.min(100, 30 + (state.customStories.length * 5));
+            const skillPct = Math.min(100, 20 + (state.learnedSkills.length * 10));
+
+            document.getElementById('overallProgressPct').innerText = `${finLifePct}%`;
+            document.getElementById('overallProgressBar').style.width = `${Math.max(5, finLifePct)}%`;
+
+            document.getElementById('personalProgressPct').innerText = `${personalPct}%`;
+            document.getElementById('personalProgressBar').style.width = `${personalPct}%`;
+
+            document.getElementById('financeLifeProgressPct').innerText = `${finLifePct}%`;
+            document.getElementById('financeLifeProgressBar').style.width = `${Math.max(5, finLifePct)}%`;
+
+            document.getElementById('skillSystemProgressPct').innerText = `${skillPct}%`;
+            document.getElementById('skillSystemProgressBar').style.width = `${skillPct}%`;
 
             renderWealthGraph(remDebt, totInv);
         }
