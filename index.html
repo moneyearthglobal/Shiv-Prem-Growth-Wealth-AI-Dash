@@ -54,31 +54,58 @@
         <div id="toastMsg" class="text-slate-200 mt-0.5">Saved successfully.</div>
     </div>
 
-    <!-- Full-Width Container -->
+    <!-- Full-Screen Container -->
     <div class="w-full max-w-none px-3 sm:px-6 py-4 space-y-4">
-        <!-- Top Navigation & Controls Bar -->
-        <nav class="dash-card bg-[#091326] border-2 border-cyberBlue/70 rounded-2xl px-4 py-3 flex flex-wrap items-center justify-between gap-3">
-            <div class="flex items-center gap-3">
-                <span class="px-2.5 py-1 rounded-lg bg-posterYellow text-matteBlack font-extrabold text-xs">☰</span>
-                <div>
-                    <h1 id="navTitle" class="font-extrabold text-sm sm:text-base tracking-wide text-white">ஷிவ் பிரேம் ஏஐ வேல்யூ செயின் செல்ஃப் டேஷ்போர்டு</h1>
-                    <p id="navSub" class="text-[11px] muted-text">Life Evolution, Debt Avalanche, Income Journal &amp; Investment Tracker</p>
+        <!-- 1. TOP NAVIGATION, CONTROLS & PROGRESS SCORE -->
+        <nav class="dash-card bg-[#091326] border-2 border-cyberBlue/70 rounded-2xl px-4 py-3 space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-1 rounded-lg bg-posterYellow text-matteBlack font-extrabold text-xs">☰</span>
+                    <div>
+                        <h1 id="navTitle" class="font-extrabold text-sm sm:text-base tracking-wide text-white">ஷிவ் பிரேம் ஏஐ வேல்யூ செயின் செல்ஃப் டேஷ்போர்டு</h1>
+                        <p id="navSub" class="text-[11px] muted-text">Life Evolution, Debt Avalanche, Income Journal &amp; AI Command Center</p>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-2 text-xs font-mono">
+                    <button type="button" onclick="toggleLanguage()" class="px-3 py-1.5 rounded-xl bg-blue-950 hover:bg-blue-900 border border-blue-700 text-posterYellow font-bold">
+                        <span id="langBtnLabel">🌐 தமிழ் / English</span>
+                    </button>
+                    <button type="button" onclick="toggleThemeMode()" class="px-3 py-1.5 rounded-xl bg-blue-950 hover:bg-blue-900 border border-blue-700 text-cyan-300 font-bold">
+                        <span id="themeBtnLabel">☀️ Light Mode</span>
+                    </button>
+                    <button type="button" onclick="downloadDashboardData('json')" class="px-3 py-1.5 rounded-xl bg-emeraldGrowth hover:bg-emerald-400 text-matteBlack font-extrabold">
+                        ⬇ JSON
+                    </button>
+                    <button type="button" onclick="downloadDashboardData('csv')" class="px-3 py-1.5 rounded-xl bg-posterYellow hover:bg-yellow-300 text-matteBlack font-extrabold">
+                        ⬇ CSV
+                    </button>
                 </div>
             </div>
 
-            <div class="flex flex-wrap items-center gap-2 text-xs font-mono">
-                <button type="button" onclick="toggleLanguage()" class="px-3 py-1.5 rounded-xl bg-blue-950 hover:bg-blue-900 border border-blue-700 text-posterYellow font-bold">
-                    <span id="langBtnLabel">🌐 தமிழ் / English</span>
-                </button>
-                <button type="button" onclick="toggleThemeMode()" class="px-3 py-1.5 rounded-xl bg-blue-950 hover:bg-blue-900 border border-blue-700 text-cyan-300 font-bold">
-                    <span id="themeBtnLabel">🌓 Dark / Light</span>
-                </button>
-                <button type="button" onclick="downloadDashboardData('json')" class="px-3 py-1.5 rounded-xl bg-emeraldGrowth hover:bg-emerald-400 text-matteBlack font-extrabold">
-                    ⬇ JSON
-                </button>
-                <button type="button" onclick="downloadDashboardData('csv')" class="px-3 py-1.5 rounded-xl bg-posterYellow hover:bg-yellow-300 text-matteBlack font-extrabold">
-                    ⬇ CSV
-                </button>
+            <!-- Progress Score Bar -->
+            <div class="inset-box rounded-xl p-3 border border-blue-800/80 space-y-2 font-mono text-xs">
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                    <span id="lblProgressScoreTitle" class="font-extrabold text-posterYellow uppercase">🏆 OVERALL PROGRESS SCORE</span>
+                    <span id="overallProgressScoreText" class="font-extrabold text-emeraldGrowth text-sm">64 / 100</span>
+                </div>
+                <div class="w-full h-2.5 rounded-full bg-slate-900 overflow-hidden border border-blue-900">
+                    <div id="overallProgressScoreBar" class="h-full bg-gradient-to-r from-cyberBlue via-cyan-400 to-emeraldGrowth transition-all" style="width:64%"></div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px]">
+                    <div class="bg-[#081938] border border-blue-900/70 rounded-lg px-2.5 py-1.5 flex items-center justify-between">
+                        <span class="muted-text">Life Evolution</span>
+                        <strong id="scoreLifeVal" class="text-cyan-300">72%</strong>
+                    </div>
+                    <div class="bg-[#081938] border border-blue-900/70 rounded-lg px-2.5 py-1.5 flex items-center justify-between">
+                        <span class="muted-text">Debt Payoff</span>
+                        <strong id="scoreDebtVal" class="text-posterYellow">48%</strong>
+                    </div>
+                    <div class="bg-[#081938] border border-blue-900/70 rounded-lg px-2.5 py-1.5 flex items-center justify-between">
+                        <span class="muted-text">Journal Consistency</span>
+                        <strong id="scoreJournalVal" class="text-emeraldGrowth">72%</strong>
+                    </div>
+                </div>
             </div>
         </nav>
 
@@ -111,7 +138,7 @@
                 </div>
 
                 <!-- Quick Portfolio Summary Box -->
-                <div class="w-full sm:w-auto lg:min-w-[340px] inset-box border border-blue-800/80 rounded-xl p-3.5 space-y-2 font-mono text-xs">
+                <div class="w-full sm:w-auto lg:min-w-[360px] inset-box border border-blue-800/80 rounded-xl p-3.5 space-y-2 font-mono text-xs">
                     <div class="flex items-center justify-between">
                         <span id="lblPortfolioTitle" class="font-bold text-cyan-300 uppercase">ஒட்டுமொத்த போர்ட்ஃபோலியோ</span>
                         <span id="heroNetWorth" class="font-extrabold text-pink-400">-₹20,90,000</span>
@@ -130,24 +157,22 @@
             </div>
         </header>
 
-        <!-- 3. FULL-WIDTH INCOME JOURNAL CALENDAR SECTION -->
+        <!-- 3. FULL-WIDTH INCOME JOURNAL CALENDAR & PERFORMANCE ANALYTICS -->
         <section class="dash-card bg-[#091326] border-2 border-cyberBlue/80 rounded-2xl p-3.5 sm:p-5 space-y-4">
             <div class="flex flex-wrap items-center justify-between gap-2 border-b border-blue-900/70 pb-3">
                 <div>
-                    <h3 id="secCalendarTitle" class="text-base sm:text-lg font-extrabold text-white">📅 INCOME JOURNAL CALENDAR &amp; PERFORMANCE ANALYTICS</h3>
+                    <h3 id="secCalendarTitle" class="text-base sm:text-lg font-extrabold text-white">📅 இன்கம் ஜர்னல் கேலண்டர் &amp; பெர்ஃபார்மன்ஸ் அனலிட்டிக்ஸ்</h3>
                     <p id="secCalendarSub" class="text-xs muted-text">மாதம்/வருடத்தைக் கிளிக் செய்து மாற்றலாம் • ஒவ்வொரு நாளின் இன்கம் அல்லது லீவு (₹0) பதிவு செய்யலாம் • AI காரணம் &amp; இம்ப்ரூவ்மென்ட் சஜஷன்</p>
                 </div>
             </div>
 
-            <!-- Trader/Income Journal Calendar Theme + Month/Year Picker + Right Analytics + Yearly Performance -->
             <div class="relative bg-[#061126] border-2 border-cyberBlue/80 rounded-2xl p-3.5 sm:p-4 space-y-4 font-mono text-xs text-slate-100 shadow-[0_0_25px_rgba(37,99,235,0.18)] w-full">
-
-                <!-- Month & Year Popover Selector (2019-2027+ Years + Jan-Dec Months) -->
+                <!-- Month & Year Popover Selector -->
                 <div id="calMonthYearPopover" class="hidden absolute top-14 left-3 sm:left-4 z-30 w-72 bg-[#071633] border-2 border-cyberBlue rounded-xl p-3 shadow-2xl space-y-2.5">
                     <div class="flex items-center justify-between border-b border-blue-800/70 pb-1.5">
                         <button type="button" onclick="shiftPickerYearPage(-1)" class="px-2.5 py-1 rounded bg-blue-900/80 hover:bg-blue-700 text-white font-bold">&lt;</button>
                         <button type="button" id="pickerYearToggleBtn" onclick="togglePickerMode(pickerMode === 'year' ? 'month' : 'year')" class="font-extrabold text-sm text-posterYellow hover:text-white px-2 py-0.5 rounded bg-blue-950">
-                            2026 ▾ (All Years)
+                            2026 ▾ All Years
                         </button>
                         <button type="button" onclick="shiftPickerYearPage(1)" class="px-2.5 py-1 rounded bg-blue-900/80 hover:bg-blue-700 text-white font-bold">&gt;</button>
                     </div>
@@ -176,7 +201,7 @@
                     </div>
                 </div>
 
-                <!-- Day-by-Day Income Journal Entry Strip (Click any date or mark Leave ₹0) -->
+                <!-- Day-by-Day Income Journal Entry Strip -->
                 <div class="bg-[#081938] border border-blue-800/70 rounded-xl p-3 space-y-2">
                     <div class="flex flex-wrap items-center justify-between gap-2">
                         <span class="text-[11px] font-extrabold text-cyan-300">🗓️ DAILY INCOME JOURNAL: <span id="selectedJournalDateLabel" class="text-white">2026-11-19</span></span>
@@ -198,9 +223,8 @@
                     </div>
                 </div>
 
-                <!-- Main Split: Left Calendar (Mon-Sun + Weekly Total) & Right Analytics -->
+                <!-- Main Split: Left Calendar & Right Analytics -->
                 <div class="grid grid-cols-1 xl:grid-cols-12 gap-3 items-start w-full">
-                    <!-- Left 7 Cols: Calendar Grid -->
                     <div class="xl:col-span-7 bg-[#081938] border border-blue-900/80 rounded-xl p-2.5 overflow-x-auto">
                         <div class="min-w-[520px] space-y-1.5">
                             <div class="grid grid-cols-8 gap-1.5 text-center text-[11px] font-bold text-blue-200 pb-1 border-b border-blue-900/70">
@@ -210,7 +234,6 @@
                         </div>
                     </div>
 
-                    <!-- Right 5 Cols: Daily WR + Avg Win/Loss + Net Daily Income Ups & Downs + Distribution -->
                     <div class="xl:col-span-5 space-y-2.5">
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                             <div class="bg-[#081938] border border-blue-900/80 rounded-xl p-2.5 flex flex-col justify-between">
@@ -278,10 +301,97 @@
                 <div id="selectedMonthDetailPanel" class="bg-[#081938] border border-blue-700/80 rounded-xl p-3 space-y-2.5 w-full"></div>
             </div>
         </section>
+
+        <!-- 4. LIFE GRAPH & FINANCIAL GRAPH SECTION -->
+        <section class="grid grid-cols-1 xl:grid-cols-2 gap-4 w-full">
+            <!-- Life Evolution Graph -->
+            <div class="dash-card bg-[#091326] border-2 border-cyberBlue/70 rounded-2xl p-4 space-y-3 font-mono text-xs">
+                <div class="flex flex-wrap items-center justify-between gap-2 border-b border-blue-900/70 pb-2">
+                    <div>
+                        <h3 id="secLifeGraphTitle" class="text-sm sm:text-base font-extrabold text-posterYellow">📈 LIFE EVOLUTION GRAPH</h3>
+                        <p class="text-[11px] muted-text">Discipline, Skill &amp; Clarity Growth Across Phases</p>
+                    </div>
+                    <span id="lifeAvgScoreBadge" class="px-2.5 py-1 rounded-lg bg-cyan-500/20 text-cyan-300 font-extrabold">Avg: 72%</span>
+                </div>
+
+                <div id="lifeGraphChart" class="inset-box rounded-xl p-3 border border-blue-900/80 h-44 flex items-end justify-around gap-2 pt-6"></div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                    <input type="text" id="lifePhaseInput" placeholder="Phase (e.g. Phase 5)" class="inset-box rounded-lg px-2.5 py-1.5 text-xs">
+                    <input type="number" id="lifeScoreInput" min="0" max="100" placeholder="Score (0-100)" class="inset-box rounded-lg px-2.5 py-1.5 text-xs">
+                    <button type="button" onclick="addLifeMilestone()" class="px-3 py-1.5 rounded-lg bg-cyberBlue hover:bg-blue-500 text-white font-extrabold text-xs">
+                        + Add Life Point
+                    </button>
+                </div>
+            </div>
+
+            <!-- Financial & Debt vs Invest Graph -->
+            <div class="dash-card bg-[#091326] border-2 border-cyberBlue/70 rounded-2xl p-4 space-y-3 font-mono text-xs">
+                <div class="flex flex-wrap items-center justify-between gap-2 border-b border-blue-900/70 pb-2">
+                    <div>
+                        <h3 id="secFinGraphTitle" class="text-sm sm:text-base font-extrabold text-emeraldGrowth">📊 FINANCIAL &amp; CASHFLOW GRAPH</h3>
+                        <p class="text-[11px] muted-text">Monthly Income, Expense &amp; Debt Reduction Trend</p>
+                    </div>
+                    <span id="finNetCashBadge" class="px-2.5 py-1 rounded-lg bg-emeraldGrowth/20 text-emeraldGrowth font-extrabold">Surplus Track</span>
+                </div>
+
+                <div id="financialGraphChart" class="inset-box rounded-xl p-3 border border-blue-900/80 h-44 flex items-end justify-around gap-2 pt-6"></div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                    <input type="text" id="finLabelInput" placeholder="Label (e.g. Dec)" class="inset-box rounded-lg px-2.5 py-1.5 text-xs">
+                    <input type="number" id="finNetInput" placeholder="Net Value (₹)" class="inset-box rounded-lg px-2.5 py-1.5 text-xs">
+                    <button type="button" onclick="addFinancialPoint()" class="px-3 py-1.5 rounded-lg bg-emeraldGrowth hover:bg-emerald-400 text-matteBlack font-extrabold text-xs">
+                        + Add Financial Bar
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. DEBT DETAILS & AVALANCHE SECTION -->
+        <section class="dash-card bg-[#091326] border-2 border-cyberBlue/70 rounded-2xl p-4 sm:p-5 space-y-4 font-mono text-xs w-full">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-blue-900/70 pb-3">
+                <div>
+                    <h3 id="secDebtTitle" class="text-sm sm:text-base font-extrabold text-pink-400">💳 DEBT DETAILS &amp; AVALANCHE PAYOFF TRACKER</h3>
+                    <p id="secDebtSub" class="text-[11px] muted-text">கடன் விவரங்கள் தனிப்பட்ட செக்ஷனில் — முன்னுரிமைப்படி (Priority) கடன் அடைப்பைப் பதிவு செய்யலாம்</p>
+                </div>
+                <div class="flex flex-wrap items-center gap-2">
+                    <input type="number" id="debtPayAmountInput" placeholder="Pay towards top debt (₹)" class="inset-box rounded-lg px-2.5 py-1.5 text-xs w-44">
+                    <button type="button" onclick="applyDebtPayment()" class="px-3.5 py-1.5 rounded-lg bg-posterYellow hover:bg-yellow-300 text-matteBlack font-extrabold text-xs">
+                        ⚡ Apply Debt Payoff
+                    </button>
+                </div>
+            </div>
+
+            <div id="debtAccountsList" class="grid grid-cols-1 md:grid-cols-3 gap-3"></div>
+        </section>
+
+        <!-- 6. AI BOT ASSISTANT SECTION -->
+        <section class="dash-card bg-[#091326] border-2 border-cyberBlue/80 rounded-2xl p-4 sm:p-5 space-y-3 font-mono text-xs w-full">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-blue-900/70 pb-2.5">
+                <div>
+                    <h3 id="secAiBotTitle" class="text-sm sm:text-base font-extrabold text-cyan-300">🤖 SHIV PREM AI BOT — ROOT-CAUSE &amp; ACTION ADVISOR</h3>
+                    <p class="text-[11px] muted-text">உங்கள் கடன், ஜர்னல், லீவு நாட்கள் மற்றும் வளர்ச்சி குறித்து உடனடி ஆலோசனை கேளுங்கள்</p>
+                </div>
+                <div class="flex flex-wrap gap-1.5">
+                    <button type="button" onclick="askAiBotQuick('debt')" class="px-2.5 py-1 rounded-lg bg-blue-950 hover:bg-blue-800 border border-blue-700 text-pink-300 font-bold text-[10px]">Debt Plan</button>
+                    <button type="button" onclick="askAiBotQuick('journal')" class="px-2.5 py-1 rounded-lg bg-blue-950 hover:bg-blue-800 border border-blue-700 text-cyan-300 font-bold text-[10px]">Journal &amp; ₹0 Leave</button>
+                    <button type="button" onclick="askAiBotQuick('life')" class="px-2.5 py-1 rounded-lg bg-blue-950 hover:bg-blue-800 border border-blue-700 text-posterYellow font-bold text-[10px]">Life Progress</button>
+                </div>
+            </div>
+
+            <div id="aiBotMessages" class="inset-box rounded-xl p-3 border border-blue-900/80 max-h-56 overflow-y-auto space-y-2"></div>
+
+            <div class="flex gap-2">
+                <input type="text" id="aiBotInput" onkeydown="if(event.key==='Enter') sendAiBotMessage()" placeholder="Ask AI Bot (e.g. How to reduce debt faster or improve monthly income?)..." class="flex-1 inset-box rounded-xl px-3 py-2 text-xs">
+                <button type="button" onclick="sendAiBotMessage()" class="px-4 py-2 rounded-xl bg-cyan-400 hover:bg-cyan-300 text-[#050e21] font-extrabold text-xs">
+                    Ask AI
+                </button>
+            </div>
+        </section>
     </div>
 
     <script>
-        const STORAGE_KEY = 'shiv_prem_ai_value_chain_v1';
+        const STORAGE_KEY = 'shiv_prem_ai_value_chain_full_v1';
         let pickerMode = 'month';
         let pickerYearBase = 2019;
 
@@ -294,9 +404,32 @@
             selectedJournalDate: '2026-11-19',
             totalDebt: 2140000,
             totalInvest: 50000,
+            debts: [
+                { id: 'd1', name: 'Priority High-Interest Loan', balance: 840000, apr: '14.5%', emi: 22000, priority: 1 },
+                { id: 'd2', name: 'Personal / Business Loan', balance: 750000, apr: '12.0%', emi: 18500, priority: 2 },
+                { id: 'd3', name: 'Long-Term Balance Loan', balance: 550000, apr: '9.8%', emi: 14000, priority: 3 }
+            ],
+            lifeMilestones: [
+                { label: 'Phase 1', score: 45 },
+                { label: 'Phase 2', score: 58 },
+                { label: 'Phase 3', score: 72 },
+                { label: 'Phase 4', score: 84 }
+            ],
+            financialPoints: [
+                { label: 'Aug', net: 18500 },
+                { label: 'Sep', net: 24000 },
+                { label: 'Oct', net: 14200 },
+                { label: 'Nov', net: 29500 }
+            ],
             dailyJournal: {
                 '2026-11-19': { income: 2200, expense: 650, investment: 0, note: 'Active Shift', isLeave: false }
-            }
+            },
+            aiBotHistory: [
+                {
+                    sender: 'AI Bot',
+                    text: 'வணக்கம்! உங்கள் இன்கம் ஜர்னல், கடன் விவரங்கள், லைஃப் & ஃபைனான்சியல் கிராஃப்கள் அனைத்தும் ஒன்றாக இணைக்கப்பட்டுள்ளன. எந்தப் பகுதியை மேம்படுத்த ஆலோசனை வேண்டும்?'
+                }
+            ]
         };
 
         let state = JSON.parse(JSON.stringify(defaultState));
@@ -330,7 +463,7 @@
             state.theme = state.theme === 'light' ? 'dark' : 'light';
             applyTheme();
             saveState();
-            showToast(state.theme === 'light' ? 'LIGHT MODE' : 'DARK MODE', 'Theme updated.');
+            showToast(state.theme === 'light' ? 'LIGHT MODE' : 'DARK MODE', 'Theme switched.');
         }
 
         function applyLanguage() {
@@ -339,8 +472,11 @@
                 ? 'ஷிவ் பிரேம் ஏஐ வேல்யூ செயின் செல்ஃப் டேஷ்போர்டு'
                 : 'SHIV PREM AI VALUE CHAIN SELF DASHBOARD';
             document.getElementById('navSub').innerText = isTa
-                ? 'வாழ்க்கை வளர்ச்சி, கடன் ஒழிப்பு, இன்கம் ஜர்னல் & முதலீட்டு டிராக்கர்'
-                : 'Life Evolution, Debt Avalanche, Income Journal & Investment Tracker';
+                ? 'லைஃப் எவல்யூஷன், கடன் ஒழிப்பு, இன்கம் ஜர்னல் & ஏஐ கமாண்ட் சென்டர்'
+                : 'Life Evolution, Debt Avalanche, Income Journal & AI Command Center';
+            document.getElementById('lblProgressScoreTitle').innerText = isTa
+                ? '🏆 ஒட்டுமொத்த முன்னேற்ற மதிப்பெண் (PROGRESS SCORE)'
+                : '🏆 OVERALL PROGRESS SCORE';
             document.getElementById('heroBadge').innerText = isTa
                 ? 'சிஸ்டம் > வேகம் — ஷிவ் பிரேம் ஏஐ வேல்யூ செயின் செல்ஃப் டேஷ்போர்டு'
                 : 'SYSTEM > SPEED — SHIV PREM AI VALUE CHAIN SELF DASHBOARD';
@@ -355,27 +491,60 @@
             document.getElementById('secCalendarTitle').innerText = isTa
                 ? '📅 இன்கம் ஜர்னல் கேலண்டர் & பெர்ஃபார்மன்ஸ் அனலிட்டிக்ஸ்'
                 : '📅 INCOME JOURNAL CALENDAR & PERFORMANCE ANALYTICS';
+            document.getElementById('secLifeGraphTitle').innerText = isTa
+                ? '📈 லைஃப் எவல்யூஷன் கிராஃப் (LIFE GRAPH)'
+                : '📈 LIFE EVOLUTION GRAPH';
+            document.getElementById('secFinGraphTitle').innerText = isTa
+                ? '📊 ஃபைனான்சியல் & கேஷ்ஃப்ளோ கிராஃப்'
+                : '📊 FINANCIAL & CASHFLOW GRAPH';
+            document.getElementById('secDebtTitle').innerText = isTa
+                ? '💳 கடன் விவரங்கள் & அவலாஞ்ச் டிராக்கர் (DEBT DETAILS)'
+                : '💳 DEBT DETAILS & AVALANCHE PAYOFF TRACKER';
+            document.getElementById('secAiBotTitle').innerText = isTa
+                ? '🤖 ஷிவ் பிரேம் ஏஐ பாட் — காரணம் & செயல் ஆலோசனை'
+                : '🤖 SHIV PREM AI BOT — ROOT-CAUSE & ACTION ADVISOR';
         }
 
         function toggleLanguage() {
             state.lang = state.lang === 'ta' ? 'en' : 'ta';
             applyLanguage();
             saveState();
-            renderOpenCalendarSection();
+            renderAllSections();
             showToast(state.lang === 'ta' ? 'தமிழ்' : 'ENGLISH', 'Language switched.');
         }
 
-        function renderHeaderSummary() {
-            const debt = Number(state.totalDebt || 2140000);
+        function renderHeaderAndProgress() {
+            const debtList = Array.isArray(state.debts) ? state.debts : [];
+            const calcDebt = debtList.length > 0
+                ? debtList.reduce((acc, d) => acc + Number(d.balance || 0), 0)
+                : Number(state.totalDebt || 2140000);
+            state.totalDebt = calcDebt;
+
             const inv = Number(state.totalInvest || 50000);
-            const netWorth = inv - debt;
-            document.getElementById('heroTotalDebt').innerText = `-${formatINR(debt)}`;
+            const netWorth = inv - calcDebt;
+
+            document.getElementById('heroTotalDebt').innerText = `-${formatINR(calcDebt)}`;
             document.getElementById('heroTotalInvest').innerText = formatINR(inv);
             document.getElementById('heroInvestSmall').innerText = formatINR(inv);
-            document.getElementById('heroDebtSmall').innerText = `-${formatINR(debt)}`;
+            document.getElementById('heroDebtSmall').innerText = `-${formatINR(calcDebt)}`;
             const nwEl = document.getElementById('heroNetWorth');
             nwEl.innerText = `${netWorth < 0 ? '-' : '+'}${formatINR(Math.abs(netWorth))}`;
             nwEl.className = `font-extrabold ${netWorth < 0 ? 'text-pink-400' : 'text-emeraldGrowth'}`;
+
+            // Progress Score Calculation
+            const lifeAvg = state.lifeMilestones.length
+                ? Math.round(state.lifeMilestones.reduce((s, m) => s + Number(m.score || 0), 0) / state.lifeMilestones.length)
+                : 50;
+            const debtProgress = Math.max(10, Math.min(95, Math.round((1 - (calcDebt / 3000000)) * 100)));
+            const activeJournalCount = Object.values(state.dailyJournal || {}).filter(e => e && !e.isLeave && Number(e.income || 0) > 0).length;
+            const journalScore = Math.min(100, Math.max(20, activeJournalCount * 15 + 35));
+            const overallScore = Math.round((lifeAvg + debtProgress + journalScore) / 3);
+
+            document.getElementById('overallProgressScoreText').innerText = `${overallScore} / 100`;
+            document.getElementById('overallProgressScoreBar').style.width = `${overallScore}%`;
+            document.getElementById('scoreLifeVal').innerText = `${lifeAvg}%`;
+            document.getElementById('scoreDebtVal').innerText = `${debtProgress}%`;
+            document.getElementById('scoreJournalVal').innerText = `${journalScore}%`;
         }
 
         function ensureDailyJournalInit() {
@@ -848,12 +1017,171 @@
             }
         }
 
+        function renderLifeAndFinancialGraphs() {
+            const lifeEl = document.getElementById('lifeGraphChart');
+            const finEl = document.getElementById('financialGraphChart');
+            if (!lifeEl || !finEl) return;
+
+            const lifeList = state.lifeMilestones || [];
+            const avgLife = lifeList.length
+                ? Math.round(lifeList.reduce((s, x) => s + Number(x.score || 0), 0) / lifeList.length)
+                : 0;
+            document.getElementById('lifeAvgScoreBadge').innerText = `Avg: ${avgLife}%`;
+
+            lifeEl.innerHTML = '';
+            lifeList.forEach(item => {
+                const sc = Math.max(5, Math.min(100, Number(item.score || 0)));
+                const col = document.createElement('div');
+                col.className = 'flex-1 flex flex-col items-center justify-end h-full gap-1';
+                col.innerHTML = `
+                    <span class="text-[10px] font-extrabold text-posterYellow">${sc}%</span>
+                    <div class="w-full max-w-[44px] rounded-t-lg bg-gradient-to-t from-cyberBlue to-cyan-400" style="height:${sc}%"></div>
+                    <span class="text-[10px] text-blue-200 truncate w-full text-center">${item.label}</span>
+                `;
+                lifeEl.appendChild(col);
+            });
+
+            const finList = state.financialPoints || [];
+            const maxFin = Math.max(1000, ...finList.map(x => Math.abs(Number(x.net || 0))));
+            const totalFinNet = finList.reduce((s, x) => s + Number(x.net || 0), 0);
+            document.getElementById('finNetCashBadge').innerText = `Net: ${formatINR(totalFinNet)}`;
+
+            finEl.innerHTML = '';
+            finList.forEach(item => {
+                const val = Number(item.net || 0);
+                const pct = Math.max(10, Math.round((Math.abs(val) / maxFin) * 85));
+                const col = document.createElement('div');
+                col.className = 'flex-1 flex flex-col items-center justify-end h-full gap-1';
+                col.innerHTML = `
+                    <span class="text-[10px] font-extrabold ${val < 0 ? 'text-pink-300' : 'text-emeraldGrowth'}">${formatINR(val)}</span>
+                    <div class="w-full max-w-[44px] rounded-t-lg ${val < 0 ? 'bg-pink-500' : 'bg-emeraldGrowth'}" style="height:${pct}%"></div>
+                    <span class="text-[10px] text-blue-200 truncate w-full text-center">${item.label}</span>
+                `;
+                finEl.appendChild(col);
+            });
+        }
+
+        function addLifeMilestone() {
+            const label = document.getElementById('lifePhaseInput').value.trim() || `Phase ${state.lifeMilestones.length + 1}`;
+            const score = Math.max(0, Math.min(100, Number(document.getElementById('lifeScoreInput').value || 75)));
+            state.lifeMilestones.push({ label, score });
+            document.getElementById('lifePhaseInput').value = '';
+            document.getElementById('lifeScoreInput').value = '';
+            saveState();
+            showToast('LIFE GRAPH UPDATED', `${label}: ${score}%`);
+        }
+
+        function addFinancialPoint() {
+            const label = document.getElementById('finLabelInput').value.trim() || `M${state.financialPoints.length + 1}`;
+            const net = Number(document.getElementById('finNetInput').value || 15000);
+            state.financialPoints.push({ label, net });
+            document.getElementById('finLabelInput').value = '';
+            document.getElementById('finNetInput').value = '';
+            saveState();
+            showToast('FINANCIAL GRAPH UPDATED', `${label}: ${formatINR(net)}`);
+        }
+
+        function renderDebtSection() {
+            const container = document.getElementById('debtAccountsList');
+            if (!container) return;
+            const list = (state.debts || []).slice().sort((a, b) => Number(a.priority) - Number(b.priority));
+            container.innerHTML = '';
+
+            list.forEach((d, idx) => {
+                const bal = Number(d.balance || 0);
+                const card = document.createElement('div');
+                card.className = `inset-box rounded-xl p-3.5 border ${idx === 0 ? 'border-posterYellow' : 'border-blue-800/80'} space-y-2`;
+                card.innerHTML = `
+                    <div class="flex items-center justify-between gap-2">
+                        <span class="font-extrabold text-sm text-white">${d.name}</span>
+                        <span class="px-2 py-0.5 rounded text-[10px] font-extrabold ${idx === 0 ? 'bg-posterYellow text-matteBlack' : 'bg-blue-900 text-cyan-300'}">P#${d.priority}</span>
+                    </div>
+                    <div class="text-lg font-black text-pink-400">${formatINR(bal)}</div>
+                    <div class="flex items-center justify-between text-[11px] muted-text pt-1 border-t border-blue-900/60">
+                        <span>APR: <strong class="text-blue-200">${d.apr}</strong></span>
+                        <span>EMI: <strong class="text-cyan-300">${formatINR(d.emi)}/mo</strong></span>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function applyDebtPayment() {
+            const amt = Number(document.getElementById('debtPayAmountInput').value || 0);
+            if (amt <= 0) return;
+            const sorted = (state.debts || []).slice().sort((a, b) => Number(a.priority) - Number(b.priority));
+            if (sorted.length > 0) {
+                sorted[0].balance = Math.max(0, Number(sorted[0].balance || 0) - amt);
+                state.debts = sorted;
+                document.getElementById('debtPayAmountInput').value = '';
+                saveState();
+                showToast('DEBT REDUCED', `Paid ${formatINR(amt)} toward ${sorted[0].name}`);
+            }
+        }
+
+        function renderAiBot() {
+            const box = document.getElementById('aiBotMessages');
+            if (!box) return;
+            box.innerHTML = '';
+            (state.aiBotHistory || []).forEach(m => {
+                const row = document.createElement('div');
+                const isUser = m.sender === 'You';
+                row.className = `p-2.5 rounded-lg text-[11px] leading-relaxed ${
+                    isUser
+                        ? 'bg-cyberBlue/20 border border-cyberBlue/50 text-white ml-6'
+                        : 'bg-[#081938] border border-blue-800/70 text-blue-100 mr-4'
+                }`;
+                row.innerHTML = `<strong class="${isUser ? 'text-posterYellow' : 'text-cyan-300'}">${m.sender}:</strong> ${m.text}`;
+                box.appendChild(row);
+            });
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function buildAiBotReply(promptText) {
+            const q = promptText.toLowerCase();
+            const mData = computeMonthlyPerformanceData(Number(state.calMonthIndex || 10));
+            if (q.includes('debt') || q.includes('கடன்') || q.includes('loan')) {
+                return `உங்கள் மொத்த கடன் ${formatINR(state.totalDebt)}. Priority #1 கடனில் கூடுதலாக மாதம் ₹5,000–₹15,000 செலுத்தும் அதே வேளையில், ஜர்னலில் வேலை நாட்களை உயர்த்தி மிச்சத்தை (Net Surplus) கடன் அடைப்பில் சேர்க்கவும்.`;
+            }
+            if (q.includes('journal') || q.includes('leave') || q.includes('லீவு') || q.includes('₹0')) {
+                return `நடப்பு மாதத்தில் ${mData.activeDays} வேலை நாட்கள் மற்றும் ${mData.leaveDays} லீவு/₹0 நாட்கள் பதிவாகியுள்ளன. லீவு நாட்களை ₹0 எனத் துல்லியமாகப் பதிவு செய்து, வாரத்திற்கு 5–6 நாட்கள் வருமானம் வரும்படி திட்டமிடுங்கள்.`;
+            }
+            return `தற்போதைய Progress Score, ${mData.activeDays} வேலை நாட்கள் மற்றும் ${formatINR(state.totalDebt)} கடன் நிலையை அடிப்படையாகப் பார்க்கும்போது: தினசரி ஜர்னலைத் தொடர்ந்து பதிவு செய்து, செலவுகளைக் கட்டுப்படுத்தி, Priority #1 கடனை முதலில் குறிவைக்கவும்.`;
+        }
+
+        function sendAiBotMessage() {
+            const inp = document.getElementById('aiBotInput');
+            const txt = inp.value.trim();
+            if (!txt) return;
+            state.aiBotHistory.push({ sender: 'You', text: txt });
+            state.aiBotHistory.push({ sender: 'AI Bot', text: buildAiBotReply(txt) });
+            inp.value = '';
+            saveState();
+        }
+
+        function askAiBotQuick(type) {
+            const map = {
+                debt: 'How should I plan my debt payoff?',
+                journal: 'Analyze my journal work days and ₹0 leave days.',
+                life: 'How can I improve my overall life and progress score?'
+            };
+            document.getElementById('aiBotInput').value = map[type] || 'Give me an improvement plan.';
+            sendAiBotMessage();
+        }
+
+        function renderAllSections() {
+            renderHeaderAndProgress();
+            renderOpenCalendarSection();
+            renderLifeAndFinancialGraphs();
+            renderDebtSection();
+            renderAiBot();
+        }
+
         function saveState() {
             try {
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
             } catch (e) {}
-            renderHeaderSummary();
-            renderOpenCalendarSection();
+            renderAllSections();
         }
 
         function loadState() {
@@ -867,7 +1195,6 @@
             ensureDailyJournalInit();
             applyTheme();
             applyLanguage();
-            renderHeaderSummary();
             selectJournalDay(state.selectedJournalDate);
         }
 
