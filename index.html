@@ -552,80 +552,141 @@
                 </div>
             </div>
 
-            <!-- Open Monthly Income Journal Calendar + Daily Bars + Yearly Performance + AI Suggestion -->
-            <div class="inset-box p-3.5 sm:p-4 rounded-xl border-2 border-cyberBlue space-y-4 font-mono text-xs">
-                <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 text-xs font-mono">
-                    <div class="bg-slate-900/90 border border-slate-700 rounded-xl p-2.5">
-                        <div class="text-[10px] muted-text uppercase">Monthly Net Journal</div>
-                        <div id="calMonthlyPerfVal" class="text-sm font-extrabold text-emeraldGrowth mt-0.5">₹0</div>
+           <!-- Trader/Income Journal Calendar Theme + Month/Year Picker + Right Analytics + Yearly Performance -->
+            <div class="relative bg-[#061126] border-2 border-cyberBlue/80 rounded-2xl p-3.5 sm:p-4 space-y-4 font-mono text-xs text-slate-100 shadow-[0_0_25px_rgba(37,99,235,0.18)]">
+
+                <!-- Month & Year Popover Selector (2019-2027 Years + Jan-Dec Months) -->
+                <div id="calMonthYearPopover" class="hidden absolute top-14 left-3 sm:left-4 z-30 w-64 bg-[#071633] border-2 border-cyberBlue rounded-xl p-3 shadow-2xl space-y-2.5">
+                    <div class="flex items-center justify-between border-b border-blue-800/70 pb-1.5">
+                        <button type="button" onclick="shiftPickerYearPage(-1)" class="px-2 py-0.5 rounded bg-blue-900/70 hover:bg-blue-800 text-white font-bold">&lt;</button>
+                        <button type="button" id="pickerYearToggleBtn" onclick="togglePickerMode('year')" class="font-extrabold text-sm text-white hover:text-posterYellow">2026 ▾</button>
+                        <button type="button" onclick="shiftPickerYearPage(1)" class="px-2 py-0.5 rounded bg-blue-900/70 hover:bg-blue-800 text-white font-bold">&gt;</button>
                     </div>
-                    <div class="bg-slate-900/90 border border-slate-700 rounded-xl p-2.5">
-                        <div class="text-[10px] muted-text uppercase">Weekly Avg / Wk</div>
-                        <div id="calWeeklyPerfVal" class="text-sm font-extrabold text-posterYellow mt-0.5">₹0</div>
+                    <div id="calYearGrid" class="hidden grid-cols-3 gap-1.5 text-center"></div>
+                    <div id="calMonthGrid" class="grid grid-cols-3 gap-1.5 text-center"></div>
+                </div>
+
+                <!-- Top Bar: Month/Year Trigger + Quick Stats Strip -->
+                <div class="flex flex-wrap items-center justify-between gap-2 bg-[#081938] border border-blue-900/80 rounded-xl px-3 py-2">
+                    <div class="flex items-center gap-1.5">
+                        <button type="button" onclick="changeCalendarMonth(-1)" class="px-2 py-1 rounded-lg bg-blue-950 hover:bg-blue-900 text-slate-200 font-bold">&lt;</button>
+                        <button type="button" onclick="toggleCalPicker()" class="px-3 py-1 rounded-lg bg-blue-900/60 hover:bg-blue-800/80 border border-blue-500/40 font-extrabold text-sm text-white flex items-center gap-1.5">
+                            <span id="openCalMonthLabel">November 2026</span>
+                            <span class="text-[10px] text-posterYellow">▾</span>
+                        </button>
+                        <button type="button" onclick="changeCalendarMonth(1)" class="px-2 py-1 rounded-lg bg-blue-950 hover:bg-blue-900 text-slate-200 font-bold">&gt;</button>
                     </div>
-                    <div class="bg-slate-900/90 border border-slate-700 rounded-xl p-2.5">
-                        <div class="text-[10px] muted-text uppercase">Work Consistency</div>
-                        <div id="calWorkRateVal" class="text-sm font-extrabold text-white mt-0.5">0% (0d)</div>
-                    </div>
-                    <div class="bg-slate-900/90 border border-slate-700 rounded-xl p-2.5">
-                        <div class="text-[10px] muted-text uppercase">Yearly Performance (YTD)</div>
-                        <div id="calYearlyPerfVal" class="text-sm font-extrabold text-cyberBlue mt-0.5">₹0</div>
+                    <div class="flex flex-wrap items-center gap-2 text-[10px]">
+                        <span class="px-2 py-1 rounded bg-blue-950 border border-blue-800/70">Monthly Net: <strong id="calMonthlyPerfVal" class="text-emeraldGrowth">₹0</strong></span>
+                        <span class="px-2 py-1 rounded bg-blue-950 border border-blue-800/70">Weekly Avg: <strong id="calWeeklyPerfVal" class="text-posterYellow">₹0</strong></span>
+                        <span class="px-2 py-1 rounded bg-blue-950 border border-blue-800/70">Work: <strong id="calWorkRateVal" class="text-cyan-300">0%</strong></span>
+                        <span class="px-2 py-1 rounded bg-blue-950 border border-blue-800/70">YTD: <strong id="calYearlyPerfVal" class="text-emeraldGrowth">₹0</strong></span>
                     </div>
                 </div>
 
-                <div class="bg-slate-900/95 border border-posterYellow/60 rounded-xl p-3 space-y-2">
+                <!-- Day-by-Day Income Journal Entry Strip (Click any date or mark Leave ₹0) -->
+                <div class="bg-[#081938] border border-blue-800/70 rounded-xl p-2.5 space-y-2">
                     <div class="flex flex-wrap items-center justify-between gap-2">
-                        <span class="text-[11px] font-extrabold text-posterYellow">✍️ DAY JOURNAL ENTRY: <span id="selectedJournalDateLabel" class="text-white">2026-11-19</span></span>
-                        <span class="text-[10px] muted-text">வேலை இல்லாத / லீவு நாட்களுக்கு ₹0 (Leave) என சேமிக்கலாம்</span>
+                        <span class="text-[11px] font-extrabold text-cyan-300">🗓️ DAILY INCOME JOURNAL: <span id="selectedJournalDateLabel" class="text-white">2026-11-19</span></span>
+                        <span class="text-[10px] text-blue-300">வேலை இல்லாத / லீவு நாளுக்கு ₹0 என சேமிக்கலாம்</span>
                     </div>
                     <div class="grid grid-cols-2 sm:grid-cols-5 gap-2">
-                        <input type="number" id="jDayIncome" placeholder="Income (₹)" class="inset-box rounded-lg px-2.5 py-1.5 text-xs">
-                        <input type="number" id="jDayExpense" placeholder="Expense (₹)" class="inset-box rounded-lg px-2.5 py-1.5 text-xs">
-                        <input type="number" id="jDayInvestment" placeholder="Invest (₹)" class="inset-box rounded-lg px-2.5 py-1.5 text-xs">
-                        <input type="text" id="jDayNote" placeholder="Work / Driving / Leave note..." class="inset-box rounded-lg px-2.5 py-1.5 text-xs col-span-2 sm:col-span-2">
+                        <input type="number" id="jDayIncome" placeholder="Income (₹)" class="bg-[#050e21] border border-blue-800/80 rounded-lg px-2.5 py-1.5 text-xs text-white">
+                        <input type="number" id="jDayExpense" placeholder="Expense (₹)" class="bg-[#050e21] border border-blue-800/80 rounded-lg px-2.5 py-1.5 text-xs text-white">
+                        <input type="number" id="jDayInvestment" placeholder="Invest (₹)" class="bg-[#050e21] border border-blue-800/80 rounded-lg px-2.5 py-1.5 text-xs text-white">
+                        <input type="text" id="jDayNote" placeholder="Shift / Work / Leave note..." class="bg-[#050e21] border border-blue-800/80 rounded-lg px-2.5 py-1.5 text-xs text-white col-span-2 sm:col-span-2">
                     </div>
                     <div class="flex flex-wrap justify-end gap-2">
-                        <button type="button" onclick="saveJournalDayEntry(true)" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-red-500/20 text-slate-300 hover:text-red-400 border border-slate-600 font-bold text-[11px]">
-                            🛑 Mark Leave (₹0)
+                        <button type="button" onclick="saveJournalDayEntry(true)" class="px-3 py-1 rounded-lg bg-pink-500/15 hover:bg-pink-500/25 text-pink-300 border border-pink-500/40 font-bold text-[11px]">
+                            🛑 Leave (₹0)
                         </button>
-                        <button type="button" onclick="saveJournalDayEntry(false)" class="px-4 py-1.5 rounded-lg bg-emeraldGrowth hover:bg-green-400 text-matteBlack font-extrabold text-[11px]">
-                            ✓ Save Day Journal
+                        <button type="button" onclick="saveJournalDayEntry(false)" class="px-3.5 py-1 rounded-lg bg-cyan-400 hover:bg-cyan-300 text-[#050e21] font-extrabold text-[11px]">
+                            ✓ Save Day
                         </button>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 xl:grid-cols-3 gap-3 items-start">
-                    <div class="xl:col-span-2 overflow-x-auto">
-                        <div class="min-w-[560px] space-y-1.5">
-                            <div class="grid grid-cols-8 gap-1.5 text-center text-[11px] font-bold text-slate-300">
-                                <div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div><div>Sun</div><div class="text-posterYellow">Total</div>
+                <!-- Main Split: Left Calendar (Mon-Sun + Weekly Total) & Right Analytics (Daily WR, Avg Win/Loss, Ups & Downs, Distribution) -->
+                <div class="grid grid-cols-1 xl:grid-cols-12 gap-3 items-start">
+                    <!-- Left 7 Cols: Calendar Grid -->
+                    <div class="xl:col-span-7 bg-[#081938] border border-blue-900/80 rounded-xl p-2.5 overflow-x-auto">
+                        <div class="min-w-[520px] space-y-1.5">
+                            <div class="grid grid-cols-8 gap-1.5 text-center text-[11px] font-bold text-blue-200 pb-1 border-b border-blue-900/70">
+                                <div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div><div>Sun</div><div class="text-cyan-300">Total</div>
                             </div>
                             <div id="openCalendarDaysGrid" class="space-y-1.5"></div>
                         </div>
                     </div>
 
-                    <div class="bg-slate-900/90 border border-slate-700 rounded-xl p-3 space-y-2.5">
-                        <div class="flex items-center justify-between">
-                            <span class="text-[11px] font-bold text-slate-300 uppercase">Net Daily Income Bars</span>
-                            <span id="calDailyBarTotal" class="text-xs font-extrabold text-emeraldGrowth">₹0</span>
+                    <!-- Right 5 Cols: Daily WR + Avg Win/Loss + Net Daily Income Ups & Downs + Distribution -->
+                    <div class="xl:col-span-5 space-y-2.5">
+                        <!-- Top Row: Daily WR & Avg Win / Avg Loss -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                            <div class="bg-[#081938] border border-blue-900/80 rounded-xl p-2.5 flex flex-col justify-between">
+                                <div class="flex items-center justify-between text-[11px]">
+                                    <span class="text-blue-200 font-semibold">Daily WR</span>
+                                    <span id="calDailyWrVal" class="font-extrabold text-cyan-300">0%</span>
+                                </div>
+                                <div class="my-2 flex items-center justify-center">
+                                    <div class="w-20 h-10 rounded-t-full border-4 border-b-0 border-cyan-400/80 flex items-end justify-center pb-1">
+                                        <span id="calDailyWrGaugeLabel" class="text-[10px] font-bold text-pink-300">0d/0d</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-[#081938] border border-blue-900/80 rounded-xl p-2.5 flex flex-col justify-between">
+                                <div class="flex items-center justify-between text-[11px]">
+                                    <span class="text-blue-200 font-semibold">Avg Day Win / Avg Loss</span>
+                                    <span id="calWinLossRatioVal" class="font-extrabold text-white">0.00</span>
+                                </div>
+                                <div class="space-y-1.5 my-2">
+                                    <div class="w-full h-3 rounded-full bg-slate-900 overflow-hidden flex border border-blue-900">
+                                        <div id="calAvgWinBar" class="bg-cyan-400 h-full transition-all" style="width:50%"></div>
+                                        <div id="calAvgLossBar" class="bg-pink-400 h-full transition-all" style="width:50%"></div>
+                                    </div>
+                                    <div class="flex justify-between text-[10px]">
+                                        <span id="calAvgWinText" class="text-cyan-300 font-bold">Win ₹0</span>
+                                        <span id="calAvgLossText" class="text-pink-300 font-bold">Loss ₹0</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div id="calDailyBarsContainer" class="h-28 flex items-end gap-1 pt-2 border-b border-slate-700 overflow-x-auto"></div>
-                        <div class="flex justify-between text-[10px] muted-text">
-                            <span>Day 1</span>
-                            <span>🟢 Profit | 🔴 Loss | ⚪ ₹0 Leave</span>
-                            <span>End</span>
+
+                        <!-- Middle: Net Daily Income Ups & Downs Chart -->
+                        <div class="bg-[#081938] border border-blue-900/80 rounded-xl p-2.5 space-y-1.5">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[11px] text-blue-200 font-semibold">Net Daily Income (Ups &amp; Downs)</span>
+                                <span id="calDailyBarTotal" class="text-sm font-extrabold text-white">₹0</span>
+                            </div>
+                            <div id="calDailyBarsContainer" class="h-24 flex items-end gap-1 pt-2 border-b border-blue-900/80 overflow-x-auto"></div>
+                            <div class="flex justify-between text-[9px] text-blue-300">
+                                <span>Day 1</span>
+                                <span>Cyan: Gain | Pink: Dip | Gray: ₹0 Leave</span>
+                                <span>End</span>
+                            </div>
+                        </div>
+
+                        <!-- Bottom: Period / Income Distribution Bars -->
+                        <div class="bg-[#081938] border border-blue-900/80 rounded-xl p-2.5 space-y-1.5">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[11px] text-blue-200 font-semibold">Income / Week Distribution</span>
+                                <span id="calDistSummaryLabel" class="text-[10px] font-bold text-cyan-300">Weekly Split</span>
+                            </div>
+                            <div id="calDistributionBars" class="h-16 grid grid-cols-5 gap-1.5 items-end pt-1"></div>
                         </div>
                     </div>
                 </div>
 
-                <div class="space-y-2 pt-2 border-t border-slate-800">
+                <!-- Yearly Performance Row (Jan - Dec + YTD) -->
+                <div class="bg-[#081938] border border-blue-900/80 rounded-xl p-2.5 space-y-2">
                     <div class="flex items-center justify-between">
-                        <span class="text-[11px] font-extrabold uppercase text-posterYellow" data-i18n="yearlyPerfGridTitle">YEARLY PERFORMANCE (CLICK MONTH FOR DETAILS & IMPROVEMENT)</span>
+                        <span class="text-[11px] font-extrabold uppercase text-blue-200" data-i18n="yearlyPerfGridTitle">YEARLY PERFORMANCE (CLICK MONTH FOR DETAILS &amp; IMPROVEMENT)</span>
                     </div>
                     <div id="yearlyPerformanceBoxes" class="grid grid-cols-3 sm:grid-cols-6 lg:grid-cols-13 gap-1.5 text-center"></div>
                 </div>
 
-                <div id="selectedMonthDetailPanel" class="bg-slate-900/95 border-2 border-posterYellow rounded-xl p-3.5 space-y-2.5"></div>
+                <!-- Selected Month / Year Breakdown + AI Root-Cause & Improvement Card -->
+                <div id="selectedMonthDetailPanel" class="bg-[#081938] border border-blue-700/80 rounded-xl p-3 space-y-2.5"></div>
             </div>
                 </div>
 
@@ -1207,10 +1268,217 @@
             renderOpenCalendarSection();
         }
 
+       let pickerMode = 'month';
+        let pickerYearBase = 2022;
+
+        function ensureDailyJournalInit() {
+            if (!state.dailyJournal || typeof state.dailyJournal !== 'object') {
+                state.dailyJournal = {
+                    '2026-11-19': { income: 2200, expense: 650, investment: 0, note: 'Active Shift', isLeave: false }
+                };
+            }
+            if (!state.selectedJournalDate) {
+                const mm = String((Number(state.calMonthIndex) || 10) + 1).padStart(2, '0');
+                state.selectedJournalDate = `${state.calYear || 2026}-${mm}-19`;
+            }
+        }
+
+        function toggleCalPicker(forceMode) {
+            const pop = document.getElementById('calMonthYearPopover');
+            if (!pop) return;
+            if (forceMode) {
+                pickerMode = forceMode;
+                pop.classList.remove('hidden');
+            } else {
+                pop.classList.toggle('hidden');
+                if (!pop.classList.contains('hidden')) pickerMode = 'month';
+            }
+            pickerYearBase = Math.max(2019, Number(state.calYear || 2026) - 4);
+            renderCalMonthYearPicker();
+        }
+
+        function togglePickerMode(mode) {
+            pickerMode = mode;
+            renderCalMonthYearPicker();
+        }
+
+        function shiftPickerYearPage(delta) {
+            if (pickerMode === 'year') {
+                pickerYearBase = Math.max(2015, pickerYearBase + (delta * 9));
+            } else {
+                state.calYear = Number(state.calYear || 2026) + delta;
+                state.selectedPerfMonth = String(state.calMonthIndex || 0);
+                saveState();
+            }
+            renderCalMonthYearPicker();
+        }
+
+        function renderCalMonthYearPicker() {
+            const yearGrid = document.getElementById('calYearGrid');
+            const monthGrid = document.getElementById('calMonthGrid');
+            const toggleBtn = document.getElementById('pickerYearToggleBtn');
+            if (!yearGrid || !monthGrid || !toggleBtn) return;
+
+            const curYear = Number(state.calYear || 2026);
+            const curMonth = Number(state.calMonthIndex || 10);
+            toggleBtn.innerText = pickerMode === 'year' ? `${pickerYearBase}–${pickerYearBase + 8} ▴` : `${curYear} ▾`;
+
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            if (pickerMode === 'year') {
+                yearGrid.classList.remove('hidden');
+                yearGrid.classList.add('grid');
+                monthGrid.classList.add('hidden');
+                monthGrid.classList.remove('grid');
+                yearGrid.innerHTML = '';
+                for (let y = pickerYearBase; y < pickerYearBase + 9; y++) {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.innerText = String(y);
+                    btn.onclick = () => {
+                        state.calYear = y;
+                        state.selectedPerfMonth = String(curMonth);
+                        pickerMode = 'month';
+                        saveState();
+                        renderCalMonthYearPicker();
+                    };
+                    btn.className = `py-1.5 rounded-lg text-[11px] font-bold transition ${
+                        y === curYear ? 'bg-cyan-400 text-[#050e21] font-extrabold' : 'bg-blue-950/80 hover:bg-blue-800 text-slate-200'
+                    }`;
+                    yearGrid.appendChild(btn);
+                }
+            } else {
+                monthGrid.classList.remove('hidden');
+                monthGrid.classList.add('grid');
+                yearGrid.classList.add('hidden');
+                yearGrid.classList.remove('grid');
+                monthGrid.innerHTML = '';
+                months.forEach((mName, idx) => {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.innerText = mName;
+                    btn.onclick = () => {
+                        state.calMonthIndex = idx;
+                        state.selectedPerfMonth = String(idx);
+                        selectJournalDay(`${curYear}-${String(idx + 1).padStart(2, '0')}-01`);
+                        document.getElementById('calMonthYearPopover').classList.add('hidden');
+                        saveState();
+                    };
+                    btn.className = `py-1.5 rounded-lg text-[11px] font-bold transition ${
+                        idx === curMonth ? 'bg-cyan-400 text-[#050e21] font-extrabold' : 'bg-blue-950/80 hover:bg-blue-800 text-slate-200'
+                    }`;
+                    monthGrid.appendChild(btn);
+                });
+            }
+        }
+
+        function selectJournalDay(dateStr) {
+            ensureDailyJournalInit();
+            state.selectedJournalDate = dateStr;
+            const entry = state.dailyJournal[dateStr] || { income: 0, expense: 0, investment: 0, note: '', isLeave: true };
+            document.getElementById('selectedJournalDateLabel').innerText = dateStr;
+            document.getElementById('jDayIncome').value = entry.income || '';
+            document.getElementById('jDayExpense').value = entry.expense || '';
+            document.getElementById('jDayInvestment').value = entry.investment || '';
+            document.getElementById('jDayNote').value = entry.note || '';
+            const calDateEl = document.getElementById('calDate');
+            if (calDateEl) calDateEl.value = dateStr;
+            renderOpenCalendarSection();
+        }
+
+        function saveJournalDayEntry(isLeaveOverride) {
+            ensureDailyJournalInit();
+            const calDateEl = document.getElementById('calDate');
+            const dateStr = state.selectedJournalDate || (calDateEl && calDateEl.value) || '2026-11-19';
+            if (isLeaveOverride) {
+                state.dailyJournal[dateStr] = { income: 0, expense: 0, investment: 0, note: 'Leave / No Work (₹0)', isLeave: true };
+                document.getElementById('jDayIncome').value = '';
+                document.getElementById('jDayExpense').value = '';
+                document.getElementById('jDayInvestment').value = '';
+                document.getElementById('jDayNote').value = 'Leave / No Work (₹0)';
+            } else {
+                const income = Number(document.getElementById('jDayIncome').value || 0);
+                const expense = Number(document.getElementById('jDayExpense').value || 0);
+                const investment = Number(document.getElementById('jDayInvestment').value || 0);
+                const note = document.getElementById('jDayNote').value.trim() || (income > 0 ? 'Work Income' : 'No Income');
+                const isLeave = income === 0 && expense === 0 && investment === 0;
+                state.dailyJournal[dateStr] = { income, expense, investment, note, isLeave };
+            }
+            saveState();
+            showToast(state.lang === 'ta' ? 'ஜர்னல் சேமிக்கப்பட்டது!' : 'JOURNAL SAVED!', `${dateStr} updated.`);
+        }
+
+        function computeMonthlyPerformanceData(monthIdx) {
+            ensureDailyJournalInit();
+            const year = Number(state.calYear || 2026);
+            const daysInMonth = new Date(year, monthIdx + 1, 0).getDate();
+            let income = 0, expense = 0, investment = 0, activeDays = 0, leaveDays = 0;
+            let winDays = 0, winSum = 0, lossDays = 0, lossSum = 0;
+            let bestDay = { day: '-', net: -Infinity };
+            let worstDay = { day: '-', net: Infinity };
+
+            for (let d = 1; d <= daysInMonth; d++) {
+                const key = `${year}-${String(monthIdx + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+                const entry = state.dailyJournal[key];
+                if (entry && (!entry.isLeave && (entry.income > 0 || entry.expense > 0 || entry.investment > 0))) {
+                    const inc = Number(entry.income || 0);
+                    const exp = Number(entry.expense || 0);
+                    const inv = Number(entry.investment || 0);
+                    const net = inc - exp;
+                    income += inc;
+                    expense += exp;
+                    investment += inv;
+                    activeDays++;
+                    if (net >= 0) { winDays++; winSum += net; }
+                    else { lossDays++; lossSum += Math.abs(net); }
+                    if (net > bestDay.net) bestDay = { day: `Day ${d}`, net };
+                    if (net < worstDay.net) worstDay = { day: `Day ${d}`, net };
+                } else {
+                    leaveDays++;
+                }
+            }
+
+            if (bestDay.net === -Infinity) bestDay = { day: '-', net: 0 };
+            if (worstDay.net === Infinity) worstDay = { day: '-', net: 0 };
+
+            const netProfit = income - expense;
+            const surplus = income - (expense + investment);
+            const workRate = Math.round((activeDays / daysInMonth) * 100);
+            const dailyWr = activeDays > 0 ? Math.round((winDays / activeDays) * 100) : 0;
+            const avgWin = winDays > 0 ? Math.round(winSum / winDays) : 0;
+            const avgLoss = lossDays > 0 ? Math.round(lossSum / lossDays) : 0;
+            const winLossRatio = avgLoss > 0 ? (avgWin / avgLoss).toFixed(2) : (avgWin > 0 ? 'MAX' : '0.00');
+
+            return { income, expense, investment, netProfit, surplus, activeDays, leaveDays, daysInMonth, workRate, dailyWr, winDays, lossDays, avgWin, avgLoss, winLossRatio, bestDay, worstDay };
+        }
+
+        function changeCalendarMonth(delta) {
+            let m = Number(state.calMonthIndex) + delta;
+            let y = Number(state.calYear);
+            if (m < 0) { m = 11; y -= 1; }
+            else if (m > 11) { m = 0; y += 1; }
+            state.calMonthIndex = m;
+            state.calYear = y;
+            state.selectedPerfMonth = String(m);
+            selectJournalDay(`${y}-${String(m + 1).padStart(2, '0')}-01`);
+            saveState();
+        }
+
+        function selectPerfMonth(key) {
+            state.selectedPerfMonth = String(key);
+            if (key !== 'YTD') {
+                state.calMonthIndex = Number(key);
+            }
+            saveState();
+            renderOpenCalendarSection();
+        }
+
         function renderOpenCalendarSection() {
+            ensureDailyJournalInit();
             const grid = document.getElementById('openCalendarDaysGrid');
             const perfBoxes = document.getElementById('yearlyPerformanceBoxes');
             const detailPanel = document.getElementById('selectedMonthDetailPanel');
+            const barsContainer = document.getElementById('calDailyBarsContainer');
+            const distContainer = document.getElementById('calDistributionBars');
             if (!grid || !perfBoxes || !detailPanel) return;
 
             const isTa = state.lang === 'ta';
@@ -1222,104 +1490,168 @@
             const shortMonthsEn = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
             document.getElementById('openCalMonthLabel').innerText = isTa ? `${monthNamesTa[monthIdx]} ${year}` : `${monthNamesEn[monthIdx]} ${year}`;
+            document.getElementById('selectedJournalDateLabel').innerText = state.selectedJournalDate;
+
+            const mData = computeMonthlyPerformanceData(monthIdx);
+            const weeklyAvg = Math.round(mData.netProfit / 4);
+
+            let ytdInc = 0, ytdExp = 0, ytdInv = 0, ytdNet = 0, ytdDays = 0, ytdLeaves = 0;
+            for (let i = 0; i < 12; i++) {
+                const d = computeMonthlyPerformanceData(i);
+                ytdInc += d.income;
+                ytdExp += d.expense;
+                ytdInv += d.investment;
+                ytdNet += d.netProfit;
+                ytdDays += d.activeDays;
+                ytdLeaves += d.leaveDays;
+            }
+
+            const mPerfEl = document.getElementById('calMonthlyPerfVal');
+            mPerfEl.innerText = `${mData.netProfit >= 0 ? '+' : ''}${formatINR(mData.netProfit)}`;
+            mPerfEl.className = mData.netProfit < 0 ? 'text-pink-400' : 'text-emeraldGrowth';
+            document.getElementById('calWeeklyPerfVal').innerText = `${weeklyAvg >= 0 ? '+' : ''}${formatINR(weeklyAvg)}`;
+            document.getElementById('calWorkRateVal').innerText = `${mData.workRate}% (${mData.activeDays}d)`;
+            document.getElementById('calYearlyPerfVal').innerText = `${ytdNet >= 0 ? '+' : ''}${formatINR(ytdNet)}`;
+
+            document.getElementById('calDailyWrVal').innerText = `${mData.dailyWr}%`;
+            document.getElementById('calDailyWrGaugeLabel').innerText = `${mData.winDays}W / ${mData.lossDays}L`;
+            document.getElementById('calWinLossRatioVal').innerText = String(mData.winLossRatio);
+            document.getElementById('calAvgWinText').innerText = `Win ${formatINR(mData.avgWin)}`;
+            document.getElementById('calAvgLossText').innerText = `Loss ${formatINR(mData.avgLoss)}`;
+            const totalAvg = Math.max(1, mData.avgWin + mData.avgLoss);
+            document.getElementById('calAvgWinBar').style.width = `${Math.round((mData.avgWin / totalAvg) * 100)}%`;
+            document.getElementById('calAvgLossBar').style.width = `${Math.round((mData.avgLoss / totalAvg) * 100)}%`;
+            if (document.getElementById('calDailyBarTotal')) {
+                document.getElementById('calDailyBarTotal').innerText = `${mData.netProfit >= 0 ? '+' : ''}${formatINR(mData.netProfit)}`;
+            }
 
             grid.innerHTML = '';
+            if (barsContainer) barsContainer.innerHTML = '';
+            if (distContainer) distContainer.innerHTML = '';
+
             const firstDay = new Date(year, monthIdx, 1);
             const daysInMonth = new Date(year, monthIdx + 1, 0).getDate();
             const startOffset = (firstDay.getDay() + 6) % 7;
 
-            const dayMap = {};
-            (state.calendarEntries || []).forEach(item => {
-                if (!item || !item.date) return;
-                const [y, m, d] = item.date.split('-').map(Number);
-                if (y === year && (m - 1) === monthIdx && d >= 1 && d <= daysInMonth) {
-                    if (!dayMap[d]) dayMap[d] = { income: 0, expense: 0, investment: 0, count: 0 };
-                    dayMap[d].income += Number(item.income || 0);
-                    dayMap[d].expense += Number(item.expense || 0);
-                    dayMap[d].investment += Number(item.investment || 0);
-                    dayMap[d].count += 1;
-                }
-            });
+            let maxAbsDay = 1000;
+            for (let d = 1; d <= daysInMonth; d++) {
+                const k = `${year}-${String(monthIdx + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+                const e = state.dailyJournal[k];
+                if (e) maxAbsDay = Math.max(maxAbsDay, Math.abs((e.income || 0) - (e.expense || 0)));
+            }
 
             let currentDay = 1;
             const totalCells = startOffset + daysInMonth;
             const numWeeks = Math.ceil(totalCells / 7);
+            const weekTotalsArr = [];
 
             for (let wIdx = 0; wIdx < numWeeks; wIdx++) {
                 const row = document.createElement('div');
                 row.className = 'grid grid-cols-8 gap-1.5 items-stretch';
                 let weekNet = 0;
-                let weekEntries = 0;
+                let weekWorkDays = 0;
 
                 for (let dIdx = 0; dIdx < 7; dIdx++) {
                     const cellIndex = wIdx * 7 + dIdx;
                     const cell = document.createElement('div');
                     if (cellIndex < startOffset || currentDay > daysInMonth) {
-                        cell.className = 'bg-slate-900/35 border border-slate-800/60 rounded-lg p-1.5 min-h-[52px] text-slate-600 flex items-center justify-center text-[10px]';
+                        cell.className = 'bg-[#050e21]/60 border border-blue-950 rounded-lg p-1.5 min-h-[52px] text-blue-900 flex items-center justify-center text-[10px]';
                         cell.innerText = '·';
                     } else {
                         const dNum = currentDay;
                         currentDay++;
-                        const dData = dayMap[dNum];
-                        const net = dData ? (dData.income - dData.expense) : 0;
-                        if (dData) {
-                            weekNet += net;
-                            weekEntries += dData.count;
+                        const dateKey = `${year}-${String(monthIdx + 1).padStart(2, '0')}-${String(dNum).padStart(2, '0')}`;
+                        const entry = state.dailyJournal[dateKey];
+                        const hasWork = entry && !entry.isLeave && (entry.income > 0 || entry.expense > 0 || entry.investment > 0);
+                        const dayNet = hasWork ? (Number(entry.income || 0) - Number(entry.expense || 0)) : 0;
+
+                        if (hasWork) {
+                            weekNet += dayNet;
+                            weekWorkDays++;
                         }
-                        cell.className = `rounded-lg p-1.5 min-h-[52px] flex flex-col justify-between border ${
-                            dData
-                                ? (net < 0 ? 'bg-red-500/15 border-red-500/50' : 'bg-emeraldGrowth/15 border-emeraldGrowth/50')
-                                : 'bg-slate-900/75 border-slate-800'
+
+                        const isSelected = state.selectedJournalDate === dateKey;
+                        cell.className = `rounded-lg p-1.5 min-h-[52px] flex flex-col justify-between cursor-pointer transition border ${
+                            isSelected
+                                ? 'bg-cyan-500/25 border-cyan-300 ring-1 ring-cyan-300'
+                                : hasWork
+                                    ? (dayNet < 0 ? 'bg-pink-500/15 border-pink-500/40' : 'bg-cyan-500/15 border-cyan-500/40')
+                                    : 'bg-[#050e21]/85 border-blue-900/60 hover:border-cyan-400/60'
                         }`;
+                        cell.onclick = () => selectJournalDay(dateKey);
+
+                        const amtLabel = hasWork ? `${dayNet >= 0 ? '+' : ''}${formatINR(dayNet)}` : '₹0';
+                        const amtColor = !hasWork ? 'text-slate-500' : (dayNet < 0 ? 'text-pink-300' : 'text-cyan-300');
                         cell.innerHTML = `
                             <div class="flex items-center justify-between text-[11px] font-bold">
-                                <span class="text-white">${dNum}</span>
-                                ${dData ? `<span class="text-[9px] px-1 rounded bg-slate-800 text-posterYellow">${dData.count}</span>` : ''}
+                                <span class="${isSelected ? 'text-white' : 'text-blue-100'}">${dNum}</span>
+                                <span class="text-[8px] ${hasWork ? 'text-cyan-300' : 'text-slate-600'}">${hasWork ? '●' : '0'}</span>
                             </div>
-                            <div class="text-[10px] font-extrabold truncate ${dData ? (net < 0 ? 'text-red-400' : 'text-emeraldGrowth') : 'text-slate-500'}">
-                                ${dData ? `${net >= 0 ? '+' : ''}${formatINR(net)}` : '—'}
-                            </div>
+                            <div class="text-[10px] font-extrabold truncate ${amtColor}">${amtLabel}</div>
                         `;
+
+                        if (barsContainer) {
+                            const bar = document.createElement('div');
+                            const pctH = hasWork ? Math.max(14, Math.round((Math.abs(dayNet) / maxAbsDay) * 100)) : 6;
+                            bar.style.height = `${pctH}%`;
+                            bar.title = `${dateKey}: ${amtLabel}`;
+                            bar.onclick = () => selectJournalDay(dateKey);
+                            bar.className = `flex-1 min-w-[6px] rounded-t cursor-pointer transition ${
+                                !hasWork ? 'bg-slate-700' : (dayNet < 0 ? 'bg-pink-400' : 'bg-cyan-400')
+                            }`;
+                            barsContainer.appendChild(bar);
+                        }
                     }
                     row.appendChild(cell);
                 }
 
+                weekTotalsArr.push({ label: `W${wIdx + 1}`, net: weekNet, days: weekWorkDays });
                 const totalCell = document.createElement('div');
-                totalCell.className = 'bg-slate-900 border border-slate-700 rounded-lg p-1.5 min-h-[52px] flex flex-col justify-center items-center text-center';
+                totalCell.className = 'bg-[#050e21] border border-blue-900/80 rounded-lg p-1.5 min-h-[52px] flex flex-col justify-center items-center text-center';
+                const wkColor = weekWorkDays === 0 ? 'text-slate-500' : (weekNet < 0 ? 'text-pink-300' : 'text-cyan-300');
                 totalCell.innerHTML = `
-                    <span class="text-[9px] muted-text">W${wIdx + 1} (${weekEntries})</span>
-                    <span class="text-[10px] font-extrabold ${weekNet < 0 ? 'text-red-400' : 'text-posterYellow'}">${weekEntries > 0 ? (weekNet >= 0 ? '+' : '') + formatINR(weekNet) : '—'}</span>
+                    <span class="text-[9px] text-blue-300">W${wIdx + 1} (${weekWorkDays}d)</span>
+                    <span class="text-[10px] font-extrabold ${wkColor}">${weekWorkDays === 0 ? '₹0' : (weekNet >= 0 ? '+' : '') + formatINR(weekNet)}</span>
                 `;
                 row.appendChild(totalCell);
                 grid.appendChild(row);
             }
 
+            if (distContainer) {
+                const maxWkAbs = Math.max(1000, ...weekTotalsArr.map(w => Math.abs(w.net)));
+                weekTotalsArr.slice(0, 5).forEach(wk => {
+                    const pct = wk.days === 0 ? 8 : Math.max(18, Math.round((Math.abs(wk.net) / maxWkAbs) * 100));
+                    const col = document.createElement('div');
+                    col.className = 'flex flex-col items-center justify-end h-full gap-1';
+                    col.innerHTML = `
+                        <div class="w-full rounded-t ${wk.days === 0 ? 'bg-slate-700' : (wk.net < 0 ? 'bg-pink-400' : 'bg-cyan-400')}" style="height:${pct}%" title="${wk.label}: ${formatINR(wk.net)}"></div>
+                        <span class="text-[9px] text-blue-300">${wk.label}</span>
+                    `;
+                    distContainer.appendChild(col);
+                });
+            }
+
             perfBoxes.innerHTML = '';
-            let ytdInc = 0, ytdExp = 0, ytdInv = 0, ytdNet = 0, ytdDays = 0;
             for (let i = 0; i < 12; i++) {
                 const md = computeMonthlyPerformanceData(i);
-                ytdInc += md.income;
-                ytdExp += md.expense;
-                ytdInv += md.investment;
-                ytdNet += md.netProfit;
-                ytdDays += md.activeDays;
-
                 const isSel = String(state.selectedPerfMonth) === String(i);
                 const btn = document.createElement('button');
                 btn.type = 'button';
                 btn.onclick = () => selectPerfMonth(i);
                 btn.className = `p-2 rounded-lg border text-center transition flex flex-col justify-between ${
                     isSel
-                        ? 'bg-posterYellow text-matteBlack border-white font-extrabold scale-[1.02]'
+                        ? 'bg-cyan-400 text-[#050e21] border-white font-extrabold scale-[1.02]'
                         : md.netProfit < 0
-                            ? 'bg-red-500/15 border-red-500/50 text-white hover:border-red-400'
-                            : 'bg-slate-900 border-slate-800 text-white hover:border-cyberBlue'
+                            ? 'bg-pink-500/15 border-pink-500/40 text-white hover:border-pink-400'
+                            : md.activeDays > 0
+                                ? 'bg-cyan-500/10 border-cyan-500/40 text-white hover:border-cyan-400'
+                                : 'bg-[#050e21] border-blue-900/70 text-blue-300 hover:border-cyan-500/60'
                 }`;
-                const valCls = isSel ? 'text-matteBlack' : (md.netProfit < 0 ? 'text-red-400' : 'text-emeraldGrowth');
+                const valCls = isSel ? 'text-[#050e21]' : (md.netProfit < 0 ? 'text-pink-300' : (md.activeDays > 0 ? 'text-cyan-300' : 'text-slate-500'));
                 btn.innerHTML = `
                     <span class="text-[10px] font-bold">${shortMonthsEn[i]}</span>
-                    <span class="text-[10px] font-extrabold truncate ${valCls}">${md.netProfit >= 0 ? '+' : ''}${formatINR(md.netProfit)}</span>
-                    <span class="text-[8px] ${isSel ? 'text-matteBlack' : 'muted-text'}">${md.activeDays}d</span>
+                    <span class="text-[10px] font-extrabold truncate ${valCls}">${md.activeDays === 0 ? '₹0' : (md.netProfit >= 0 ? '+' : '') + formatINR(md.netProfit)}</span>
+                    <span class="text-[8px] ${isSel ? 'text-[#050e21]' : 'text-blue-400'}">${md.activeDays}d</span>
                 `;
                 perfBoxes.appendChild(btn);
             }
@@ -1330,55 +1662,80 @@
             ytdBtn.onclick = () => selectPerfMonth('YTD');
             ytdBtn.className = `p-2 rounded-lg border text-center transition flex flex-col justify-between ${
                 isYtdSel
-                    ? 'bg-posterYellow text-matteBlack border-white font-extrabold'
-                    : 'bg-cyberBlue/20 border-cyberBlue text-white hover:bg-cyberBlue/30'
+                    ? 'bg-cyan-400 text-[#050e21] border-white font-extrabold'
+                    : 'bg-blue-900/40 border-cyan-500/60 text-white hover:bg-blue-800/50'
             }`;
             ytdBtn.innerHTML = `
                 <span class="text-[10px] font-bold">YTD</span>
-                <span class="text-[10px] font-extrabold truncate ${isYtdSel ? 'text-matteBlack' : 'text-posterYellow'}">${ytdNet >= 0 ? '+' : ''}${formatINR(ytdNet)}</span>
-                <span class="text-[8px] ${isYtdSel ? 'text-matteBlack' : 'muted-text'}">${ytdDays}d</span>
+                <span class="text-[10px] font-extrabold truncate ${isYtdSel ? 'text-[#050e21]' : 'text-cyan-300'}">${ytdNet >= 0 ? '+' : ''}${formatINR(ytdNet)}</span>
+                <span class="text-[8px] ${isYtdSel ? 'text-[#050e21]' : 'text-blue-300'}">${ytdDays}d</span>
             `;
             perfBoxes.appendChild(ytdBtn);
 
             if (isYtdSel) {
                 const ytdSurplus = ytdInc - (ytdExp + ytdInv);
                 detailPanel.innerHTML = `
-                    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-2">
-                        <strong class="text-sm text-posterYellow">${isTa ? `ஆண்டு மொத்த பெர்ஃபார்மன்ஸ் (YTD ${year})` : `Yearly Performance Summary (YTD ${year})`}</strong>
-                        <span class="px-2.5 py-0.5 rounded bg-cyberBlue/20 text-cyberBlue font-extrabold">${ytdDays} Active Days</span>
+                    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-blue-900/80 pb-2">
+                        <strong class="text-sm text-cyan-300">${isTa ? `ஆண்டு மொத்த ஜர்னல் (YTD ${year})` : `Yearly Income Journal Summary (YTD ${year})`}</strong>
+                        <span class="px-2.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-extrabold">${ytdDays} Work Days • ${ytdLeaves} Leave/₹0 Days</span>
                     </div>
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                        <div class="inset-box p-2 rounded-lg"><div class="text-[10px] muted-text">Total Income</div><div class="font-extrabold text-emeraldGrowth">+${formatINR(ytdInc)}</div></div>
-                        <div class="inset-box p-2 rounded-lg"><div class="text-[10px] muted-text">Total Expenses</div><div class="font-extrabold text-red-400">-${formatINR(ytdExp)}</div></div>
-                        <div class="inset-box p-2 rounded-lg"><div class="text-[10px] muted-text">Investments</div><div class="font-extrabold text-posterYellow">${formatINR(ytdInv)}</div></div>
-                        <div class="inset-box p-2 rounded-lg"><div class="text-[10px] muted-text">Net Surplus</div><div class="font-extrabold text-cyberBlue">${formatINR(ytdSurplus)}</div></div>
+                        <div class="bg-[#050e21] border border-blue-900/70 p-2 rounded-lg"><div class="text-[10px] text-blue-300">Total Income</div><div class="font-extrabold text-cyan-300">+${formatINR(ytdInc)}</div></div>
+                        <div class="bg-[#050e21] border border-blue-900/70 p-2 rounded-lg"><div class="text-[10px] text-blue-300">Total Expenses</div><div class="font-extrabold text-pink-300">-${formatINR(ytdExp)}</div></div>
+                        <div class="bg-[#050e21] border border-blue-900/70 p-2 rounded-lg"><div class="text-[10px] text-blue-300">Investments</div><div class="font-extrabold text-posterYellow">${formatINR(ytdInv)}</div></div>
+                        <div class="bg-[#050e21] border border-blue-900/70 p-2 rounded-lg"><div class="text-[10px] text-blue-300">Net Surplus</div><div class="font-extrabold text-white">${formatINR(ytdSurplus)}</div></div>
                     </div>
-                    <div class="text-[11px] text-slate-300">
-                        <strong>${isTa ? 'AI ஆலோசனை:' : 'AI Suggestion:'}</strong> ${isTa
-                            ? `ஆண்டு முழுவதும் மொத்தம் ${ytdDays} நாட்கள் பதிவாகியுள்ளன. செலவுகளை (${formatINR(ytdExp)}) கட்டுப்படுத்தி நிகர மிச்சத்தை பிரையாரிட்டி கடனில் செலுத்துங்கள்.`
-                            : `Across ${year}, ${ytdDays} active days were logged. Keep expenses (${formatINR(ytdExp)}) disciplined and route surplus to priority debt.`}
+                    <div class="bg-[#050e21] border border-blue-800/80 rounded-lg p-2.5 text-[11px] text-blue-100 leading-relaxed">
+                        <strong class="text-cyan-300">🤖 ${isTa ? 'ஓவர்ஆல் AI காரணம் & இம்ப்ரூவ்மென்ட் சஜஷன்:' : 'Overall AI Root-Cause & Improvement Suggestion:'}</strong>
+                        ${isTa
+                            ? `இந்த ஆண்டில் மொத்தம் ${ytdDays} நாட்கள் வருமானம் பதிவாகியுள்ளது (${ytdLeaves} நாட்கள் ₹0 / லீவு). மாதத்திற்கு 20–24 நாட்கள் தொடர்ச்சியாக வேலை/பிசினஸ் வருமானத்தை உறுதி செய்து, செலவுகளை (${formatINR(ytdExp)}) கட்டுப்படுத்தினால் நிகர வளர்ச்சி வேகமாக உயரும்.`
+                            : `Across ${year}, income was logged on ${ytdDays} active days with ${ytdLeaves} ₹0/leave days. Maintaining 20–24 active earning days per month and trimming expenses (${formatINR(ytdExp)}) will significantly boost net growth.`}
                     </div>
                 `;
             } else {
                 const selIdx = Math.min(11, Math.max(0, Number(state.selectedPerfMonth) || 0));
                 const selData = computeMonthlyPerformanceData(selIdx);
                 const selTitle = isTa ? `${monthNamesTa[selIdx]} ${year}` : `${monthNamesEn[selIdx]} ${year}`;
+                const expRatio = selData.income > 0 ? Math.round((selData.expense / selData.income) * 100) : 0;
+
+                let aiReason = '';
+                if (selData.activeDays === 0) {
+                    aiReason = isTa
+                        ? `${selTitle} மாதத்தில் எந்த நாளும் வருமானம் பதிவாகாததால் (அனைத்து நாட்களும் ₹0 / Leave) பெர்ஃபார்மன்ஸ் பூஜ்ஜியமாக உள்ளது. கேலண்டரில் ஒவ்வொரு நாளையும் கிளிக் செய்து டெய்லி வருமானம்/செலவைப் பதிவு செய்யத் தொடங்குங்கள்.`
+                        : `Performance in ${selTitle} is ₹0 because no active working days were logged yet. Click each date above to record daily income or mark leave days.`;
+                } else if (selData.leaveDays > selData.activeDays) {
+                    aiReason = isTa
+                        ? `இந்த மாதத்தில் வேலை செய்த நாட்களை விட (${selData.activeDays} நாட்கள்) லீவு/வருமானமில்லாத நாட்கள் (${selData.leaveDays} நாட்கள் ₹0) அதிகமாக இருந்ததால் மொத்த பெர்ஃபார்மன்ஸ் குறைந்துள்ளது. வாரத்திற்கு 5–6 நாட்கள் தொடர்ச்சியாக இன்கம் ஜெனரேட் செய்தால் அடுத்த மாதம் வருமானம் வேகமாக உயரும்.`
+                        : `Performance dipped in ${selTitle} primarily due to ${selData.leaveDays} ₹0/leave days compared to ${selData.activeDays} working days. Aim for 5–6 consistent earning days per week and keep daily expenses controlled to improve next month.`;
+                } else if (expRatio > 45) {
+                    aiReason = isTa
+                        ? `${selData.activeDays} நாட்கள் வேலை செய்தும் செலவுகள் வருமானத்தில் ${expRatio}% (${formatINR(selData.expense)}) ஆக உயர்ந்ததால் நிகர லாபம் குறைந்துள்ளது. தேவையற்ற செலவுகளைக் குறைத்து மிச்சத்தை பிரையாரிட்டி கடனில் செலுத்துங்கள்.`
+                        : `Although you worked ${selData.activeDays} days, expenses consumed ${expRatio}% (${formatINR(selData.expense)}) of income, reducing net profit. Cutting non-essential expenses and directing surplus to priority debt will improve next month's margin.`;
+                } else {
+                    aiReason = isTa
+                        ? `${selData.activeDays} நாட்கள் வேலை செய்து சிறந்த நாளில் ${formatINR(selData.bestDay.net)} ஈட்டியுள்ளீர்கள். மீதமுள்ள ${selData.leaveDays} லீவு நாட்களில் சில நாட்களை கூடுதல் வருமான நாட்களாக மாற்றினால் வளர்ச்சி இன்னும் சிறப்பாக இருக்கும்.`
+                        : `Solid consistency across ${selData.activeDays} working days (best day: ${formatINR(selData.bestDay.net)}). Converting a few of the ${selData.leaveDays} ₹0/leave days into active earning days and investing surplus will accelerate growth further.`;
+                }
+
                 detailPanel.innerHTML = `
-                    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-2">
-                        <strong class="text-sm text-posterYellow">${selTitle} — Monthly Performance</strong>
-                        <span class="px-2.5 py-0.5 rounded ${selData.netProfit < 0 ? 'bg-red-500/20 text-red-400' : 'bg-emeraldGrowth/20 text-emeraldGrowth'} font-extrabold">Net: ${selData.netProfit >= 0 ? '+' : ''}${formatINR(selData.netProfit)} (${selData.workRate}% Active)</span>
+                    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-blue-900/80 pb-2">
+                        <strong class="text-sm text-cyan-300">${selTitle} — Income Journal Breakdown</strong>
+                        <span class="px-2.5 py-0.5 rounded ${selData.netProfit < 0 ? 'bg-pink-500/20 text-pink-300' : 'bg-cyan-500/20 text-cyan-300'} font-extrabold">Net: ${selData.netProfit >= 0 ? '+' : ''}${formatINR(selData.netProfit)} (${selData.activeDays}d Active / ${selData.leaveDays}d ₹0)</span>
                     </div>
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                        <div class="inset-box p-2 rounded-lg"><div class="text-[10px] muted-text">Income</div><div class="font-extrabold text-emeraldGrowth">+${formatINR(selData.income)}</div></div>
-                        <div class="inset-box p-2 rounded-lg"><div class="text-[10px] muted-text">Expenses</div><div class="font-extrabold text-red-400">-${formatINR(selData.expense)}</div></div>
-                        <div class="inset-box p-2 rounded-lg"><div class="text-[10px] muted-text">Investment</div><div class="font-extrabold text-posterYellow">${formatINR(selData.investment)}</div></div>
-                        <div class="inset-box p-2 rounded-lg"><div class="text-[10px] muted-text">Net Surplus</div><div class="font-extrabold text-cyberBlue">${formatINR(selData.surplus)}</div></div>
+                    <div class="grid grid-cols-2 sm:grid-cols-6 gap-2">
+                        <div class="bg-[#050e21] border border-blue-900/70 p-2 rounded-lg"><div class="text-[10px] text-blue-300">Income</div><div class="font-extrabold text-cyan-300">+${formatINR(selData.income)}</div></div>
+                        <div class="bg-[#050e21] border border-blue-900/70 p-2 rounded-lg"><div class="text-[10px] text-blue-300">Expenses</div><div class="font-extrabold text-pink-300">-${formatINR(selData.expense)}</div></div>
+                        <div class="bg-[#050e21] border border-blue-900/70 p-2 rounded-lg"><div class="text-[10px] text-blue-300">Investment</div><div class="font-extrabold text-posterYellow">${formatINR(selData.investment)}</div></div>
+                        <div class="bg-[#050e21] border border-blue-900/70 p-2 rounded-lg"><div class="text-[10px] text-blue-300">Net Surplus</div><div class="font-extrabold text-white">${formatINR(selData.surplus)}</div></div>
+                        <div class="bg-[#050e21] border border-blue-900/70 p-2 rounded-lg"><div class="text-[10px] text-blue-300">Best Day</div><div class="font-extrabold text-cyan-300">${selData.bestDay.day} (${formatINR(selData.bestDay.net)})</div></div>
+                        <div class="bg-[#050e21] border border-blue-900/70 p-2 rounded-lg"><div class="text-[10px] text-blue-300">Low / Worst Day</div><div class="font-extrabold text-pink-300">${selData.worstDay.day} (${formatINR(selData.worstDay.net)})</div></div>
                     </div>
-                    <div class="text-[11px] text-slate-300">
-                        <strong>${isTa ? 'AI ஆலோசனை:' : 'AI Suggestion:'}</strong> ${selData.netProfit < 0
-                            ? (isTa ? `${selTitle} மாதத்தில் செலவு அதிகமாக உள்ளது. தேவையற்ற செலவுகளைக் குறைத்து மிச்சத்தை பிரையாரிட்டி கடனில் செலுத்துங்கள்.` : `${selTitle} shows net outflow. Trim discretionary spend and direct surplus toward priority debt.`)
-                            : (isTa ? `${selTitle} மாதத்தில் ${selData.activeDays} நாட்கள் செயல்பாடு உள்ளது. நிகர மிச்சத்தை (${formatINR(selData.surplus)}) முதலீடு மற்றும் கடன் குறைப்பில் தொடரவும்.` : `${selTitle} shows ${selData.activeDays} active days. Sustain net surplus (${formatINR(selData.surplus)}) across investment and debt payoff.`)}
+                    <div class="bg-[#050e21] border border-blue-800/80 rounded-lg p-2.5 text-[11px] text-blue-100 leading-relaxed">
+                        <strong class="text-cyan-300">🤖 ${isTa ? 'AI காரணம் & இம்ப்ரூவ்மென்ட் சஜஷன்:' : 'AI Root-Cause & Improvement Suggestion:'}</strong> ${aiReason}
                     </div>
+                `;
+            }
+        }
                 `;
             }
         }
