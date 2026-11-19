@@ -552,21 +552,81 @@
                 </div>
             </div>
 
-            <!-- Open Monthly Calendar Grid + Weekly Totals + Monthly/Weekly/Yearly Performance -->
+            <!-- Open Monthly Income Journal Calendar + Daily Bars + Yearly Performance + AI Suggestion -->
             <div class="inset-box p-3.5 sm:p-4 rounded-xl border-2 border-cyberBlue space-y-4 font-mono text-xs">
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs font-mono">
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 text-xs font-mono">
                     <div class="bg-slate-900/90 border border-slate-700 rounded-xl p-2.5">
-                        <div class="text-[10px] muted-text uppercase" data-i18n="calMonthlyPerfLabel">Monthly Performance</div>
+                        <div class="text-[10px] muted-text uppercase">Monthly Net Journal</div>
                         <div id="calMonthlyPerfVal" class="text-sm font-extrabold text-emeraldGrowth mt-0.5">₹0</div>
                     </div>
                     <div class="bg-slate-900/90 border border-slate-700 rounded-xl p-2.5">
-                        <div class="text-[10px] muted-text uppercase" data-i18n="calWeeklyPerfLabel">Weekly Performance (Avg / Wk)</div>
+                        <div class="text-[10px] muted-text uppercase">Weekly Avg / Wk</div>
                         <div id="calWeeklyPerfVal" class="text-sm font-extrabold text-posterYellow mt-0.5">₹0</div>
                     </div>
                     <div class="bg-slate-900/90 border border-slate-700 rounded-xl p-2.5">
-                        <div class="text-[10px] muted-text uppercase" data-i18n="calYearlyPerfLabel">Yearly Performance (YTD)</div>
+                        <div class="text-[10px] muted-text uppercase">Work Consistency</div>
+                        <div id="calWorkRateVal" class="text-sm font-extrabold text-white mt-0.5">0% (0d)</div>
+                    </div>
+                    <div class="bg-slate-900/90 border border-slate-700 rounded-xl p-2.5">
+                        <div class="text-[10px] muted-text uppercase">Yearly Performance (YTD)</div>
                         <div id="calYearlyPerfVal" class="text-sm font-extrabold text-cyberBlue mt-0.5">₹0</div>
                     </div>
+                </div>
+
+                <div class="bg-slate-900/95 border border-posterYellow/60 rounded-xl p-3 space-y-2">
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                        <span class="text-[11px] font-extrabold text-posterYellow">✍️ DAY JOURNAL ENTRY: <span id="selectedJournalDateLabel" class="text-white">2026-11-19</span></span>
+                        <span class="text-[10px] muted-text">வேலை இல்லாத / லீவு நாட்களுக்கு ₹0 (Leave) என சேமிக்கலாம்</span>
+                    </div>
+                    <div class="grid grid-cols-2 sm:grid-cols-5 gap-2">
+                        <input type="number" id="jDayIncome" placeholder="Income (₹)" class="inset-box rounded-lg px-2.5 py-1.5 text-xs">
+                        <input type="number" id="jDayExpense" placeholder="Expense (₹)" class="inset-box rounded-lg px-2.5 py-1.5 text-xs">
+                        <input type="number" id="jDayInvestment" placeholder="Invest (₹)" class="inset-box rounded-lg px-2.5 py-1.5 text-xs">
+                        <input type="text" id="jDayNote" placeholder="Work / Driving / Leave note..." class="inset-box rounded-lg px-2.5 py-1.5 text-xs col-span-2 sm:col-span-2">
+                    </div>
+                    <div class="flex flex-wrap justify-end gap-2">
+                        <button type="button" onclick="saveJournalDayEntry(true)" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-red-500/20 text-slate-300 hover:text-red-400 border border-slate-600 font-bold text-[11px]">
+                            🛑 Mark Leave (₹0)
+                        </button>
+                        <button type="button" onclick="saveJournalDayEntry(false)" class="px-4 py-1.5 rounded-lg bg-emeraldGrowth hover:bg-green-400 text-matteBlack font-extrabold text-[11px]">
+                            ✓ Save Day Journal
+                        </button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 xl:grid-cols-3 gap-3 items-start">
+                    <div class="xl:col-span-2 overflow-x-auto">
+                        <div class="min-w-[560px] space-y-1.5">
+                            <div class="grid grid-cols-8 gap-1.5 text-center text-[11px] font-bold text-slate-300">
+                                <div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div><div>Sun</div><div class="text-posterYellow">Total</div>
+                            </div>
+                            <div id="openCalendarDaysGrid" class="space-y-1.5"></div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900/90 border border-slate-700 rounded-xl p-3 space-y-2.5">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[11px] font-bold text-slate-300 uppercase">Net Daily Income Bars</span>
+                            <span id="calDailyBarTotal" class="text-xs font-extrabold text-emeraldGrowth">₹0</span>
+                        </div>
+                        <div id="calDailyBarsContainer" class="h-28 flex items-end gap-1 pt-2 border-b border-slate-700 overflow-x-auto"></div>
+                        <div class="flex justify-between text-[10px] muted-text">
+                            <span>Day 1</span>
+                            <span>🟢 Profit | 🔴 Loss | ⚪ ₹0 Leave</span>
+                            <span>End</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-2 pt-2 border-t border-slate-800">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[11px] font-extrabold uppercase text-posterYellow" data-i18n="yearlyPerfGridTitle">YEARLY PERFORMANCE (CLICK MONTH FOR DETAILS & IMPROVEMENT)</span>
+                    </div>
+                    <div id="yearlyPerformanceBoxes" class="grid grid-cols-3 sm:grid-cols-6 lg:grid-cols-13 gap-1.5 text-center"></div>
+                </div>
+
+                <div id="selectedMonthDetailPanel" class="bg-slate-900/95 border-2 border-posterYellow rounded-xl p-3.5 space-y-2.5"></div>
+            </div>
                 </div>
 
                 <!-- 7-Day + Weekly Total Grid -->
@@ -1106,36 +1166,36 @@
             return { totInv, totInc, totExp, net };
         }
 
-        function computeMonthlyPerformanceData(monthIdx) {
-            const cur = getCurrentFinancialTotals();
-            const currentMonthIdx = state.calMonthIndex;
-            const weights = [0.72, 0.78, 0.85, 0.81, 0.88, 0.84, 0.91, 0.87, 0.90, 0.95, 1.0, 0.92];
-            const w = weights[monthIdx] || 0.85;
-            const isCurrent = monthIdx === currentMonthIdx;
+      function computeMonthlyPerformanceData(monthIdx) {
+            const year = Number(state.calYear || 2026);
+            const daysInMonth = new Date(year, monthIdx + 1, 0).getDate();
+            let income = 0, expense = 0, investment = 0, activeDays = 0;
 
-            const income = isCurrent ? cur.totInc : Math.round(cur.totInc * w);
-            const expense = isCurrent ? cur.totExp : Math.round(cur.totExp * (0.85 + ((monthIdx % 4) * 0.08)));
-            const investment = isCurrent ? cur.totInv : Math.round(cur.totInv * w);
+            for (let d = 1; d <= daysInMonth; d++) {
+                const entry = (state.calendarEntries || []).find(e => e.date === `${year}-${String(monthIdx + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`);
+                if (entry) {
+                    income += Number(entry.income || 0);
+                    expense += Number(entry.expense || 0);
+                    investment += Number(entry.investment || 0);
+                    activeDays++;
+                }
+            }
+
             const netProfit = income - expense;
             const surplus = income - (expense + investment);
-            return { income, expense, investment, netProfit, surplus };
+            const workRate = Math.round((activeDays / daysInMonth) * 100);
+            return { income, expense, investment, netProfit, surplus, activeDays, daysInMonth, workRate };
         }
 
         function changeCalendarMonth(delta) {
             let m = Number(state.calMonthIndex) + delta;
             let y = Number(state.calYear);
-            if (m < 0) {
-                m = 11;
-                y -= 1;
-            } else if (m > 11) {
-                m = 0;
-                y += 1;
-            }
+            if (m < 0) { m = 11; y -= 1; }
+            else if (m > 11) { m = 0; y += 1; }
             state.calMonthIndex = m;
             state.calYear = y;
             state.selectedPerfMonth = String(m);
             saveState();
-            renderOpenCalendarSection();
         }
 
         function selectPerfMonth(key) {
@@ -1161,52 +1221,26 @@
             const monthNamesTa = ['ஜனவரி', 'பிப்ரவரி', 'மார்ச்', 'ஏப்ரல்', 'மே', 'ஜூன்', 'ஜூலை', 'ஆகஸ்ட்', 'செப்டம்பர்', 'அக்டோபர்', 'நவம்பர்', 'டிசம்பர்'];
             const shortMonthsEn = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-            const headerMonthName = isTa ? `${monthNamesTa[monthIdx]} ${year}` : `${monthNamesEn[monthIdx]} ${year}`;
-            document.getElementById('openCalMonthLabel').innerText = headerMonthName;
+            document.getElementById('openCalMonthLabel').innerText = isTa ? `${monthNamesTa[monthIdx]} ${year}` : `${monthNamesEn[monthIdx]} ${year}`;
 
-            const mData = computeMonthlyPerformanceData(monthIdx);
-            const weeklyAvg = Math.round(mData.netProfit / 4);
-
-            let ytdInc = 0, ytdExp = 0, ytdInv = 0, ytdNet = 0;
-            for (let i = 0; i < 12; i++) {
-                const d = computeMonthlyPerformanceData(i);
-                ytdInc += d.income;
-                ytdExp += d.expense;
-                ytdInv += d.investment;
-                ytdNet += d.netProfit;
-            }
-
-            const mPerfEl = document.getElementById('calMonthlyPerfVal');
-            const wPerfEl = document.getElementById('calWeeklyPerfVal');
-            const yPerfEl = document.getElementById('calYearlyPerfVal');
-            mPerfEl.innerText = `${mData.netProfit >= 0 ? '+' : ''}${formatINR(mData.netProfit)}`;
-            mPerfEl.className = `text-sm font-extrabold mt-0.5 ${mData.netProfit < 0 ? 'text-red-500' : 'text-emeraldGrowth'}`;
-            wPerfEl.innerText = `${weeklyAvg >= 0 ? '+' : ''}${formatINR(weeklyAvg)}`;
-            wPerfEl.className = `text-sm font-extrabold mt-0.5 ${weeklyAvg < 0 ? 'text-red-500' : 'text-posterYellow'}`;
-            yPerfEl.innerText = `${ytdNet >= 0 ? '+' : ''}${formatINR(ytdNet)}`;
-            yPerfEl.className = `text-sm font-extrabold mt-0.5 ${ytdNet < 0 ? 'text-red-500' : 'text-cyberBlue'}`;
-
-            // Build Calendar Grid (Mon-Sun + Weekly Total column)
             grid.innerHTML = '';
             const firstDay = new Date(year, monthIdx, 1);
             const daysInMonth = new Date(year, monthIdx + 1, 0).getDate();
-            const startOffset = (firstDay.getDay() + 6) % 7; // Mon=0..Sun=6
-            const now = new Date();
-            const isThisMonthNow = now.getFullYear() === year && now.getMonth() === monthIdx;
-            const todayDate = now.getDate();
+            const startOffset = (firstDay.getDay() + 6) % 7;
 
-            const eventsByDay = {};
-            (state.calendarEvents || []).forEach(ev => {
-                if (!ev.date) return;
-                const parts = String(ev.date).split('-');
-                if (parts.length === 3 && Number(parts[0]) === year && Number(parts[1]) - 1 === monthIdx) {
-                    const dayNum = Number(parts[2]);
-                    if (!eventsByDay[dayNum]) eventsByDay[dayNum] = [];
-                    eventsByDay[dayNum].push(ev.title);
+            const dayMap = {};
+            (state.calendarEntries || []).forEach(item => {
+                if (!item || !item.date) return;
+                const [y, m, d] = item.date.split('-').map(Number);
+                if (y === year && (m - 1) === monthIdx && d >= 1 && d <= daysInMonth) {
+                    if (!dayMap[d]) dayMap[d] = { income: 0, expense: 0, investment: 0, count: 0 };
+                    dayMap[d].income += Number(item.income || 0);
+                    dayMap[d].expense += Number(item.expense || 0);
+                    dayMap[d].investment += Number(item.investment || 0);
+                    dayMap[d].count += 1;
                 }
             });
 
-            const avgDailyNet = Math.round(mData.netProfit / Math.max(1, daysInMonth));
             let currentDay = 1;
             const totalCells = startOffset + daysInMonth;
             const numWeeks = Math.ceil(totalCells / 7);
@@ -1215,64 +1249,61 @@
                 const row = document.createElement('div');
                 row.className = 'grid grid-cols-8 gap-1.5 items-stretch';
                 let weekNet = 0;
-                let weekActiveDays = 0;
+                let weekEntries = 0;
 
                 for (let dIdx = 0; dIdx < 7; dIdx++) {
                     const cellIndex = wIdx * 7 + dIdx;
                     const cell = document.createElement('div');
                     if (cellIndex < startOffset || currentDay > daysInMonth) {
-                        cell.className = 'bg-slate-900/35 border border-slate-800/60 rounded-lg p-1.5 min-h-[54px] text-slate-600 flex items-center justify-center text-[10px]';
+                        cell.className = 'bg-slate-900/35 border border-slate-800/60 rounded-lg p-1.5 min-h-[52px] text-slate-600 flex items-center justify-center text-[10px]';
                         cell.innerText = '·';
                     } else {
                         const dNum = currentDay;
                         currentDay++;
-                        weekActiveDays++;
-                        const hasEvent = Array.isArray(eventsByDay[dNum]) && eventsByDay[dNum].length > 0;
-                        const dayNet = hasEvent ? Math.round(avgDailyNet * 1.15) : avgDailyNet;
-                        weekNet += dayNet;
-                        const isToday = isThisMonthNow && dNum === todayDate;
-
-                        cell.className = `rounded-lg p-1.5 min-h-[54px] flex flex-col justify-between cursor-pointer transition border ${
-                            isToday
-                                ? 'bg-cyberBlue/25 border-posterYellow ring-1 ring-posterYellow'
-                                : hasEvent
-                                    ? 'bg-emeraldGrowth/15 border-emeraldGrowth/60'
-                                    : 'bg-slate-900/80 border-slate-800 hover:border-cyberBlue'
+                        const dData = dayMap[dNum];
+                        const net = dData ? (dData.income - dData.expense) : 0;
+                        if (dData) {
+                            weekNet += net;
+                            weekEntries += dData.count;
+                        }
+                        cell.className = `rounded-lg p-1.5 min-h-[52px] flex flex-col justify-between border ${
+                            dData
+                                ? (net < 0 ? 'bg-red-500/15 border-red-500/50' : 'bg-emeraldGrowth/15 border-emeraldGrowth/50')
+                                : 'bg-slate-900/75 border-slate-800'
                         }`;
-                        cell.onclick = () => {
-                            const mm = String(monthIdx + 1).padStart(2, '0');
-                            const dd = String(dNum).padStart(2, '0');
-                            document.getElementById('calDate').value = `${year}-${mm}-${dd}`;
-                            showToast(isTa ? 'தேதி தேர்ந்தெடுக்கப்பட்டது' : 'DATE SELECTED', `${year}-${mm}-${dd}`);
-                        };
-
-                        const amtColor = dayNet < 0 ? 'text-red-400' : 'text-emeraldGrowth';
                         cell.innerHTML = `
                             <div class="flex items-center justify-between text-[11px] font-bold">
-                                <span class="${isToday ? 'text-posterYellow' : 'text-white'}">${dNum}</span>
-                                ${hasEvent ? '<span class="w-2 h-2 rounded-full bg-posterYellow"></span>' : ''}
+                                <span class="text-white">${dNum}</span>
+                                ${dData ? `<span class="text-[9px] px-1 rounded bg-slate-800 text-posterYellow">${dData.count}</span>` : ''}
                             </div>
-                            <div class="text-[10px] font-bold truncate ${amtColor}">${dayNet >= 0 ? '+' : ''}${formatINR(dayNet)}</div>
+                            <div class="text-[10px] font-extrabold truncate ${dData ? (net < 0 ? 'text-red-400' : 'text-emeraldGrowth') : 'text-slate-500'}">
+                                ${dData ? `${net >= 0 ? '+' : ''}${formatINR(net)}` : '—'}
+                            </div>
                         `;
                     }
                     row.appendChild(cell);
                 }
 
                 const totalCell = document.createElement('div');
-                totalCell.className = 'bg-slate-900 border border-slate-700 rounded-lg p-1.5 min-h-[54px] flex flex-col justify-center items-center text-center';
-                const wkColor = weekNet < 0 ? 'text-red-400' : 'text-posterYellow';
+                totalCell.className = 'bg-slate-900 border border-slate-700 rounded-lg p-1.5 min-h-[52px] flex flex-col justify-center items-center text-center';
                 totalCell.innerHTML = `
-                    <span class="text-[9px] muted-text">W${wIdx + 1}</span>
-                    <span class="text-[10px] font-extrabold ${wkColor}">${weekActiveDays > 0 ? (weekNet >= 0 ? '+' : '') + formatINR(weekNet) : '—'}</span>
+                    <span class="text-[9px] muted-text">W${wIdx + 1} (${weekEntries})</span>
+                    <span class="text-[10px] font-extrabold ${weekNet < 0 ? 'text-red-400' : 'text-posterYellow'}">${weekEntries > 0 ? (weekNet >= 0 ? '+' : '') + formatINR(weekNet) : '—'}</span>
                 `;
                 row.appendChild(totalCell);
                 grid.appendChild(row);
             }
 
-            // Yearly Performance Month Boxes (Jan - Dec + YTD)
             perfBoxes.innerHTML = '';
+            let ytdInc = 0, ytdExp = 0, ytdInv = 0, ytdNet = 0, ytdDays = 0;
             for (let i = 0; i < 12; i++) {
                 const md = computeMonthlyPerformanceData(i);
+                ytdInc += md.income;
+                ytdExp += md.expense;
+                ytdInv += md.investment;
+                ytdNet += md.netProfit;
+                ytdDays += md.activeDays;
+
                 const isSel = String(state.selectedPerfMonth) === String(i);
                 const btn = document.createElement('button');
                 btn.type = 'button';
@@ -1282,12 +1313,13 @@
                         ? 'bg-posterYellow text-matteBlack border-white font-extrabold scale-[1.02]'
                         : md.netProfit < 0
                             ? 'bg-red-500/15 border-red-500/50 text-white hover:border-red-400'
-                            : 'bg-slate-900 border-slate-700 text-white hover:border-emeraldGrowth'
+                            : 'bg-slate-900 border-slate-800 text-white hover:border-cyberBlue'
                 }`;
                 const valCls = isSel ? 'text-matteBlack' : (md.netProfit < 0 ? 'text-red-400' : 'text-emeraldGrowth');
                 btn.innerHTML = `
                     <span class="text-[10px] font-bold">${shortMonthsEn[i]}</span>
                     <span class="text-[10px] font-extrabold truncate ${valCls}">${md.netProfit >= 0 ? '+' : ''}${formatINR(md.netProfit)}</span>
+                    <span class="text-[8px] ${isSel ? 'text-matteBlack' : 'muted-text'}">${md.activeDays}d</span>
                 `;
                 perfBoxes.appendChild(btn);
             }
@@ -1304,38 +1336,52 @@
             ytdBtn.innerHTML = `
                 <span class="text-[10px] font-bold">YTD</span>
                 <span class="text-[10px] font-extrabold truncate ${isYtdSel ? 'text-matteBlack' : 'text-posterYellow'}">${ytdNet >= 0 ? '+' : ''}${formatINR(ytdNet)}</span>
+                <span class="text-[8px] ${isYtdSel ? 'text-matteBlack' : 'muted-text'}">${ytdDays}d</span>
             `;
             perfBoxes.appendChild(ytdBtn);
 
-            // Selected Month / YTD Detailed Card + Improvement Suggestion
             if (isYtdSel) {
                 const ytdSurplus = ytdInc - (ytdExp + ytdInv);
                 detailPanel.innerHTML = `
                     <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-2">
-                        <strong class="text-sm text-posterYellow">${isTa ? `ஆண்டு மொத்தம் (YTD ${year})` : `Yearly Performance Summary (YTD ${year})`}</strong>
-                        <span class="px-2.5 py-0.5 rounded bg-cyberBlue/20 text-cyberBlue font-extrabold">${isTa ? 'நிகர லாபம் / வரவு' : 'Net Income - Expense'}: ${ytdNet >= 0 ? '+' : ''}${formatINR(ytdNet)}</span>
+                        <strong class="text-sm text-posterYellow">${isTa ? `ஆண்டு மொத்த பெர்ஃபார்மன்ஸ் (YTD ${year})` : `Yearly Performance Summary (YTD ${year})`}</strong>
+                        <span class="px-2.5 py-0.5 rounded bg-cyberBlue/20 text-cyberBlue font-extrabold">${ytdDays} Active Days</span>
                     </div>
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                        <div class="inset-box p-2 rounded-lg"><div class="text-[10px] muted-text">${isTa ? 'மொத்த வரவு (Income)' : 'Total Income'}</div><div class="font-extrabold text-emeraldGrowth">+${formatINR(ytdInc)}</div></div>
-                        <div class="inset-box p-2 rounded-lg"><div class="text-[10px] muted-text">${isTa ? 'மொத்த செலவு (Expenses)' : 'Total Expenses'}</div><div class="font-extrabold text-red-400">-${formatINR(ytdExp)}</div></div>
-                        <div class="inset-box p-2 rounded-lg"><div class="text-[10px] muted-text">${isTa ? 'முதலீடு (Investment)' : 'Investments'}</div><div class="font-extrabold text-posterYellow">${formatINR(ytdInv)}</div></div>
-                        <div class="inset-box p-2 rounded-lg"><div class="text-[10px] muted-text">${isTa ? 'நிகர மிச்சம் (Surplus)' : 'Net Surplus'}</div><div class="font-extrabold text-cyberBlue">${formatINR(ytdSurplus)}</div></div>
+                        <div class="inset-box p-2 rounded-lg"><div class="text-[10px] muted-text">Total Income</div><div class="font-extrabold text-emeraldGrowth">+${formatINR(ytdInc)}</div></div>
+                        <div class="inset-box p-2 rounded-lg"><div class="text-[10px] muted-text">Total Expenses</div><div class="font-extrabold text-red-400">-${formatINR(ytdExp)}</div></div>
+                        <div class="inset-box p-2 rounded-lg"><div class="text-[10px] muted-text">Investments</div><div class="font-extrabold text-posterYellow">${formatINR(ytdInv)}</div></div>
+                        <div class="inset-box p-2 rounded-lg"><div class="text-[10px] muted-text">Net Surplus</div><div class="font-extrabold text-cyberBlue">${formatINR(ytdSurplus)}</div></div>
                     </div>
-                    <div class="text-[11px] text-slate-200 leading-relaxed">
-                        <strong class="text-emeraldGrowth">${isTa ? '📈 எதில் இம்ப்ரூவ்மென்ட் செய்ய வேண்டும்:' : '📈 Where to Improve:'}</strong>
-                        ${isTa
-                            ? `ஆண்டு முழுவதும் செலவு (${formatINR(ytdExp)}) கட்டுப்பாட்டில் வைத்து, வரவு (${formatINR(ytdInc)}) மற்றும் முதலீட்டை (${formatINR(ytdInv)}) தொடர்ந்து உயர்த்தி பிரையாரிட்டி கடனைக் குறைப்பது முக்கியம்.`
-                            : `Keep yearly expenses (${formatINR(ytdExp)}) disciplined while growing income (${formatINR(ytdInc)}) and investments (${formatINR(ytdInv)}) to clear priority debt faster.`}
+                    <div class="text-[11px] text-slate-300">
+                        <strong>${isTa ? 'AI ஆலோசனை:' : 'AI Suggestion:'}</strong> ${isTa
+                            ? `ஆண்டு முழுவதும் மொத்தம் ${ytdDays} நாட்கள் பதிவாகியுள்ளன. செலவுகளை (${formatINR(ytdExp)}) கட்டுப்படுத்தி நிகர மிச்சத்தை பிரையாரிட்டி கடனில் செலுத்துங்கள்.`
+                            : `Across ${year}, ${ytdDays} active days were logged. Keep expenses (${formatINR(ytdExp)}) disciplined and route surplus to priority debt.`}
                     </div>
                 `;
             } else {
                 const selIdx = Math.min(11, Math.max(0, Number(state.selectedPerfMonth) || 0));
                 const selData = computeMonthlyPerformanceData(selIdx);
                 const selTitle = isTa ? `${monthNamesTa[selIdx]} ${year}` : `${monthNamesEn[selIdx]} ${year}`;
-                const improvementText = isTa
-                    ? `${selTitle} மாதத்தில் செலவுகள் ${formatINR(selData.expense)} ஆக உள்ளன; தேவையற்ற செலவுகளைக் குறைத்து, வரவு (${formatINR(selData.income)}) மற்றும் முதலீட்டு (${formatINR(selData.investment)}) மிச்சத்தை பிரையாரிட்டி கடன் அடைப்பில் பயன்படுத்துவதில் இம்ப்ரூவ் செய்யுங்கள்.`
-                    : `In ${selTitle}, expenses are ${formatINR(selData.expense)}; improve by trimming non-essential expenses and directing surplus from income (${formatINR(selData.income)}) and investments (${formatINR(selData.investment)}) into priority debt payoff.`;
-
+                detailPanel.innerHTML = `
+                    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-2">
+                        <strong class="text-sm text-posterYellow">${selTitle} — Monthly Performance</strong>
+                        <span class="px-2.5 py-0.5 rounded ${selData.netProfit < 0 ? 'bg-red-500/20 text-red-400' : 'bg-emeraldGrowth/20 text-emeraldGrowth'} font-extrabold">Net: ${selData.netProfit >= 0 ? '+' : ''}${formatINR(selData.netProfit)} (${selData.workRate}% Active)</span>
+                    </div>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                        <div class="inset-box p-2 rounded-lg"><div class="text-[10px] muted-text">Income</div><div class="font-extrabold text-emeraldGrowth">+${formatINR(selData.income)}</div></div>
+                        <div class="inset-box p-2 rounded-lg"><div class="text-[10px] muted-text">Expenses</div><div class="font-extrabold text-red-400">-${formatINR(selData.expense)}</div></div>
+                        <div class="inset-box p-2 rounded-lg"><div class="text-[10px] muted-text">Investment</div><div class="font-extrabold text-posterYellow">${formatINR(selData.investment)}</div></div>
+                        <div class="inset-box p-2 rounded-lg"><div class="text-[10px] muted-text">Net Surplus</div><div class="font-extrabold text-cyberBlue">${formatINR(selData.surplus)}</div></div>
+                    </div>
+                    <div class="text-[11px] text-slate-300">
+                        <strong>${isTa ? 'AI ஆலோசனை:' : 'AI Suggestion:'}</strong> ${selData.netProfit < 0
+                            ? (isTa ? `${selTitle} மாதத்தில் செலவு அதிகமாக உள்ளது. தேவையற்ற செலவுகளைக் குறைத்து மிச்சத்தை பிரையாரிட்டி கடனில் செலுத்துங்கள்.` : `${selTitle} shows net outflow. Trim discretionary spend and direct surplus toward priority debt.`)
+                            : (isTa ? `${selTitle} மாதத்தில் ${selData.activeDays} நாட்கள் செயல்பாடு உள்ளது. நிகர மிச்சத்தை (${formatINR(selData.surplus)}) முதலீடு மற்றும் கடன் குறைப்பில் தொடரவும்.` : `${selTitle} shows ${selData.activeDays} active days. Sustain net surplus (${formatINR(selData.surplus)}) across investment and debt payoff.`)}
+                    </div>
+                `;
+            }
+        }
                 detailPanel.innerHTML = `
                     <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-2">
                         <strong class="text-sm text-posterYellow">${selTitle}</strong>
