@@ -6,6 +6,9 @@
     <title>SHIV PREM — AI Growth & Wealth Master Dashboard</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- html2canvas & jsPDF for PDF Download -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&family=Noto+Sans+Tamil:wght@400;600;700&family=Oswald:wght@600;700&display=swap" rel="stylesheet">
 
     <script>
@@ -178,9 +181,9 @@
     </div>
 
     <!-- Main Container -->
-    <div class="max-w-7xl mx-auto space-y-6">
+    <div id="dashboardExportRoot" class="max-w-7xl mx-auto space-y-6">
 
-        <!-- 1. TOP NAV WITH TOP QUICK ICON, LIVE DATE/TIME & LANGUAGE SWITCHER -->
+        <!-- 1. TOP NAV WITH TOP QUICK ICON, DOWNLOAD CATEGORY ICON, LIVE DATE/TIME & LANGUAGE SWITCHER -->
         <nav class="comic-card rounded-2xl px-4 py-3 flex flex-wrap items-center justify-between gap-3 border-cyberBlue relative">
             <div class="flex items-center gap-2.5">
                 <button onclick="toggleTopQuickMenu()" class="w-9 h-9 rounded-xl bg-posterYellow text-matteBlack border border-slate-900 flex items-center justify-center font-bold text-base shadow hover:scale-105 transition" title="Quick Sections">
@@ -192,7 +195,7 @@
                 </span>
             </div>
 
-            <!-- Dropdown Menu Opened by Top Icon -->
+            <!-- Dropdown Menu Opened by Top Left Icon -->
             <div id="topQuickMenuDrawer" class="hidden absolute left-4 top-16 z-40 flex flex-col gap-1 bg-panelDark border-2 border-cyberBlue rounded-2xl p-2 shadow-[4px_4px_0px_#000] text-xs font-mono min-w-[215px]">
                 <button onclick="scrollToSection('sec-portfolio')" class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-cyberBlue/20 text-white text-left">
                     <span>💼</span> <span>Portfolio</span>
@@ -218,13 +221,25 @@
                 </button>
             </div>
 
-            <div class="flex flex-wrap items-center gap-2">
-                <button onclick="exportWholeData()" class="px-3 py-1.5 rounded-xl bg-emeraldGrowth hover:bg-green-400 text-matteBlack border border-slate-900 font-mono text-xs font-extrabold shadow transition">
-                    ⬇ Export Whole Data
-                </button>
-                <button onclick="triggerImportWholeData()" class="px-3 py-1.5 rounded-xl bg-posterYellow hover:bg-yellow-300 text-matteBlack border border-slate-900 font-mono text-xs font-extrabold shadow transition">
-                    ⬆ Import Whole Data
-                </button>
+            <div class="flex flex-wrap items-center gap-2 relative">
+                <!-- Single Top Download Icon Button Categorizing PDF & Docs -->
+                <div class="relative">
+                    <button onclick="toggleTopDownloadMenu()" class="px-3 py-1.5 rounded-xl bg-posterYellow hover:bg-yellow-300 text-matteBlack border border-slate-900 font-mono text-xs font-extrabold shadow flex items-center gap-1.5 transition" title="Download PDF or Docs">
+                        <span>⬇</span>
+                        <span>Download</span>
+                    </button>
+                    <div id="topDownloadCategoryMenu" class="hidden absolute right-0 top-11 z-40 flex flex-col gap-1 bg-panelDark border-2 border-posterYellow rounded-2xl p-2 shadow-[4px_4px_0px_#000] text-xs font-mono min-w-[165px]">
+                        <div class="px-2.5 py-1 text-[10px] uppercase tracking-wider text-slate-400 font-bold">Select Format</div>
+                        <button onclick="downloadAsPDF()" class="flex items-center justify-between px-3 py-2 rounded-xl hover:bg-cyberBlue/20 text-white font-bold text-left">
+                            <span>📄 PDF</span>
+                            <span class="text-[10px] text-posterYellow">.PDF</span>
+                        </button>
+                        <button onclick="downloadAsDocs()" class="flex items-center justify-between px-3 py-2 rounded-xl hover:bg-emeraldGrowth/20 text-white font-bold text-left">
+                            <span>📝 Docs</span>
+                            <span class="text-[10px] text-emeraldGrowth">.DOC</span>
+                        </button>
+                    </div>
+                </div>
 
                 <div class="inset-box px-3 py-1 rounded-xl font-mono text-xs font-bold text-cyberBlue flex items-center gap-2">
                     <span id="liveDateDisplay">---</span>
@@ -509,18 +524,20 @@
                 <button onclick="openZoomModal('personal')" class="px-3 py-1.5 rounded-lg bg-posterYellow text-matteBlack font-bold text-xs shadow" data-i18n="zoomBtn">🔍 Zoom</button>
             </div>
 
+            <!-- Personal Evolution Graph: 1993 Born -> Gradual Growth -> Breakdown / Current Status Below -->
             <div class="bg-matteBlack border-2 border-slate-800 rounded-xl p-3 cursor-pointer" onclick="openZoomModal('personal')">
                 <svg id="personalGrowthSvg" viewBox="0 0 540 235" class="w-full h-auto select-none" xmlns="http://www.w3.org/2000/svg">
                     <g stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3">
-                        <line x1="35" y1="195" x2="520" y2="195"/><line x1="35" y1="145" x2="520" y2="145"/><line x1="35" y1="95" x2="520" y2="95"/><line x1="35" y1="45" x2="520" y2="45"/>
+                        <line x1="35" y1="50" x2="520" y2="50"/><line x1="35" y1="95" x2="520" y2="95"/><line x1="35" y1="140" x2="520" y2="140"/><line x1="35" y1="195" x2="520" y2="195"/>
                     </g>
-                    <line x1="35" y1="110" x2="520" y2="110" stroke="#facc15" stroke-width="1.3" stroke-dasharray="5 4"/>
-                    <text x="42" y="104" fill="#facc15" font-family="Oswald" font-size="10">BREAKOUT LINE (SYSTEM BUILT)</text>
-                    <path d="M 48,160 L 95,140 L 142,120 L 188,165 L 235,100 L 282,205 L 328,115 L 372,210 L 418,85 L 418,225 L 48,225 Z" fill="rgba(59,130,246,0.18)"/>
-                    <path d="M 48,160 L 95,140 L 142,120 L 188,165 L 235,100 L 282,205 L 328,115 L 372,210 L 418,85" fill="none" stroke="#3b82f6" stroke-width="3.2" stroke-linecap="round"/>
+                    <line x1="35" y1="95" x2="520" y2="95" stroke="#facc15" stroke-width="1.3" stroke-dasharray="5 4"/>
+                    <text x="42" y="88" fill="#facc15" font-family="Oswald" font-size="10">BREAKOUT LINE</text>
+                    <!-- Gradual rise from 1993 low -> step-by-step growth -> breakdown & current status down below -->
+                    <path d="M 48,188 L 95,168 L 142,148 L 188,132 L 235,116 L 282,158 L 328,136 L 372,182 L 418,202 L 418,225 L 48,225 Z" fill="rgba(59,130,246,0.18)"/>
+                    <path d="M 48,188 L 95,168 L 142,148 L 188,132 L 235,116 L 282,158 L 328,136 L 372,182 L 418,202" fill="none" stroke="#3b82f6" stroke-width="3.2" stroke-linecap="round"/>
                     <g id="personalNodesGroup"></g>
                     <g fill="#94a3b8" font-family="JetBrains Mono" font-size="9" text-anchor="middle">
-                        <text x="48" y="222">1993</text><text x="95" y="222">2010</text><text x="142" y="222">2015</text><text x="188" y="222">2017</text><text x="235" y="222">2020</text><text x="282" y="222" fill="#ef4444">Aug 2022</text><text x="328" y="222">2023</text><text x="372" y="222" fill="#ef4444">Nov 2024</text><text x="418" y="222" fill="#facc15" font-weight="bold">2026 (Current Point)</text>
+                        <text x="48" y="222">1993</text><text x="95" y="222">2010</text><text x="142" y="222">2015</text><text x="188" y="222">2017</text><text x="235" y="222">2020</text><text x="282" y="222" fill="#ef4444">Aug 2022</text><text x="328" y="222">2023</text><text x="372" y="222" fill="#ef4444">Nov 2024</text><text x="418" y="222" fill="#facc15" font-weight="bold">2026 (Current Status)</text>
                     </g>
                 </svg>
             </div>
@@ -531,30 +548,30 @@
                 <div class="inset-box rounded-xl p-3.5 border-l-4 border-l-cyberBlue">
                     <div class="flex justify-between items-center mb-1.5">
                         <strong class="text-white" data-i18n="persProgLabel">PERSONAL PROGRESS</strong>
-                        <span id="personalProgressPct" class="text-cyberBlue font-extrabold">35%</span>
+                        <span id="personalProgressPct" class="text-cyberBlue font-extrabold">20%</span>
                     </div>
                     <div class="w-full h-2.5 bg-slate-900 rounded-full overflow-hidden">
-                        <div id="personalProgressBar" class="h-full bg-cyberBlue transition-all duration-300" style="width: 35%;"></div>
+                        <div id="personalProgressBar" class="h-full bg-cyberBlue transition-all duration-300" style="width: 20%;"></div>
                     </div>
                 </div>
 
                 <div class="inset-box rounded-xl p-3.5 border-l-4 border-l-emeraldGrowth">
                     <div class="flex justify-between items-center mb-1.5">
                         <strong class="text-white" data-i18n="finLifeProgLabel">FINANCE & LIFE PROGRESS</strong>
-                        <span id="financeLifeProgressPct" class="text-emeraldGrowth font-extrabold">20%</span>
+                        <span id="financeLifeProgressPct" class="text-emeraldGrowth font-extrabold">15%</span>
                     </div>
                     <div class="w-full h-2.5 bg-slate-900 rounded-full overflow-hidden">
-                        <div id="financeLifeProgressBar" class="h-full bg-emeraldGrowth transition-all duration-300" style="width: 20%;"></div>
+                        <div id="financeLifeProgressBar" class="h-full bg-emeraldGrowth transition-all duration-300" style="width: 15%;"></div>
                     </div>
                 </div>
 
                 <div class="inset-box rounded-xl p-3.5 border-l-4 border-l-posterYellow">
                     <div class="flex justify-between items-center mb-1.5">
                         <strong class="text-white" data-i18n="skillSysProgLabel">SKILL SYSTEM PROGRESS</strong>
-                        <span id="skillSystemProgressPct" class="text-posterYellow font-extrabold">40%</span>
+                        <span id="skillSystemProgressPct" class="text-posterYellow font-extrabold">30%</span>
                     </div>
                     <div class="w-full h-2.5 bg-slate-900 rounded-full overflow-hidden mb-2">
-                        <div id="skillSystemProgressBar" class="h-full bg-posterYellow transition-all duration-300" style="width: 40%;"></div>
+                        <div id="skillSystemProgressBar" class="h-full bg-posterYellow transition-all duration-300" style="width: 30%;"></div>
                     </div>
                     <div class="flex gap-1.5">
                         <input type="text" id="newSkillInput" placeholder="New Skill Learned..." class="inset-box rounded-lg px-2 py-1 text-[11px] flex-1">
@@ -785,7 +802,7 @@
                     { sender: 'ai', text: 'Financial Assistant active: Track Income, Expenses, Investments, Remaining Debt (red until cleared) and Algo Strategy earnings to grow your Net Worth towards ₹1 Crore.' }
                 ],
                 growth: [
-                    { sender: 'ai', text: 'Personal Growth active: From 2022 & 2024 challenges to building a disciplined system in 2026, your steady milestone tracking builds long-term resilience.' }
+                    { sender: 'ai', text: 'Personal Growth active: Starting from 1993 roots with gradual step-by-step growth, facing breakdown/current down status, and rebuilding systematically.' }
                 ],
                 nextplan: [
                     { sender: 'ai', text: 'Next Plan active: Keep executing Goobro & driving cashflow, clear high-priority debt step by step, and prepare Auth/Cloud when shifting to a public app later.' }
@@ -796,7 +813,7 @@
                     { sender: 'ai', text: 'Financial Assistant செயலில் உள்ளது: வருமானம், செலவு, முதலீடு, பாக்கி கடன் (முடியும் வரை சிவப்பு) மற்றும் ஆல்கோ வருமானத்தைக் கவனித்து ₹1 கோடி இலக்கை நோக்கிச் செல்லுங்கள்.' }
                 ],
                 growth: [
-                    { sender: 'ai', text: 'Personal Growth செயலில் உள்ளது: 2022 & 2024 சவால்களைக் கடந்து 2026-ல் சிஸ்டம் உருவாக்கியுள்ள உங்கள் பயணம் நிலையான வளர்ச்சியைத் தரும்.' }
+                    { sender: 'ai', text: 'Personal Growth செயலில் உள்ளது: 1993 தொடக்கத்திலிருந்து படிப்படியாக வளர்ந்து, இப்போது Breakdown / கீழே உள்ள நிலையைக் கடந்து மீண்டும் சிஸ்டம் மூலம் முன்னேற வேண்டிய கட்டம்.' }
                 ],
                 nextplan: [
                     { sender: 'ai', text: 'Next Plan செயலில் உள்ளது: Goobro & டிரைவிங் வருமானத்தைத் தொடருங்கள், கடன்களைத் திட்டமிட்டுக் குறையுங்கள்; எதிர்காலத்தில் பப்ளிக் ஆப்பாக மாற்றும்போது Login & Cloud சேர்த்துக் கொள்ளலாம்.' }
@@ -804,16 +821,17 @@
             }
         };
 
+        // 1993 Born starting low, growing gradually step by step, then breakdown & current status down below
         let personalNodes = [
-            { id: 'n1', cx: 48, cy: 160, color: '#3b82f6', year: '1993', title: 'Birth & Roots — Tenkasi', desc: 'Govt Teacher mom & Army dad. Grounded values.' },
-            { id: 'n2', cx: 95, cy: 140, color: '#3b82f6', year: '2010', title: 'Schooling & Adaptability', desc: 'Tamil & English medium flexibility.' },
-            { id: 'n3', cx: 142, cy: 120, color: '#3b82f6', year: '2015', title: 'B.Tech Biotechnology', desc: 'Analytical problem solving.' },
-            { id: 'n4', cx: 188, cy: 165, color: '#facc15', year: '2017', title: 'Hustle & Abroad Prep', desc: 'Domino’s, coding & studio work.' },
-            { id: 'n5', cx: 235, cy: 100, color: '#3b82f6', year: '2020', title: 'Goobro & Sivakasi Legacy', desc: 'Launched Goobro & business foundation.' },
-            { id: 'n6', cx: 282, cy: 205, color: '#ef4444', year: 'Aug 2022', title: 'Struggle Peak: COVID & Loss', desc: 'Severe financial crunch & heavy personal losses.' },
-            { id: 'n7', cx: 328, cy: 115, color: '#3b82f6', year: '2023', title: 'Marriage & Investing', desc: 'Demat opening & investor mindset.' },
-            { id: 'n8', cx: 372, cy: 210, color: '#ef4444', year: 'Nov 2024', title: 'Struggle Peak: ₹27L Debt', desc: 'Intense trading loss & mental breakdown.' },
-            { id: 'n9', cx: 418, cy: 85, color: '#facc15', year: '2026 (Current Point)', title: 'Son சிவருத்ரா & System Breakout (Current Point)', desc: 'Son born. Active driving + Goobro + Prem Diary. Current standing point.' }
+            { id: 'n1', cx: 48, cy: 188, color: '#3b82f6', year: '1993', title: '1993 Born — Low Start & Roots', desc: 'Born in Tenkasi. Starting from baseline.' },
+            { id: 'n2', cx: 95, cy: 168, color: '#3b82f6', year: '2010', title: 'Schooling & Gradual Growth', desc: 'Step-by-step learning and adaptability.' },
+            { id: 'n3', cx: 142, cy: 148, color: '#3b82f6', year: '2015', title: 'B.Tech Biotechnology', desc: 'Growing analytical & technical foundation.' },
+            { id: 'n4', cx: 188, cy: 132, color: '#3b82f6', year: '2017', title: 'Early Hustle & Growth', desc: 'Domino’s, coding & studio work.' },
+            { id: 'n5', cx: 235, cy: 116, color: '#22c55e', year: '2020', title: 'Goobro & Business Growth', desc: 'Gradual business & brand growth.' },
+            { id: 'n6', cx: 282, cy: 158, color: '#ef4444', year: 'Aug 2022', title: 'Breakdown: COVID & Loss', desc: 'Financial crunch & personal losses.' },
+            { id: 'n7', cx: 328, cy: 136, color: '#3b82f6', year: '2023', title: 'Marriage & Rebuilding', desc: 'Trying to rebuild & invest.' },
+            { id: 'n8', cx: 372, cy: 182, color: '#ef4444', year: 'Nov 2024', title: 'Breakdown: ₹27L Debt', desc: 'Heavy debt pressure & breakdown.' },
+            { id: 'n9', cx: 418, cy: 202, color: '#ef4444', year: '2026 (Current Status)', title: 'Current Status (Down / Breakdown)', desc: 'Currently at the lower breakdown point; rebuilding step by step.' }
         ];
 
         const defaultState = {
@@ -896,7 +914,100 @@
             recalculateMetrics();
         }
 
-        // Export Whole Data (including all localStorage keys + current state + personalNodes)
+        function toggleTopDownloadMenu() {
+            document.getElementById('topQuickMenuDrawer').classList.add('hidden');
+            document.getElementById('topDownloadCategoryMenu').classList.toggle('hidden');
+        }
+
+        async function downloadAsPDF() {
+            document.getElementById('topDownloadCategoryMenu').classList.add('hidden');
+            const root = document.getElementById('dashboardExportRoot');
+            if (!root || typeof html2canvas === 'undefined' || !window.jspdf || !window.jspdf.jsPDF) {
+                return showToast('PDF ERROR', 'PDF exporter not ready.');
+            }
+            showToast('DOWNLOADING PDF...', 'Preparing PDF file...');
+            try {
+                const canvas = await html2canvas(root, {
+                    backgroundColor: state.theme === 'dark' ? '#090a0f' : '#f8fafc',
+                    scale: 1.5,
+                    useCORS: true
+                });
+                const imgData = canvas.toDataURL('image/png');
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const pageWidth = pdf.internal.pageSize.getWidth();
+                const pageHeight = pdf.internal.pageSize.getHeight();
+                const imgWidth = pageWidth - 10;
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+                let heightLeft = imgHeight;
+                let position = 5;
+                pdf.addImage(imgData, 'PNG', 5, position, imgWidth, imgHeight);
+                heightLeft -= (pageHeight - 10);
+
+                while (heightLeft > 0) {
+                    position = heightLeft - imgHeight + 5;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 5, position, imgWidth, imgHeight);
+                    heightLeft -= (pageHeight - 10);
+                }
+                const dateStr = new Date().toISOString().slice(0, 10);
+                pdf.save(`shiv-prem-dashboard-${dateStr}.pdf`);
+                showToast('PDF SAVED!', `shiv-prem-dashboard-${dateStr}.pdf downloaded.`);
+            } catch (err) {
+                showToast('PDF ERROR', 'Could not create PDF.');
+            }
+        }
+
+        function downloadAsDocs() {
+            document.getElementById('topDownloadCategoryMenu').classList.add('hidden');
+            const remDebt = state.debts.reduce((s, d) => s + Number(d.remaining || 0), 0);
+            let totInv = 0, totInc = 0, totExp = 0;
+            state.transactions.forEach(tx => {
+                if (tx.type === 'investment') totInv += tx.amount;
+                else if (tx.type === 'income') totInc += tx.amount;
+                else if (tx.type === 'expense') totExp += tx.amount;
+            });
+            state.radarRides.forEach(r => { totInc += r.amount; });
+            state.algoStrategies.forEach(a => { totInc += a.income; });
+            const netWorth = totInv - remDebt;
+
+            const docHtml = `
+                <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+                <head><meta charset='utf-8'><title>SHIV PREM Dashboard Report</title></head>
+                <body style="font-family: Arial, sans-serif; color: #111;">
+                    <h1>SHIV PREM — AI Growth & Wealth Master Dashboard</h1>
+                    <p><strong>Generated:</strong> ${new Date().toLocaleString('en-IN')}</p>
+                    <h2>Overall Portfolio</h2>
+                    <ul>
+                        <li><strong>Net Worth:</strong> ${formatINR(netWorth)}</li>
+                        <li><strong>Overall Investment:</strong> ${formatINR(totInv)}</li>
+                        <li><strong>Overall Remaining Debt:</strong> ${remDebt > 0 ? '-' + formatINR(remDebt) : '₹0'}</li>
+                        <li><strong>Overall Expenses:</strong> ${formatINR(totExp)}</li>
+                        <li><strong>Overall Income:</strong> ${formatINR(totInc)}</li>
+                    </ul>
+                    <h2>Debts</h2>
+                    <ul>${state.debts.map(d => `<li>${d.lender}: Remaining ${d.remaining > 0 ? '-' + formatINR(d.remaining) : '₹0'} / Total ${formatINR(d.total)}</li>`).join('')}</ul>
+                    <h2>Businesses</h2>
+                    <ul>${state.businesses.map(b => `<li>${b.name} (${b.status}) - ${b.note}</li>`).join('')}</ul>
+                    <h2>Planning Tasks</h2>
+                    <ul>${state.planningTasks.map(t => `<li>[${t.done ? 'DONE' : 'PENDING'}] ${t.task}</li>`).join('')}</ul>
+                </body></html>
+            `;
+
+            const blob = new Blob(['\ufeff', docHtml], { type: 'application/msword' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            const dateStr = new Date().toISOString().slice(0, 10);
+            a.href = url;
+            a.download = `shiv-prem-dashboard-${dateStr}.doc`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast('DOCS SAVED!', `shiv-prem-dashboard-${dateStr}.doc downloaded.`);
+        }
+
         function exportWholeData() {
             document.getElementById('topQuickMenuDrawer').classList.add('hidden');
             const allLocalStorage = {};
@@ -985,6 +1096,7 @@
         }
 
         function toggleTopQuickMenu() {
+            document.getElementById('topDownloadCategoryMenu').classList.add('hidden');
             document.getElementById('topQuickMenuDrawer').classList.toggle('hidden');
         }
 
@@ -1126,7 +1238,7 @@
             const body = document.getElementById('zoomModalBody');
             modal.classList.remove('hidden');
             if (type === 'personal') {
-                title.innerText = 'PERSONAL EVOLUTION & LIVE STAGE (MAXIMIZED)';
+                title.innerText = 'PERSONAL EVOLUTION & CURRENT STATUS (MAXIMIZED)';
                 body.innerHTML = document.getElementById('personalGrowthSvg').outerHTML;
             } else {
                 title.innerText = 'WEALTH GROWTH & LIVE STAGE (MAXIMIZED)';
@@ -1294,7 +1406,7 @@
 
             const newId = 's_' + Date.now();
             state.customStories.push({ id: newId, title, desc });
-            personalNodes.push({ id: newId, cx: 418, cy: 85, color: '#ef4444', year: title, title, desc });
+            personalNodes.push({ id: newId, cx: 418, cy: 202, color: '#ef4444', year: title, title, desc });
             saveState();
             renderStory();
             renderPersonalNodes();
@@ -1341,8 +1453,8 @@
                 c.setAttribute('cx', node.cx);
                 c.setAttribute('cy', node.cy);
                 c.setAttribute('r', isLast ? '8.5' : (active ? '7.5' : '5'));
-                c.setAttribute('fill', isLast ? '#facc15' : (active ? '#ffffff' : node.color));
-                c.setAttribute('stroke', isLast ? '#3b82f6' : (active ? '#3b82f6' : '#090a0f'));
+                c.setAttribute('fill', isLast ? '#ef4444' : (active ? '#ffffff' : node.color));
+                c.setAttribute('stroke', isLast ? '#facc15' : (active ? '#3b82f6' : '#090a0f'));
                 c.setAttribute('stroke-width', isLast ? '3' : '2');
                 if (isLast) c.setAttribute('class', 'stable-current-dot');
                 c.style.cursor = 'pointer';
@@ -1357,7 +1469,7 @@
             document.getElementById('lifeInsightCard').innerHTML = `
                 <div class="flex items-center justify-between mb-1">
                     <span class="font-mono text-[11px] font-bold text-amber-500">Period: ${activeNode.year}</span>
-                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-posterYellow/20 text-amber-500 font-bold">CURRENT STANDING POINT</span>
+                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-red-500/20 text-red-400 font-bold">CURRENT STATUS</span>
                 </div>
                 <div class="font-heading text-base uppercase tracking-wide">${activeNode.title}</div>
                 <p class="text-xs muted-text mt-1">${activeNode.desc}</p>
@@ -1700,18 +1812,18 @@
             nwEl.className = netWorth < 0 ? 'text-red-500 font-extrabold' : 'text-emeraldGrowth font-extrabold';
 
             const clearedDebts = state.debts.filter(d => d.remaining <= 0).length;
-            const finLifePct = Math.min(100, Math.round((clearedDebts / Math.max(1, state.debts.length)) * 50 + (totInv / 1000000) * 50));
-            const personalPct = Math.min(100, 30 + (state.customStories.length * 5));
-            const skillPct = Math.min(100, 20 + (state.learnedSkills.length * 10));
+            const finLifePct = Math.min(100, Math.max(5, Math.round((clearedDebts / Math.max(1, state.debts.length)) * 50 + (totInv / 1000000) * 50)));
+            const personalPct = Math.min(100, Math.max(10, 15 + (state.customStories.length * 3)));
+            const skillPct = Math.min(100, Math.max(15, 20 + (state.learnedSkills.length * 5)));
 
             document.getElementById('overallProgressPct').innerText = `${finLifePct}%`;
-            document.getElementById('overallProgressBar').style.width = `${Math.max(5, finLifePct)}%`;
+            document.getElementById('overallProgressBar').style.width = `${finLifePct}%`;
 
             document.getElementById('personalProgressPct').innerText = `${personalPct}%`;
             document.getElementById('personalProgressBar').style.width = `${personalPct}%`;
 
             document.getElementById('financeLifeProgressPct').innerText = `${finLifePct}%`;
-            document.getElementById('financeLifeProgressBar').style.width = `${Math.max(5, finLifePct)}%`;
+            document.getElementById('financeLifeProgressBar').style.width = `${finLifePct}%`;
 
             document.getElementById('skillSystemProgressPct').innerText = `${skillPct}%`;
             document.getElementById('skillSystemProgressBar').style.width = `${skillPct}%`;
