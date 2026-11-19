@@ -6,7 +6,7 @@
     <title>SHIV PREM — AI Growth & Wealth Master Dashboard</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- html2canvas & jsPDF for PNG & PDF Export -->
+    <!-- html2canvas & jsPDF for Direct PDF Download -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&family=Noto+Sans+Tamil:wght@400;600;700&family=Oswald:wght@600;700&display=swap" rel="stylesheet">
@@ -96,9 +96,6 @@
 </head>
 <body class="antialiased pb-24 p-3 sm:p-6">
 
-    <!-- Hidden File Input for Import -->
-    <input type="file" id="importMemoryFile" accept=".json" class="hidden" onchange="handleImportMemory(event)">
-
     <!-- Toast Notification -->
     <div id="comicToast" class="fixed bottom-24 right-5 z-50 transform translate-y-28 opacity-0 transition-all duration-300 bg-posterYellow text-matteBlack border-2 border-slate-900 px-4 py-3 rounded-xl shadow-[5px_5px_0px_#3b82f6] flex items-center gap-3">
         <span class="text-xl">⚡</span>
@@ -135,162 +132,4 @@
                         <rect x="8" y="9" width="24" height="17" rx="6" fill="#3b82f6" stroke="#facc15" stroke-width="2"/>
                         <circle cx="15" cy="17.5" r="2.3" fill="#ffffff"/>
                         <circle cx="25" cy="17.5" r="2.3" fill="#ffffff"/>
-                        <path d="M 15.5 22 Q 20 24.5 24.5 22" stroke="#facc15" stroke-width="2" stroke-linecap="round" fill="none"/>
-                        <rect x="11" y="28" width="18" height="11" rx="4" fill="#1e293b" stroke="#3b82f6" stroke-width="1.8"/>
-                    </svg>
-                    <div>
-                        <h3 class="poster-title text-xl text-posterYellow" data-i18n="botTitle">SHIV PREM AI & DETAILS</h3>
-                        <p class="text-xs text-slate-400" data-i18n="botSub">Arranged Dashboard Summary & AI Modes</p>
-                    </div>
-                </div>
-                <button onclick="toggleFloatingBot()" class="text-slate-400 hover:text-white font-mono text-lg px-2">✕</button>
-            </div>
-
-            <div id="botArrangedDetails" class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-mono mb-3"></div>
-
-            <div class="grid grid-cols-3 gap-2 mb-3 text-xs font-mono">
-                <button onclick="switchBotTopic('finance')" id="bot-tab-finance" class="py-2 px-2 rounded-xl font-bold bg-posterYellow text-matteBlack transition" data-i18n="botTabFinance">
-                    Financial Assistant
-                </button>
-                <button onclick="switchBotTopic('growth')" id="bot-tab-growth" class="py-2 px-2 rounded-xl font-bold bg-slate-800 text-slate-200 hover:bg-slate-700 transition" data-i18n="botTabGrowth">
-                    Personal Growth
-                </button>
-                <button onclick="switchBotTopic('nextplan')" id="bot-tab-nextplan" class="py-2 px-2 rounded-xl font-bold bg-slate-800 text-slate-200 hover:bg-slate-700 transition" data-i18n="botTabNextPlan">
-                    Next Plan
-                </button>
-            </div>
-
-            <div id="botChatWindow" class="bg-slate-900 border border-slate-700 rounded-xl p-3.5 h-52 overflow-y-auto space-y-3 mb-3 text-sm font-mono"></div>
-
-            <form onsubmit="handleBotSubmit(event)" class="flex gap-2">
-                <input type="text" id="botUserInput" required data-i18n-placeholder="botPlaceholder" placeholder="Ask about finance, personal growth or next plan..." class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-posterYellow font-mono">
-                <button type="submit" class="bg-cyberBlue hover:bg-blue-600 text-white font-poster text-sm px-5 py-2.5 rounded-xl tracking-wider" data-i18n="sendBtn">ASK ⚡</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Graph Maximize Modal -->
-    <div id="graphZoomModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-        <div class="comic-card w-full max-w-5xl rounded-2xl p-5 bg-matteBlack text-white max-h-[90vh] flex flex-col">
-            <div class="flex items-center justify-between mb-3 pb-2 border-b border-slate-700">
-                <h3 id="zoomModalTitle" class="poster-title text-2xl text-posterYellow">MAXIMIZED GRAPH VIEW</h3>
-                <button onclick="closeZoomModal()" class="px-3 py-1 bg-cyberBlue text-white rounded-lg font-bold text-xs">CLOSE ✕</button>
-            </div>
-            <div id="zoomModalBody" class="flex-1 overflow-auto flex items-center justify-center p-2"></div>
-        </div>
-    </div>
-
-    <!-- Main Container -->
-    <div id="dashboardCaptureRoot" class="max-w-7xl mx-auto space-y-6">
-
-        <!-- 1. TOP NAV WITH LEFT CORNER EXPORT/IMPORT ICON, QUICK ICON, LIVE DATE/TIME & LANGUAGE SWITCHER -->
-        <nav class="comic-card rounded-2xl px-4 py-3 flex flex-wrap items-center justify-between gap-3 border-cyberBlue relative">
-            <div class="flex items-center gap-2">
-                <!-- Left Side Corner Export / Import Download Icon -->
-                <button onclick="toggleLeftExportImportMenu()" class="w-9 h-9 rounded-xl bg-emeraldGrowth text-matteBlack border border-slate-900 flex items-center justify-center font-bold text-base shadow hover:scale-105 transition" title="Export / Import & Download PDF, Docs, PNG">
-                    💾
-                </button>
-                <button onclick="toggleTopQuickMenu()" class="w-9 h-9 rounded-xl bg-posterYellow text-matteBlack border border-slate-900 flex items-center justify-center font-bold text-base shadow hover:scale-105 transition" title="Quick Sections">
-                    ☰
-                </button>
-                <span class="w-3 h-3 rounded-full bg-cyberBlue animate-ping"></span>
-                <span class="poster-title text-base sm:text-lg tracking-wider" data-i18n="brandTitle">
-                    SHIV PREM // AI GROWTH & WEALTH DASHBOARD
-                </span>
-            </div>
-
-            <!-- Left Side Corner Export / Import & PDF / Docs / PNG Menu -->
-            <div id="leftExportImportDrawer" class="hidden absolute left-4 top-16 z-40 flex flex-col gap-1.5 bg-panelDark border-2 border-emeraldGrowth rounded-2xl p-2.5 shadow-[4px_4px_0px_#000] text-xs font-mono min-w-[240px]">
-                <div class="text-[10px] font-bold text-posterYellow uppercase px-2">TOTAL DASHBOARD DOWNLOAD</div>
-                <button onclick="downloadTargetPDF('dashboardCaptureRoot', 'shiv-prem-total-dashboard')" class="flex items-center justify-between px-3 py-2 rounded-xl hover:bg-emeraldGrowth/20 text-white text-left">
-                    <span>📄 Total Dashboard PDF</span>
-                    <span class="text-red-400 font-bold">PDF</span>
-                </button>
-                <button onclick="downloadTargetDocs('dashboardCaptureRoot', 'shiv-prem-total-dashboard')" class="flex items-center justify-between px-3 py-2 rounded-xl hover:bg-emeraldGrowth/20 text-white text-left">
-                    <span>📝 Total Dashboard Docs</span>
-                    <span class="text-cyberBlue font-bold">DOC</span>
-                </button>
-                <button onclick="downloadTargetPNG('dashboardCaptureRoot', 'shiv-prem-total-dashboard')" class="flex items-center justify-between px-3 py-2 rounded-xl hover:bg-emeraldGrowth/20 text-white text-left">
-                    <span>🖼️ Total Dashboard Image</span>
-                    <span class="text-emeraldGrowth font-bold">PNG</span>
-                </button>
-                <div class="border-t border-slate-700 my-1"></div>
-                <div class="text-[10px] font-bold text-cyberBlue uppercase px-2">MEMORY EXPORT / IMPORT</div>
-                <button onclick="exportMemoryData()" class="flex items-center justify-between px-3 py-2 rounded-xl hover:bg-cyberBlue/20 text-white text-left">
-                    <span>⬇ Export All Data</span>
-                    <span class="text-posterYellow font-bold">JSON</span>
-                </button>
-                <button onclick="triggerImportMemory()" class="flex items-center justify-between px-3 py-2 rounded-xl hover:bg-cyberBlue/20 text-white text-left">
-                    <span>⬆ Import All Data</span>
-                    <span class="text-cyberBlue font-bold">JSON</span>
-                </button>
-            </div>
-
-            <!-- Dropdown Menu Opened by Top Quick Icon -->
-            <div id="topQuickMenuDrawer" class="hidden absolute left-14 top-16 z-40 flex flex-col gap-1 bg-panelDark border-2 border-cyberBlue rounded-2xl p-2 shadow-[4px_4px_0px_#000] text-xs font-mono min-w-[190px]">
-                <button onclick="scrollToSection('sec-portfolio')" class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-cyberBlue/20 text-white text-left">
-                    <span>💼</span> <span>Portfolio</span>
-                </button>
-                <button onclick="scrollToSection('sec-personal-growth')" class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-cyberBlue/20 text-white text-left">
-                    <span>🌱</span> <span>Personal Growth</span>
-                </button>
-                <button onclick="scrollToSection('sec-financial-growth')" class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-cyberBlue/20 text-white text-left">
-                    <span>📈</span> <span>Financial Growth</span>
-                </button>
-                <button onclick="scrollToSection('sec-growth-progress')" class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-cyberBlue/20 text-white text-left">
-                    <span>📊</span> <span>Growth Progress</span>
-                </button>
-                <button onclick="scrollToSection('sec-business')" class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-cyberBlue/20 text-white text-left">
-                    <span>🚀</span> <span>Business</span>
-                </button>
-            </div>
-
-            <div class="flex flex-wrap items-center gap-2">
-                <!-- Export & Import Buttons -->
-                <button onclick="exportMemoryData()" class="px-3 py-1.5 rounded-xl bg-emeraldGrowth hover:bg-green-400 text-matteBlack font-mono text-xs font-extrabold shadow transition" data-i18n="exportBtn">
-                    ⬇ Export
-                </button>
-                <button onclick="triggerImportMemory()" class="px-3 py-1.5 rounded-xl bg-cyberBlue hover:bg-blue-600 text-white font-mono text-xs font-extrabold shadow transition" data-i18n="importBtn">
-                    ⬆ Import
-                </button>
-
-                <div class="inset-box px-3 py-1 rounded-xl font-mono text-xs font-bold text-cyberBlue flex items-center gap-2">
-                    <span id="liveDateDisplay">---</span>
-                    <span>•</span>
-                    <span id="liveTimeDisplay" class="text-posterYellow">--:--:--</span>
-                </div>
-
-                <div class="flex items-center rounded-xl border-2 border-slate-700 overflow-hidden bg-slate-900 p-0.5">
-                    <button onclick="setLanguage('en')" id="lang-en" class="px-3 py-1 rounded-lg text-xs font-bold bg-posterYellow text-matteBlack transition">EN</button>
-                    <button onclick="setLanguage('ta')" id="lang-ta" class="px-3 py-1 rounded-lg text-xs font-bold text-slate-300 hover:text-white transition">தமிழ்</button>
-                </div>
-                <button onclick="toggleThemeMode()" id="themeToggleBtn" class="px-3 py-1.5 rounded-xl border-2 border-slate-700 bg-slate-900 text-posterYellow text-xs font-bold transition">
-                    <span id="themeIcon">☀️</span> <span id="themeLabel" data-i18n="themeWhite">White</span>
-                </button>
-            </div>
-        </nav>
-
-        <!-- 2. PROFILE HERO BANNER + COMPACT PROGRESS & TARGET BOX -->
-        <header class="comic-card rounded-2xl p-4 sm:p-6 border-cyberBlue relative overflow-hidden">
-            <div class="flex flex-col lg:flex-row items-center lg:items-start justify-between gap-6">
-                <div class="flex flex-col sm:flex-row items-center gap-5">
-                    <div class="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-cyberBlue border-4 border-white shadow-[0_0_0_4px_#090a0f,6px_6px_0px_#facc15] flex-shrink-0 overflow-hidden flex items-center justify-center">
-                        <svg viewBox="0 0 220 220" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="110" cy="110" r="110" fill="#3b82f6"/>
-                            <path d="M24,220 C32,174 64,162 110,162 C156,162 188,174 196,220 Z" fill="#172554" stroke="#090a0f" stroke-width="4"/>
-                            <path d="M60,82 C60,45 160,45 160,82 C160,126 142,152 110,152 C78,152 60,126 60,82 Z" fill="#ea8c32" stroke="#090a0f" stroke-width="4"/>
-                            <path d="M61,98 C61,134 80,153 110,153 C140,153 159,134 159,98 C155,114 147,125 135,127 C127,120 93,120 85,127 C73,125 65,114 61,98 Z" fill="#18181b" stroke="#090a0f" stroke-width="3"/>
-                            <rect x="66" y="83" width="38" height="24" rx="6" stroke="#e4e4e7" stroke-width="3.5" fill="rgba(255,255,255,0.14)"/>
-                            <rect x="116" y="83" width="38" height="24" rx="6" stroke="#e4e4e7" stroke-width="3.5" fill="rgba(255,255,255,0.14)"/>
-                        </svg>
-                    </div>
-                    <div class="text-center sm:text-left">
-                        <div class="inline-flex items-center gap-2 bg-cyberBlue text-white font-poster text-xs px-3 py-1 rounded mb-1.5 shadow">
-                            <span data-i18n="heroBannerTag">⚡ “SYSTEM > SPEED — PERSONAL GROWTH & WEALTH DASHBOARD”</span>
-                        </div>
-                        <h1 class="poster-title text-3xl sm:text-4xl">SHIV PREM <span class="text-amber-500">//</span> AI DASHBOARD</h1>
-                        <p class="text-xs sm:text-sm muted-text font-medium mt-1" data-i18n="heroSub">
-                            Life Evolution, Debt Avalanche & Investment Portfolio Tracker
-                        </p>
-                        <div class="mt-3 flex flex-wrap justify-center sm:justify-start gap-2 text-xs font-mono">
-                            <span class="px-2.5 py-1 rounded-lg bg-red-500/15 text-r
+                        <path d="M 15.
