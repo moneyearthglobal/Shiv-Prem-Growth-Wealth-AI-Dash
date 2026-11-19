@@ -9,6 +9,8 @@
     <!-- html2canvas & jsPDF for PDF Download -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- Tesseract.js for Photo OCR Data Extraction -->
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&family=Noto+Sans+Tamil:wght@400;600;700&family=Oswald:wght@600;700&display=swap" rel="stylesheet">
 
     <script>
@@ -98,6 +100,8 @@
 
     <!-- Hidden File Input for Importing Whole Data -->
     <input type="file" id="importWholeDataInput" accept=".json,application/json" class="hidden" onchange="importWholeData(event)">
+    <!-- Hidden File Input for Bot Photo Upload -->
+    <input type="file" id="botPhotoUploadInput" accept="image/*" class="hidden" onchange="handleBotPhotoUpload(event)">
 
     <!-- Toast Notification -->
     <div id="comicToast" class="fixed bottom-24 right-5 z-50 transform translate-y-28 opacity-0 transition-all duration-300 bg-posterYellow text-matteBlack border-2 border-slate-900 px-4 py-3 rounded-xl shadow-[5px_5px_0px_#3b82f6] flex items-center gap-3">
@@ -124,9 +128,9 @@
         </button>
     </div>
 
-    <!-- Bot Modal: Arranged Details + Financial Assistant / Personal Growth / Next Plan Tabs -->
+    <!-- Bot Modal: Arranged Details + Financial Assistant / Personal Growth / Next Plan + Doc Paste & Photo Upload -->
     <div id="floatingBotModal" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-3">
-        <div class="comic-card w-full max-w-2xl rounded-2xl p-4 sm:p-6 bg-matteBlack text-white max-h-[90vh] flex flex-col border-cyberBlue overflow-y-auto">
+        <div class="comic-card w-full max-w-2xl rounded-2xl p-4 sm:p-6 bg-matteBlack text-white max-h-[92vh] flex flex-col border-cyberBlue overflow-y-auto">
             <div class="flex items-center justify-between pb-3 border-b border-slate-700 mb-3">
                 <div class="flex items-center gap-3">
                     <svg viewBox="0 0 40 44" class="w-9 h-10 bot-figure-anim" xmlns="http://www.w3.org/2000/svg">
@@ -140,7 +144,7 @@
                     </svg>
                     <div>
                         <h3 class="poster-title text-xl text-posterYellow" data-i18n="botTitle">SHIV PREM AI & DETAILS</h3>
-                        <p class="text-xs text-slate-400" data-i18n="botSub">Arranged Dashboard Summary & AI Modes</p>
+                        <p class="text-xs text-slate-400" data-i18n="botSub">Arranged Dashboard Summary, Doc Paste & Photo Sync</p>
                     </div>
                 </div>
                 <button onclick="toggleFloatingBot()" class="text-slate-400 hover:text-white font-mono text-lg px-2">✕</button>
@@ -160,7 +164,24 @@
                 </button>
             </div>
 
-            <div id="botChatWindow" class="bg-slate-900 border border-slate-700 rounded-xl p-3.5 h-52 overflow-y-auto space-y-3 mb-3 text-sm font-mono"></div>
+            <!-- Document / Conversation Paste & Photo Upload Sync Box -->
+            <div class="inset-box rounded-xl p-3 mb-3 space-y-2 text-xs font-mono border-cyberBlue">
+                <div class="flex items-center justify-between gap-2">
+                    <span class="font-bold text-posterYellow" data-i18n="botDocPhotoTitle">📄 Doc/Chat Paste & 📷 Photo Data Sync</span>
+                    <button type="button" onclick="document.getElementById('botPhotoUploadInput').click()" class="px-2.5 py-1 rounded-lg bg-cyberBlue hover:bg-blue-600 text-white font-bold text-[11px]" data-i18n="botUploadPhotoBtn">
+                        📷 Upload Photo
+                    </button>
+                </div>
+                <textarea id="botDocPasteArea" rows="2" data-i18n-placeholder="botDocPlaceholder" placeholder="Paste conversation / document data here (e.g., Goobro ride 2500, Algo income 5000, Investment 10000, Debt 20000)..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-posterYellow"></textarea>
+                <div class="flex items-center justify-between gap-2">
+                    <span id="botPhotoStatusText" class="text-[11px] text-slate-400"></span>
+                    <button type="button" onclick="applyDocAndPhotoDataToDashboard()" class="px-3 py-1 rounded-lg bg-emeraldGrowth hover:bg-green-400 text-matteBlack font-extrabold text-[11px]" data-i18n="botApplyDocBtn">
+                        ⚡ Sync to Chart & Dashboard
+                    </button>
+                </div>
+            </div>
+
+            <div id="botChatWindow" class="bg-slate-900 border border-slate-700 rounded-xl p-3.5 h-44 overflow-y-auto space-y-3 mb-3 text-sm font-mono"></div>
 
             <form onsubmit="handleBotSubmit(event)" class="flex gap-2">
                 <input type="text" id="botUserInput" required data-i18n-placeholder="botPlaceholder" placeholder="Ask about finance, personal growth or next plan..." class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-posterYellow font-mono">
@@ -301,7 +322,7 @@
             </div>
         </header>
 
-        <!-- 3. PORTFOLIO OVERVIEW SECTION (ABOVE GRAPH) -->
+        <!-- 3. PORTFOLIO OVERVIEW SECTION (ABOVE GRAPH) + ONE-SENTENCE OVERALL AI SUGGESTION -->
         <section id="sec-portfolio" class="comic-card rounded-2xl p-4 sm:p-6 border-cyberBlue space-y-4">
             <div class="flex items-center justify-between gap-2">
                 <div>
@@ -326,6 +347,9 @@
                     <div class="muted-text uppercase text-[11px]" data-i18n="portIncLabel">Overall Income</div>
                     <div id="portOverallInc" class="text-base font-extrabold text-cyberBlue mt-1">₹0</div>
                 </div>
+            </div>
+            <div class="inset-box p-3 rounded-xl border-l-4 border-l-posterYellow text-xs font-mono text-slate-200">
+                🤖 <strong class="text-posterYellow" data-i18n="portAiLabel">AI Suggestion:</strong> <span id="overallPortfolioAiSentence"></span>
             </div>
         </section>
 
@@ -354,12 +378,12 @@
                 <div class="inset-box p-3 rounded-xl border-emeraldGrowth"><span data-i18n="netSurplus">Monthly Net Surplus</span>: <strong id="calcNetSurplus" class="text-emeraldGrowth">₹0</strong></div>
             </div>
             <div class="inset-box p-3.5 rounded-xl border-l-4 border-l-posterYellow text-xs font-mono text-slate-300">
-                💡 <strong class="text-white" data-i18n="aiFinSugg">AI Financial Feedback:</strong> <span id="aiFinSuggestionText">Allocate at least 50% of surplus towards high-interest debt clearance to reach your ₹1 Crore goal.</span>
+                💡 <strong class="text-white" data-i18n="aiFinSugg">AI Financial Feedback:</strong> <span id="aiFinSuggestionText"></span>
             </div>
             <div class="inset-box p-3 rounded-xl max-h-40 overflow-y-auto text-xs font-mono space-y-1.5" id="txList"></div>
         </section>
 
-        <!-- 5. WEALTH GROWTH & NET WORTH GRAPH (BELOW PORTFOLIO & INCOME/EXPENSE/INVESTMENT BOXES) -->
+        <!-- 5. WEALTH GROWTH & NET WORTH GRAPH -->
         <section id="sec-financial-growth" class="grid grid-cols-1 gap-6">
             <div class="comic-card rounded-2xl p-4 sm:p-6 border-cyberBlue flex flex-col justify-between">
                 <div>
@@ -420,7 +444,7 @@
             </div>
 
             <div class="inset-box p-3.5 rounded-xl border-l-4 border-l-red-500 text-xs font-mono text-slate-300">
-                💡 <strong class="text-white" data-i18n="aiDebtSugg">AI Debt Feedback:</strong> <span id="aiDebtSuggDesc">Remaining debt stays red until 100% cleared. Once cleared, status turns green.</span>
+                💡 <strong class="text-white" data-i18n="aiDebtSugg">AI Debt Feedback:</strong> <span id="aiDebtSuggDesc"></span>
             </div>
             <div id="avalancheDebtGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5"></div>
         </section>
@@ -443,7 +467,7 @@
                 </div>
             </div>
             <div class="inset-box p-3.5 rounded-xl border-l-4 border-l-cyberBlue text-xs font-mono text-slate-300">
-                💡 <strong class="text-white" data-i18n="aiBizPred">AI Skill-Based Prediction:</strong> <span id="skillAiPredictionText">Based on your recent skill, AI predicts launching an Automated Mobility SaaS app next.</span>
+                💡 <strong class="text-white" data-i18n="aiBizPred">AI Skill-Based Prediction:</strong> <span id="skillAiPredictionText"></span>
             </div>
             <div id="businessBoardGrid" class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 text-xs font-mono"></div>
         </section>
@@ -461,7 +485,7 @@
                 </div>
             </div>
             <div class="inset-box p-3.5 rounded-xl border-l-4 border-l-posterYellow text-xs font-mono text-slate-300">
-                💡 <strong class="text-white" data-i18n="aiPlanSugg">AI Plan Feedback:</strong> <span data-i18n="aiPlanSuggDesc">Execute tasks systematically to keep daily driving and business brand scaling on track.</span>
+                💡 <strong class="text-white" data-i18n="aiPlanSugg">AI Plan Feedback:</strong> <span id="aiPlanSuggDesc"></span>
             </div>
             <div id="planningTaskList" class="space-y-2 text-xs font-mono"></div>
         </section>
@@ -485,33 +509,49 @@
                 <button onclick="addCalendarEvent()" class="bg-posterYellow hover:bg-yellow-300 text-matteBlack font-poster text-xs px-4 py-2 rounded-xl font-bold shadow" data-i18n="addEventBtn">+ ADD EVENT</button>
             </div>
             <div class="inset-box p-3.5 rounded-xl border-l-4 border-l-posterYellow text-xs font-mono text-slate-300">
-                💡 <strong class="text-white" data-i18n="aiCalSugg">AI Calendar Feedback:</strong> <span data-i18n="aiCalSuggDesc">Events scheduled here automatically dispatch alerts to your synced WhatsApp and Email.</span>
+                💡 <strong class="text-white" data-i18n="aiCalSugg">AI Calendar Feedback:</strong> <span id="aiCalSuggDesc"></span>
             </div>
             <div id="calendarEventsList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs font-mono"></div>
         </section>
 
-        <!-- 10. GOOBRO RIDE CALENDAR & MONTHLY INCOME RADAR -->
+        <!-- 10. UNIFIED GOOBRO RIDE, MONTHLY INCOME, ALGO STRATEGY & BUSINESS STARTUP REVENUE HUB (ADD / REMOVE / EDIT + INVESTMENT & INCOME BOX) -->
         <section class="comic-card rounded-2xl p-4 sm:p-6 border-cyberBlue space-y-4">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
                 <div>
-                    <span class="bg-cyberBlue text-white font-poster text-xs px-3 py-0.5 rounded uppercase" data-i18n="radarTag">DAILY INCOME & RIDE CALENDAR</span>
-                    <h2 class="poster-title text-2xl sm:text-3xl mt-1" data-i18n="radarHeader">GOOBRO RIDE RADAR & MONTHLY EARNINGS</h2>
+                    <span class="bg-cyberBlue text-white font-poster text-xs px-3 py-0.5 rounded uppercase" data-i18n="hubTag">UNIFIED INCOME & STARTUP HUB</span>
+                    <h2 class="poster-title text-2xl sm:text-3xl mt-1" data-i18n="hubHeader">GOOBRO / MONTHLY RIDE, ALGO & BUSINESS REVENUE</h2>
                 </div>
                 <div class="flex flex-wrap gap-2">
-                    <input type="text" id="radarCustName" placeholder="Customer Name..." class="inset-box rounded-xl px-3 py-2 text-xs font-mono w-36">
-                    <input type="number" id="radarAmount" placeholder="Amount (₹)" class="inset-box rounded-xl px-3 py-2 text-xs font-mono w-24">
-                    <select id="radarCategory" class="inset-box rounded-xl px-2 py-2 text-xs font-mono bg-slate-900 text-white">
-                        <option value="Driving" data-i18n="optDriving">Driving</option>
-                        <option value="Goobro" data-i18n="optGoobro">Goobro</option>
+                    <select id="hubCategory" class="inset-box rounded-xl px-2.5 py-2 text-xs font-mono bg-slate-900 text-white">
+                        <option value="goobro" data-i18n="optHubGoobro">Goobro / Monthly Ride</option>
+                        <option value="algo" data-i18n="optHubAlgo">Algo Strategy</option>
+                        <option value="business" data-i18n="optHubBusiness">Business / Startup</option>
                     </select>
-                    <button onclick="addRadarRide()" class="bg-cyberBlue hover:bg-blue-600 text-white font-poster text-xs px-4 py-2 rounded-xl font-bold shadow" data-i18n="addRideBtn">+ ADD RIDE</button>
+                    <input type="text" id="hubName" placeholder="Name / Source..." class="inset-box rounded-xl px-3 py-2 text-xs font-mono w-36">
+                    <input type="number" id="hubInvestment" placeholder="Investment (₹)" class="inset-box rounded-xl px-3 py-2 text-xs font-mono w-28">
+                    <input type="number" id="hubIncome" placeholder="Income (₹)" class="inset-box rounded-xl px-3 py-2 text-xs font-mono w-28">
+                    <button onclick="saveHubEntry()" id="hubSubmitBtn" class="bg-cyberBlue hover:bg-blue-600 text-white font-poster text-xs px-4 py-2 rounded-xl font-bold shadow" data-i18n="addHubBtn">+ ADD</button>
+                    <button onclick="cancelHubEdit()" id="hubCancelEditBtn" class="hidden bg-slate-700 hover:bg-slate-600 text-white font-mono text-xs px-3 py-2 rounded-xl font-bold">CANCEL</button>
                 </div>
             </div>
-            <div class="inset-box p-3.5 rounded-xl border-emeraldGrowth flex items-center justify-between font-mono text-xs">
-                <span>📅 <strong class="text-white" data-i18n="monthlyRadarSum">Monthly Ride & Goobro Total Income:</strong></span>
-                <span id="monthlyRadarTotal" class="text-emeraldGrowth text-sm font-extrabold">₹0</span>
+
+            <!-- Dedicated Investment & Income Calculation Box for Added Items & Businesses -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs font-mono">
+                <div class="inset-box p-3.5 rounded-xl border-l-4 border-l-posterYellow">
+                    <div class="muted-text uppercase text-[11px]" data-i18n="hubTotInvLabel">Total Investment (Goobro / Algo / Business)</div>
+                    <div id="hubTotalInvestmentDisplay" class="text-base font-extrabold text-posterYellow mt-1">₹0</div>
+                </div>
+                <div class="inset-box p-3.5 rounded-xl border-l-4 border-l-emeraldGrowth">
+                    <div class="muted-text uppercase text-[11px]" data-i18n="hubTotIncLabel">Total Income (Goobro / Algo / Business)</div>
+                    <div id="hubTotalIncomeDisplay" class="text-base font-extrabold text-emeraldGrowth mt-1">₹0</div>
+                </div>
+                <div class="inset-box p-3.5 rounded-xl border-l-4 border-l-cyberBlue">
+                    <div class="muted-text uppercase text-[11px]" data-i18n="hubNetReturnLabel">Net Return (Income - Investment)</div>
+                    <div id="hubNetReturnDisplay" class="text-base font-extrabold text-cyberBlue mt-1">₹0</div>
+                </div>
             </div>
-            <div id="radarRidesList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs font-mono"></div>
+
+            <div id="hubEntriesList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs font-mono"></div>
         </section>
 
         <!-- 11. PERSONAL EVOLUTION, TIMELINE MILESTONES & GROWTH PROGRESS TRACKERS -->
@@ -532,7 +572,6 @@
                     </g>
                     <line x1="35" y1="95" x2="520" y2="95" stroke="#facc15" stroke-width="1.3" stroke-dasharray="5 4"/>
                     <text x="42" y="88" fill="#facc15" font-family="Oswald" font-size="10">BREAKOUT LINE</text>
-                    <!-- Gradual rise from 1993 low -> step-by-step growth -> breakdown & current status down below -->
                     <path d="M 48,188 L 95,168 L 142,148 L 188,132 L 235,116 L 282,158 L 328,136 L 372,182 L 418,202 L 418,225 L 48,225 Z" fill="rgba(59,130,246,0.18)"/>
                     <path d="M 48,188 L 95,168 L 142,148 L 188,132 L 235,116 L 282,158 L 328,136 L 372,182 L 418,202" fill="none" stroke="#3b82f6" stroke-width="3.2" stroke-linecap="round"/>
                     <g id="personalNodesGroup"></g>
@@ -543,6 +582,11 @@
             </div>
 
             <div id="lifeInsightCard" class="inset-box rounded-xl p-3.5 border-l-4 border-l-posterYellow text-xs font-mono"></div>
+
+            <!-- Overall Analysis & Focus AI Suggestion Below Personal Evolution Timeline -->
+            <div class="inset-box rounded-xl p-3.5 border-l-4 border-l-cyberBlue text-xs font-mono text-slate-200">
+                🤖 <strong class="text-cyberBlue" data-i18n="evoAiLabel">AI Overall Growth & Focus Suggestion:</strong> <span id="personalEvolutionAiSuggestion"></span>
+            </div>
 
             <div id="sec-growth-progress" class="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono text-xs">
                 <div class="inset-box rounded-xl p-3.5 border-l-4 border-l-cyberBlue">
@@ -594,33 +638,6 @@
             </div>
         </section>
 
-        <!-- 12. ALGO TRADING & STRATEGY PERFORMANCE BOX (AT BOTTOM) -->
-        <section class="comic-card rounded-2xl p-4 sm:p-6 border-emeraldGrowth space-y-4">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div>
-                    <span class="bg-emeraldGrowth text-matteBlack font-poster text-xs px-3 py-0.5 rounded uppercase" data-i18n="algoTag">ALGO & STRATEGY ENGINE</span>
-                    <h2 class="poster-title text-2xl sm:text-3xl mt-1" data-i18n="algoHeader">ALGO TRADING & STRATEGY PERFORMANCE</h2>
-                </div>
-                <div class="flex flex-wrap gap-2">
-                    <input type="text" id="algoStrategyName" placeholder="Strategy Name..." class="inset-box rounded-xl px-3 py-2 text-xs font-mono w-36">
-                    <input type="number" id="algoCapitalAmt" placeholder="Amount (₹)" class="inset-box rounded-xl px-3 py-2 text-xs font-mono w-28">
-                    <input type="number" id="algoGeneratedIncome" placeholder="Income Gen (₹)" class="inset-box rounded-xl px-3 py-2 text-xs font-mono w-32">
-                    <button onclick="addAlgoStrategy()" class="bg-emeraldGrowth hover:bg-green-400 text-matteBlack font-poster text-xs px-4 py-2 rounded-xl font-bold shadow" data-i18n="addAlgoBtn">+ ADD STRATEGY</button>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-mono">
-                <div class="inset-box p-3 rounded-xl border-cyberBlue">
-                    <span data-i18n="algoTotalCapLabel">Total Strategy Capital</span>: <strong id="algoTotalCapital" class="text-cyberBlue text-sm">₹0</strong>
-                </div>
-                <div class="inset-box p-3 rounded-xl border-emeraldGrowth">
-                    <span data-i18n="algoTotalIncLabel">Total Algo Income Generated</span>: <strong id="algoTotalIncome" class="text-emeraldGrowth text-sm">₹0</strong>
-                </div>
-            </div>
-
-            <div id="algoStrategiesList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs font-mono"></div>
-        </section>
-
     </div>
 
     <!-- JavaScript Engine -->
@@ -641,6 +658,7 @@
                 portDebtLabel: 'Overall Remaining Debt',
                 portExpLabel: 'Overall Expenses',
                 portIncLabel: 'Overall Income',
+                portAiLabel: 'AI Suggestion:',
                 leftGraphTag: 'CHRONOLOGICAL GROWTH & LIVE STAGE',
                 leftGraphTitle: 'PERSONAL EVOLUTION, TIMELINE & PROGRESS',
                 zoomBtn: '🔍 Zoom',
@@ -655,6 +673,7 @@
                 finLifeProgLabel: 'FINANCE & LIFE PROGRESS',
                 skillSysProgLabel: 'SKILL SYSTEM PROGRESS',
                 addSkillBtn: '+ SKILL',
+                evoAiLabel: 'AI Overall Growth & Focus Suggestion:',
                 storyTitle: '📖 SHIV PREM — TIMELINE MILESTONES',
                 addStoryBtn: '+ ADD',
                 finTag: 'FINANCIAL PORTFOLIO DATABASE',
@@ -691,22 +710,24 @@
                 addEventBtn: '+ ADD EVENT',
                 aiCalSugg: 'AI Calendar Feedback:',
                 aiCalSuggDesc: 'Events scheduled here automatically dispatch alerts to your synced WhatsApp and Email.',
-                radarTag: 'DAILY INCOME & RIDE CALENDAR',
-                radarHeader: 'GOOBRO RIDE RADAR & MONTHLY EARNINGS',
-                optDriving: 'Driving',
-                optGoobro: 'Goobro',
-                addRideBtn: '+ ADD RIDE',
-                monthlyRadarSum: 'Monthly Ride & Goobro Total Income:',
-                algoTag: 'ALGO & STRATEGY ENGINE',
-                algoHeader: 'ALGO TRADING & STRATEGY PERFORMANCE',
-                addAlgoBtn: '+ ADD STRATEGY',
-                algoTotalCapLabel: 'Total Strategy Capital',
-                algoTotalIncLabel: 'Total Algo Income Generated',
+                hubTag: 'UNIFIED INCOME & STARTUP HUB',
+                hubHeader: 'GOOBRO / MONTHLY RIDE, ALGO & BUSINESS REVENUE',
+                optHubGoobro: 'Goobro / Monthly Ride',
+                optHubAlgo: 'Algo Strategy',
+                optHubBusiness: 'Business / Startup',
+                addHubBtn: '+ ADD',
+                hubTotInvLabel: 'Total Investment (Goobro / Algo / Business)',
+                hubTotIncLabel: 'Total Income (Goobro / Algo / Business)',
+                hubNetReturnLabel: 'Net Return (Income - Investment)',
                 botTitle: 'SHIV PREM AI & DETAILS',
-                botSub: 'Arranged Dashboard Summary & AI Modes',
+                botSub: 'Arranged Dashboard Summary, Doc Paste & Photo Sync',
                 botTabFinance: 'Financial Assistant',
                 botTabGrowth: 'Personal Growth',
                 botTabNextPlan: 'Next Plan',
+                botDocPhotoTitle: '📄 Doc/Chat Paste & 📷 Photo Data Sync',
+                botUploadPhotoBtn: '📷 Upload Photo',
+                botDocPlaceholder: 'Paste conversation / document data here (e.g., Goobro ride 2500, Algo income 5000, Investment 10000, Debt 20000)...',
+                botApplyDocBtn: '⚡ Sync to Chart & Dashboard',
                 botPlaceholder: 'Ask about finance, personal growth or next plan...',
                 sendBtn: 'ASK ⚡'
             },
@@ -725,6 +746,7 @@
                 portDebtLabel: 'ஒட்டுமொத்த மீதமுள்ள கடன்',
                 portExpLabel: 'ஒட்டுமொத்த செலவுகள்',
                 portIncLabel: 'ஒட்டுமொத்த வருமானம்',
+                portAiLabel: 'ஏஐ சஜஷன்:',
                 leftGraphTag: 'காலவரிசை வளர்ச்சி & தற்போதைய நிலை',
                 leftGraphTitle: 'தனிப்பட்ட வளர்ச்சி, டைம்லைன் & ப்ராக்ரஸ்',
                 zoomBtn: '🔍 பெரிதாக்கு',
@@ -739,6 +761,7 @@
                 finLifeProgLabel: 'நிதி & வாழ்க்கை முன்னேற்றம்',
                 skillSysProgLabel: 'திறன் & சிஸ்டம் முன்னேற்றம்',
                 addSkillBtn: '+ திறன்',
+                evoAiLabel: 'ஏஐ ஒட்டுமொத்த வளர்ச்சி & ஃபோகஸ் சஜஷன்:',
                 storyTitle: '📖 சிவ்பிரேம் — டைம்லைன் மைல்கற்கள்',
                 addStoryBtn: '+ சேர்',
                 finTag: 'நிதி போர்ட்ஃபோலியோ டேட்டாபேஸ்',
@@ -775,22 +798,24 @@
                 addEventBtn: '+ நிகழ்வு சேர்',
                 aiCalSugg: 'AI காலண்டர் ஃபீட்பேக்:',
                 aiCalSuggDesc: 'இங்கு பதிவு செய்யப்படும் நிகழ்வுகள் உங்கள் வாட்ஸ்அப் மற்றும் ஈமெயிலுக்கு தானாகவே நினைவூட்டப்படும்.',
-                radarTag: 'தினசரி வருமானம் & ரைடு காலண்டர்',
-                radarHeader: 'Goobro ரைடு ரேடார் & மாதாந்திர வருவாய்',
-                optDriving: 'டிரைவிங்',
-                optGoobro: 'Goobro',
-                addRideBtn: '+ ரைடு சேர்',
-                monthlyRadarSum: 'மாதாந்திர ரைடு & Goobro மொத்த வருமானம்:',
-                algoTag: 'ஆல்கோ & ஸ்ட்ராட்டஜி இன்ஜின்',
-                algoHeader: 'ஆல்கோ டிரேடிங் & ஸ்ட்ராட்டஜி பெர்ஃபார்மன்ஸ்',
-                addAlgoBtn: '+ ஸ்ட்ராட்டஜி சேர்',
-                algoTotalCapLabel: 'மொத்த ஸ்ட்ராட்டஜி தொகை',
-                algoTotalIncLabel: 'ஆல்கோ மூலம் கிடைத்த வருமானம்',
+                hubTag: 'ஒருங்கிணைந்த வருமானம் & பிசினஸ் ஹப்',
+                hubHeader: 'Goobro / மாதந்திர ரைடு, ஆல்கோ & பிசினஸ் வருவாய்',
+                optHubGoobro: 'Goobro / மாதந்திர ரைடு',
+                optHubAlgo: 'ஆல்கோ ஸ்ட்ராட்டஜி',
+                optHubBusiness: 'பிசினஸ் / ஸ்டார்ட்அப்',
+                addHubBtn: '+ சேர்',
+                hubTotInvLabel: 'மொத்த முதலீடு (Goobro / ஆல்கோ / பிசினஸ்)',
+                hubTotIncLabel: 'மொத்த வருமானம் (Goobro / ஆல்கோ / பிசினஸ்)',
+                hubNetReturnLabel: 'நிகர வருவாய் (வருமானம் - முதலீடு)',
                 botTitle: 'ஷிவ் பிரேம் AI & விவரங்கள்',
-                botSub: 'ஒழுங்குபடுத்தப்பட்ட டேஷ்போர்டு சுருக்கம் & பிரிவுகள்',
+                botSub: 'ஒழுங்குபடுத்தப்பட்ட டேஷ்போர்டு சுருக்கம், டாக் பேஸ்ட் & போட்டோ சிங்க்',
                 botTabFinance: 'Financial Assistant',
                 botTabGrowth: 'Personal Growth',
                 botTabNextPlan: 'Next Plan',
+                botDocPhotoTitle: '📄 டாக்/சாட் பேஸ்ட் & 📷 போட்டோ டேட்டா சிங்க்',
+                botUploadPhotoBtn: '📷 போட்டோ அப்லோட்',
+                botDocPlaceholder: 'உரையாடல் அல்லது டாக்குமெண்ட் விவரங்களை இங்கு பேஸ்ட் செய்யவும் (எ.கா: Goobro ride 2500, Algo income 5000, Investment 10000)...',
+                botApplyDocBtn: '⚡ சார்ட் & டேஷ்போர்டில் இணை',
                 botPlaceholder: 'பைனான்ஸ், பர்சனல் க்ரோத் அல்லது நெக்ஸ்ட் பிளான் பற்றி கேளுங்கள்...',
                 sendBtn: 'கேள் ⚡'
             }
@@ -799,7 +824,7 @@
         const defaultBotThreads = {
             en: {
                 finance: [
-                    { sender: 'ai', text: 'Financial Assistant active: Track Income, Expenses, Investments, Remaining Debt (red until cleared) and Algo Strategy earnings to grow your Net Worth towards ₹1 Crore.' }
+                    { sender: 'ai', text: 'Financial Assistant active: Track Income, Expenses, Investments, Remaining Debt (red until cleared) and Goobro / Algo / Business earnings to grow your Net Worth towards ₹1 Crore.' }
                 ],
                 growth: [
                     { sender: 'ai', text: 'Personal Growth active: Starting from 1993 roots with gradual step-by-step growth, facing breakdown/current down status, and rebuilding systematically.' }
@@ -810,28 +835,27 @@
             },
             ta: {
                 finance: [
-                    { sender: 'ai', text: 'Financial Assistant செயலில் உள்ளது: வருமானம், செலவு, முதலீடு, பாக்கி கடன் (முடியும் வரை சிவப்பு) மற்றும் ஆல்கோ வருமானத்தைக் கவனித்து ₹1 கோடி இலக்கை நோக்கிச் செல்லுங்கள்.' }
+                    { sender: 'ai', text: 'Financial Assistant செயலில் உள்ளது: வருமானம், செலவு, முதலீடு, பாக்கி கடன் மற்றும் Goobro / ஆல்கோ / பிசினஸ் வருமானத்தைக் கவனித்து ₹1 கோடி இலக்கை நோக்கிச் செல்லுங்கள்.' }
                 ],
                 growth: [
                     { sender: 'ai', text: 'Personal Growth செயலில் உள்ளது: 1993 தொடக்கத்திலிருந்து படிப்படியாக வளர்ந்து, இப்போது Breakdown / கீழே உள்ள நிலையைக் கடந்து மீண்டும் சிஸ்டம் மூலம் முன்னேற வேண்டிய கட்டம்.' }
                 ],
                 nextplan: [
-                    { sender: 'ai', text: 'Next Plan செயலில் உள்ளது: Goobro & டிரைவிங் வருமானத்தைத் தொடருங்கள், கடன்களைத் திட்டமிட்டுக் குறையுங்கள்; எதிர்காலத்தில் பப்ளிக் ஆப்பாக மாற்றும்போது Login & Cloud சேர்த்துக் கொள்ளலாம்.' }
+                    { sender: 'ai', text: 'Next Plan active: Goobro & டிரைவிங் வருமானத்தைத் தொடருங்கள், கடன்களைத் திட்டமிட்டுக் குறையுங்கள்; எதிர்காலத்தில் பப்ளிக் ஆப்பாக மாற்றும்போது Login & Cloud சேர்த்துக் கொள்ளலாம்.' }
                 ]
             }
         };
 
-        // 1993 Born starting low, growing gradually step by step, then breakdown & current status down below
         let personalNodes = [
-            { id: 'n1', cx: 48, cy: 188, color: '#3b82f6', year: '1993', title: '1993 Born — Low Start & Roots', desc: 'Born in Tenkasi. Starting from baseline.' },
-            { id: 'n2', cx: 95, cy: 168, color: '#3b82f6', year: '2010', title: 'Schooling & Gradual Growth', desc: 'Step-by-step learning and adaptability.' },
-            { id: 'n3', cx: 142, cy: 148, color: '#3b82f6', year: '2015', title: 'B.Tech Biotechnology', desc: 'Growing analytical & technical foundation.' },
-            { id: 'n4', cx: 188, cy: 132, color: '#3b82f6', year: '2017', title: 'Early Hustle & Growth', desc: 'Domino’s, coding & studio work.' },
-            { id: 'n5', cx: 235, cy: 116, color: '#22c55e', year: '2020', title: 'Goobro & Business Growth', desc: 'Gradual business & brand growth.' },
-            { id: 'n6', cx: 282, cy: 158, color: '#ef4444', year: 'Aug 2022', title: 'Breakdown: COVID & Loss', desc: 'Financial crunch & personal losses.' },
-            { id: 'n7', cx: 328, cy: 136, color: '#3b82f6', year: '2023', title: 'Marriage & Rebuilding', desc: 'Trying to rebuild & invest.' },
-            { id: 'n8', cx: 372, cy: 182, color: '#ef4444', year: 'Nov 2024', title: 'Breakdown: ₹27L Debt', desc: 'Heavy debt pressure & breakdown.' },
-            { id: 'n9', cx: 418, cy: 202, color: '#ef4444', year: '2026 (Current Status)', title: 'Current Status (Down / Breakdown)', desc: 'Currently at the lower breakdown point; rebuilding step by step.' }
+            { id: 'n1', cx: 48, cy: 188, color: '#3b82f6', year: '1993', yearTa: '1993', title: '1993 Born — Low Start & Roots', titleTa: '1993 பிறப்பு — தொடக்க & அடிப்படை வேர்கள்', desc: 'Born in Tenkasi. Starting from baseline.', descTa: 'தென்காசியில் பிறப்பு; எளிய அடித்தளத்திலிருந்து தொடக்கம்.' },
+            { id: 'n2', cx: 95, cy: 168, color: '#3b82f6', year: '2010', yearTa: '2010', title: 'Schooling & Gradual Growth', titleTa: 'பள்ளிப் படிப்பு & படிப்படியான வளர்ச்சி', desc: 'Step-by-step learning and adaptability.', descTa: 'படிப்படியான கற்றல் மற்றும் சூழலுக்கு ஏற்ப மாறும் தன்மை.' },
+            { id: 'n3', cx: 142, cy: 148, color: '#3b82f6', year: '2015', yearTa: '2015', title: 'B.Tech Biotechnology', titleTa: 'B.Tech பயோடெக்னாலஜி', desc: 'Growing analytical & technical foundation.', descTa: 'பகுப்பாய்வு மற்றும் தொழில்நுட்ப அடிப்படை வளர்ச்சி.' },
+            { id: 'n4', cx: 188, cy: 132, color: '#3b82f6', year: '2017', yearTa: '2017', title: 'Early Hustle & Growth', titleTa: 'தொடக்க உழைப்பு & வளர்ச்சி', desc: 'Domino’s, coding & studio work.', descTa: 'Domino’s, கோடிங் மற்றும் ஸ்டுடியோ அனுபவங்கள்.' },
+            { id: 'n5', cx: 235, cy: 116, color: '#22c55e', year: '2020', yearTa: '2020', title: 'Goobro & Business Growth', titleTa: 'Goobro & பிசினஸ் வளர்ச்சி', desc: 'Gradual business & brand growth.', descTa: 'படிப்படியான பிசினஸ் மற்றும் பிராண்ட் வளர்ச்சி.' },
+            { id: 'n6', cx: 282, cy: 158, color: '#ef4444', year: 'Aug 2022', yearTa: 'ஆக 2022', title: 'Breakdown: COVID & Loss', titleTa: 'வீழ்ச்சி / Breakdown: COVID & இழப்புகள்', desc: 'Financial crunch & personal losses.', descTa: 'நிதி நெருக்கடி மற்றும் தனிப்பட்ட இழப்புகள்.' },
+            { id: 'n7', cx: 328, cy: 136, color: '#3b82f6', year: '2023', yearTa: '2023', title: 'Marriage & Rebuilding', titleTa: 'திருமணம் & மீண்டும் கட்டமைப்பு', desc: 'Trying to rebuild & invest.', descTa: 'மீண்டும் எழுந்து முதலீடு செய்ய முயற்சி.' },
+            { id: 'n8', cx: 372, cy: 182, color: '#ef4444', year: 'Nov 2024', yearTa: 'நவ 2024', title: 'Breakdown: ₹27L Debt', titleTa: 'Breakdown: ₹27 லட்சம் கடன் சுமை', desc: 'Heavy debt pressure & breakdown.', descTa: 'கடுமையான கடன் அழுத்தம் மற்றும் மன/நிதி சவால்.' },
+            { id: 'n9', cx: 418, cy: 202, color: '#ef4444', year: '2026 (Current Status)', yearTa: '2026 (தற்போதைய நிலை)', title: 'Current Status (Down / Breakdown)', titleTa: 'தற்போதைய நிலை (கீழே / Breakdown)', desc: 'Currently at the lower breakdown point; rebuilding step by step.', descTa: 'தற்போது கீழான நிலையில் உள்ளீர்கள்; படிப்படியாக மீண்டும் கட்டமைக்க வேண்டிய காலகட்டம்.' }
         ];
 
         const defaultState = {
@@ -843,18 +867,16 @@
             email: '',
             learnedSkills: ['System Architecture', 'Driving Logistics', 'Debt Avalanche Calculation'],
             customStories: [
-                { id: 's1', title: 'Aug 2022 (COVID Struggle)', desc: 'Severe financial setbacks, managing family pressure and rebuilding from scratch.' },
-                { id: 's2', title: 'Nov 2024 (₹27L Debt Crisis)', desc: 'The darkest struggle period with trading loss, turning into a disciplined System Builder.' }
+                { id: 's1', title: 'Aug 2022 (COVID Struggle)', titleTa: 'ஆக 2022 (COVID போராட்டம்)', desc: 'Severe financial setbacks, managing family pressure and rebuilding from scratch.', descTa: 'கடுமையான நிதி பின்னடைவு, குடும்ப அழுத்தம் மற்றும் புதிதாகத் தொடங்கும் முயற்சி.' },
+                { id: 's2', title: 'Nov 2024 (₹27L Debt Crisis)', titleTa: 'நவ 2024 (₹27L கடன் நெருக்கடி)', desc: 'The darkest struggle period with trading loss, turning into a disciplined System Builder.', descTa: 'டிரேடிங் இழப்பு மற்றும் கடினமான காலகட்டத்திலிருந்து ஒழுங்கான சிஸ்டம் பில்டராக மாறிய நிலை.' }
             ],
             calendarEvents: [
                 { date: '2026-11-19', title: 'Health Checkup & Insurance Review (WhatsApp/Email Sync Active)' }
             ],
-            radarRides: [
-                { customer: 'Ramesh Kumar', amount: 1500, category: 'Driving' },
-                { customer: 'Senthil Vel', amount: 2500, category: 'Goobro' }
-            ],
-            algoStrategies: [
-                { strategy: 'Intraday Trend Algo v1', amount: 50000, income: 8500 }
+            hubEntries: [
+                { id: 'h1', category: 'goobro', name: 'Goobro Monthly Ride (Ramesh Kumar)', investment: 5000, income: 18500 },
+                { id: 'h2', category: 'algo', name: 'Intraday Trend Algo v1', investment: 50000, income: 8500 },
+                { id: 'h3', category: 'business', name: 'Goobro Startup / Logistics', investment: 25000, income: 32000 }
             ],
             debts: [
                 { id: 'd1', lender: 'Gold Loan', total: 1500000, remaining: 1500000, tag: 'Priority #1 • Secured' },
@@ -896,7 +918,18 @@
                     if (raw) {
                         const parsed = JSON.parse(raw);
                         if (parsed && typeof parsed === 'object' && Array.isArray(parsed.debts)) {
-                            return Object.assign({}, JSON.parse(JSON.stringify(defaultState)), parsed);
+                            const merged = Object.assign({}, JSON.parse(JSON.stringify(defaultState)), parsed);
+                            if (!Array.isArray(merged.hubEntries) || merged.hubEntries.length === 0) {
+                                const migrated = [];
+                                if (Array.isArray(parsed.radarRides)) {
+                                    parsed.radarRides.forEach((r, i) => migrated.push({ id: 'mr_' + i, category: 'goobro', name: `${r.customer || 'Ride'} (${r.category || 'Goobro'})`, investment: 0, income: Number(r.amount || 0) }));
+                                }
+                                if (Array.isArray(parsed.algoStrategies)) {
+                                    parsed.algoStrategies.forEach((a, i) => migrated.push({ id: 'ma_' + i, category: 'algo', name: a.strategy || 'Algo Strategy', investment: Number(a.amount || 0), income: Number(a.income || 0) }));
+                                }
+                                merged.hubEntries = migrated.length > 0 ? migrated : JSON.parse(JSON.stringify(defaultState.hubEntries));
+                            }
+                            return merged;
                         }
                     }
                 } catch (e) {}
@@ -905,6 +938,7 @@
         }
 
         let state = loadInitialState();
+        let editingHubId = null;
 
         function saveState() {
             try {
@@ -912,6 +946,274 @@
                 localStorage.setItem('shivPremMasterOS_v21', serialized);
             } catch (e) {}
             recalculateMetrics();
+            updateAllAiSuggestions();
+        }
+
+        function getHubTotals() {
+            let hubInv = 0, hubInc = 0;
+            (state.hubEntries || []).forEach(item => {
+                hubInv += Number(item.investment || 0);
+                hubInc += Number(item.income || 0);
+            });
+            return { hubInv, hubInc, hubNet: hubInc - hubInv };
+        }
+
+        function updateAllAiSuggestions() {
+            const isTa = state.lang === 'ta';
+            const remDebt = state.debts.reduce((s, d) => s + Number(d.remaining || 0), 0);
+            let totInv = 0, totInc = 0, totExp = 0;
+            state.transactions.forEach(tx => {
+                if (tx.type === 'investment') totInv += Number(tx.amount || 0);
+                else if (tx.type === 'income') totInc += Number(tx.amount || 0);
+                else if (tx.type === 'expense') totExp += Number(tx.amount || 0);
+            });
+            const { hubInv, hubInc, hubNet } = getHubTotals();
+            totInc += hubInc;
+            totInv += hubInv;
+            const netWorth = totInv - remDebt;
+            const surplus = totInc - (totExp + totInv);
+
+            // 1. One-sentence AI Suggestion under Overall Portfolio
+            const portAiEl = document.getElementById('overallPortfolioAiSentence');
+            if (portAiEl) {
+                if (isTa) {
+                    portAiEl.innerText = `உங்கள் நிகர சொத்து ${formatINR(netWorth)} மற்றும் மீதமுள்ள கடன் ${remDebt > 0 ? '-' + formatINR(remDebt) : '₹0'} ஆக உள்ளதால், தேவையற்ற செலவுகளைக் குறைத்து Goobro/ஆல்கோ/பிசினஸ் வருமானத்தை அதிகரித்து கடன் அடைப்பு மற்றும் முதலீட்டில் முழு கவனம் செலுத்துங்கள்.`;
+                } else {
+                    portAiEl.innerText = `With Net Worth at ${formatINR(netWorth)} and remaining debt at ${remDebt > 0 ? '-' + formatINR(remDebt) : '₹0'}, focus on cutting extra expenses, scaling Goobro/Algo/Business income, and steadily clearing debt while building investments.`;
+                }
+            }
+
+            // 2. AI Financial Feedback
+            const finAiEl = document.getElementById('aiFinSuggestionText');
+            if (finAiEl) {
+                if (isTa) {
+                    finAiEl.innerText = `மாதாந்திர நிகர மிச்சம் ${formatINR(surplus)} மற்றும் ஹப் நிகர வருவாய் ${formatINR(hubNet)} உள்ள நிலையில், குறைந்தபட்சம் 50% மிச்சத்தை கடன் குறைப்பு மற்றும் நிலையான முதலீட்டில் பயன்படுத்துங்கள்.`;
+                } else {
+                    finAiEl.innerText = `With monthly net surplus at ${formatINR(surplus)} and hub net return at ${formatINR(hubNet)}, direct at least 50% of surplus toward debt clearance and steady long-term investments.`;
+                }
+            }
+
+            // 3. AI Overall Growth & Focus Suggestion below Personal Evolution Timeline
+            const evoAiEl = document.getElementById('personalEvolutionAiSuggestion');
+            if (evoAiEl) {
+                const latestSkill = state.learnedSkills[state.learnedSkills.length - 1] || (isTa ? 'சிஸ்டம் கட்டமைப்பு' : 'System Building');
+                if (isTa) {
+                    evoAiEl.innerText = `1993-லிருந்து படிப்படியாக வளர்ந்து 2022 & 2024 சவால்களைக் கடந்து இப்போது கீழான கட்டத்தில் உள்ளீர்கள்; எனவே தினசரி சிஸ்டம் ஒழுக்கம், "${latestSkill}" திறன் வளர்ச்சி, Goobro/பிசினஸ் வருவாய் உயர்வு மற்றும் கடன் குறைப்பு ஆகியவற்றில் முன்னுரிமை கொடுத்து இம்ப்ரூவ் செய்யுங்கள்.`;
+                } else {
+                    evoAiEl.innerText = `Having grown gradually from 1993 through 2022 & 2024 challenges to a lower current status, focus on daily system discipline, advancing "${latestSkill}", boosting Goobro/business income, and step-by-step debt reduction to improve steadily.`;
+                }
+            }
+
+            // 4. AI Skill-Based Prediction
+            const bizAiEl = document.getElementById('skillAiPredictionText');
+            if (bizAiEl) {
+                const latestSkill = state.learnedSkills[state.learnedSkills.length - 1] || 'General Logistics';
+                if (isTa) {
+                    bizAiEl.innerText = `நீங்கள் சமீபத்தில் கற்கும் திறன் ("${latestSkill}") அடிப்படையில், ஏஐ அடுத்ததாக ஒரு 'Automated Mobility & Fleet SaaS App' தொடங்க பரிந்துரைக்கிறது.`;
+                } else {
+                    bizAiEl.innerText = `Based on your recent skill ("${latestSkill}"), AI predicts launching an Automated Mobility & Fleet SaaS App next.`;
+                }
+            }
+
+            // 5. Debt / Plan / Calendar AI feedback in Tamil/English
+            const debtDescEl = document.getElementById('aiDebtSuggDesc');
+            if (debtDescEl) {
+                debtDescEl.innerText = isTa ? 'கடன் முழுமையாக முடியும் வரை சிவப்பு நிறத்திலேயே இருக்கும்; முடிந்த பிறகே பச்சை நிறமாக மாறும்.' : 'Remaining debt stays red until 100% cleared. Once cleared, status turns green.';
+            }
+            const planDescEl = document.getElementById('aiPlanSuggDesc');
+            if (planDescEl) {
+                planDescEl.innerText = isTa ? 'ஒவ்வொரு பணியையும் முறையாக முடித்து தினசரி டிரைவிங் மற்றும் பிசினஸ் வளர்ச்சியை உறுதிப்படுத்துங்கள்.' : 'Execute tasks systematically to keep daily driving and business brand scaling on track.';
+            }
+            const calDescEl = document.getElementById('aiCalSuggDesc');
+            if (calDescEl) {
+                calDescEl.innerText = isTa ? 'இங்கு பதிவு செய்யப்படும் நிகழ்வுகள் உங்கள் வாட்ஸ்அப் மற்றும் ஈமெயிலுக்கு தானாகவே நினைவூட்டப்படும்.' : 'Events scheduled here automatically dispatch alerts to your synced WhatsApp and Email.';
+            }
+        }
+
+        // Unified Hub: Add / Edit / Remove for Goobro / Monthly Ride, Algo Strategy, Business / Startup
+        function saveHubEntry() {
+            const category = document.getElementById('hubCategory').value;
+            const name = document.getElementById('hubName').value.trim();
+            const investment = Number(document.getElementById('hubInvestment').value || 0);
+            const income = Number(document.getElementById('hubIncome').value || 0);
+            if (!name) return showToast('Error', 'Enter name / source.');
+
+            if (!Array.isArray(state.hubEntries)) state.hubEntries = [];
+
+            if (editingHubId) {
+                const idx = state.hubEntries.findIndex(x => x.id === editingHubId);
+                if (idx !== -1) {
+                    state.hubEntries[idx] = { id: editingHubId, category, name, investment, income };
+                }
+                editingHubId = null;
+                document.getElementById('hubSubmitBtn').innerText = state.lang === 'ta' ? '+ சேர்' : '+ ADD';
+                document.getElementById('hubCancelEditBtn').classList.add('hidden');
+                showToast('UPDATED!', `${name} updated.`);
+            } else {
+                state.hubEntries.push({ id: 'hub_' + Date.now(), category, name, investment, income });
+                showToast('ADDED!', `${name} added.`);
+            }
+
+            document.getElementById('hubName').value = '';
+            document.getElementById('hubInvestment').value = '';
+            document.getElementById('hubIncome').value = '';
+            saveState();
+            renderHubEntries();
+            renderTransactions();
+        }
+
+        function startEditHubEntry(id) {
+            const item = (state.hubEntries || []).find(x => x.id === id);
+            if (!item) return;
+            editingHubId = id;
+            document.getElementById('hubCategory').value = item.category || 'goobro';
+            document.getElementById('hubName').value = item.name || '';
+            document.getElementById('hubInvestment').value = Number(item.investment || 0);
+            document.getElementById('hubIncome').value = Number(item.income || 0);
+            document.getElementById('hubSubmitBtn').innerText = state.lang === 'ta' ? '✓ அப்டேட்' : '✓ UPDATE';
+            document.getElementById('hubCancelEditBtn').classList.remove('hidden');
+        }
+
+        function cancelHubEdit() {
+            editingHubId = null;
+            document.getElementById('hubName').value = '';
+            document.getElementById('hubInvestment').value = '';
+            document.getElementById('hubIncome').value = '';
+            document.getElementById('hubSubmitBtn').innerText = state.lang === 'ta' ? '+ சேர்' : '+ ADD';
+            document.getElementById('hubCancelEditBtn').classList.add('hidden');
+        }
+
+        function deleteHubEntry(id) {
+            if (editingHubId === id) cancelHubEdit();
+            state.hubEntries = (state.hubEntries || []).filter(x => x.id !== id);
+            saveState();
+            renderHubEntries();
+            renderTransactions();
+            showToast('REMOVED', 'Entry removed.');
+        }
+
+        function renderHubEntries() {
+            const list = document.getElementById('hubEntriesList');
+            if (!list) return;
+            list.innerHTML = '';
+            const { hubInv, hubInc, hubNet } = getHubTotals();
+
+            document.getElementById('hubTotalInvestmentDisplay').innerText = formatINR(hubInv);
+            document.getElementById('hubTotalIncomeDisplay').innerText = formatINR(hubInc);
+            const netEl = document.getElementById('hubNetReturnDisplay');
+            netEl.innerText = formatINR(hubNet);
+            netEl.className = hubNet < 0 ? 'text-base font-extrabold text-red-500 mt-1' : 'text-base font-extrabold text-emeraldGrowth mt-1';
+
+            (state.hubEntries || []).forEach(item => {
+                const catLabel = item.category === 'algo'
+                    ? (state.lang === 'ta' ? 'ஆல்கோ ஸ்ட்ராட்டஜி' : 'ALGO STRATEGY')
+                    : item.category === 'business'
+                        ? (state.lang === 'ta' ? 'பிசினஸ் / ஸ்டார்ட்அப்' : 'BUSINESS / STARTUP')
+                        : (state.lang === 'ta' ? 'Goobro / மாதந்திர ரைடு' : 'GOOBRO / MONTHLY RIDE');
+                const borderCol = item.category === 'algo' ? 'border-l-emeraldGrowth' : item.category === 'business' ? 'border-l-posterYellow' : 'border-l-cyberBlue';
+                const card = document.createElement('div');
+                card.className = `inset-box p-3.5 rounded-xl flex justify-between items-start border-l-4 ${borderCol}`;
+                card.innerHTML = `
+                    <div>
+                        <span class="text-[10px] uppercase font-bold text-cyberBlue">${catLabel}</span>
+                        <div class="text-white font-bold text-xs mt-0.5">${item.name}</div>
+                        <div class="text-[11px] muted-text mt-1">Inv: <strong class="text-posterYellow">${formatINR(item.investment)}</strong></div>
+                        <div class="text-[11px] text-emeraldGrowth font-extrabold mt-0.5">Inc: +${formatINR(item.income)}</div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="startEditHubEntry('${item.id}')" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-posterYellow hover:text-matteBlack text-posterYellow text-[11px] font-bold">✎ Edit</button>
+                        <button onclick="deleteHubEntry('${item.id}')" class="text-slate-500 hover:text-red-500 font-bold text-sm">✕</button>
+                    </div>
+                `;
+                list.appendChild(card);
+            });
+        }
+
+        // Bot Document Paste & Photo Upload Sync
+        function handleBotPhotoUpload(event) {
+            const file = event.target.files && event.target.files[0];
+            if (!file) return;
+            const statusEl = document.getElementById('botPhotoStatusText');
+            statusEl.innerText = state.lang === 'ta' ? 'போட்டோவிலிருந்து டேட்டா படிக்கப்படுகிறது...' : 'Reading data from photo...';
+
+            if (typeof Tesseract !== 'undefined') {
+                Tesseract.recognize(file, 'eng')
+                    .then(({ data }) => {
+                        const extracted = (data && data.text ? data.text : '').trim();
+                        const area = document.getElementById('botDocPasteArea');
+                        if (extracted) {
+                            area.value = (area.value ? area.value + '\n' : '') + extracted;
+                            statusEl.innerText = state.lang === 'ta' ? 'போட்டோ டேட்டா எடுக்கப்பட்டது. "Sync" அழுத்தவும்.' : 'Photo text extracted. Click Sync.';
+                            showToast('PHOTO READ!', 'Extracted text from photo.');
+                        } else {
+                            statusEl.innerText = state.lang === 'ta' ? 'போட்டோவில் தெளிவான எழுத்து கிடைக்கவில்லை; கீழே டைப்/பேஸ்ட் செய்யவும்.' : 'No clear text found in photo; paste/type details below.';
+                        }
+                    })
+                    .catch(() => {
+                        statusEl.innerText = state.lang === 'ta' ? 'போட்டோ படிக்க முடியவில்லை; கீழே டைப்/பேஸ்ட் செய்யவும்.' : 'Could not read photo; paste/type details below.';
+                    });
+            } else {
+                statusEl.innerText = state.lang === 'ta' ? 'போட்டோ சேர்க்கப்பட்டது; விவரங்களை கீழே பேஸ்ட் செய்யவும்.' : 'Photo selected; paste or type details below.';
+            }
+            event.target.value = '';
+        }
+
+        function applyDocAndPhotoDataToDashboard() {
+            const rawText = (document.getElementById('botDocPasteArea').value || '').trim();
+            if (!rawText) return showToast('Error', 'Paste or upload data first.');
+
+            let addedCount = 0;
+            const lines = rawText.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+
+            lines.forEach(line => {
+                const lower = line.toLowerCase();
+                const numMatches = line.match(/\d[\d,]*/g);
+                if (!numMatches || numMatches.length === 0) return;
+                const firstAmt = Number(numMatches[0].replace(/,/g, ''));
+                if (!firstAmt || isNaN(firstAmt)) return;
+
+                if (lower.includes('goobro') || lower.includes('ride') || lower.includes('driving') || lower.includes('ரைடு')) {
+                    const secondAmt = numMatches[1] ? Number(numMatches[1].replace(/,/g, '')) : firstAmt;
+                    const invAmt = numMatches[1] ? firstAmt : 0;
+                    state.hubEntries.push({ id: 'doc_' + Date.now() + '_' + Math.random(), category: 'goobro', name: line.slice(0, 40), investment: invAmt, income: secondAmt });
+                    addedCount++;
+                } else if (lower.includes('algo') || lower.includes('strategy') || lower.includes('ஆல்கோ')) {
+                    const invAmt = firstAmt;
+                    const incAmt = numMatches[1] ? Number(numMatches[1].replace(/,/g, '')) : firstAmt;
+                    state.hubEntries.push({ id: 'doc_' + Date.now() + '_' + Math.random(), category: 'algo', name: line.slice(0, 40), investment: invAmt, income: incAmt });
+                    addedCount++;
+                } else if (lower.includes('business') || lower.includes('startup') || lower.includes('பிசினஸ்')) {
+                    const invAmt = firstAmt;
+                    const incAmt = numMatches[1] ? Number(numMatches[1].replace(/,/g, '')) : firstAmt;
+                    state.hubEntries.push({ id: 'doc_' + Date.now() + '_' + Math.random(), category: 'business', name: line.slice(0, 40), investment: invAmt, income: incAmt });
+                    addedCount++;
+                } else if (lower.includes('debt') || lower.includes('loan') || lower.includes('கடன்')) {
+                    state.debts.push({ id: 'doc_d_' + Date.now() + '_' + Math.random(), lender: line.slice(0, 30), total: firstAmt, remaining: firstAmt, tag: 'Synced Doc Loan' });
+                    addedCount++;
+                } else if (lower.includes('inv') || lower.includes('முதலீடு')) {
+                    state.transactions.push({ name: line.slice(0, 35), amount: firstAmt, type: 'investment' });
+                    addedCount++;
+                } else if (lower.includes('exp') || lower.includes('செலவு')) {
+                    state.transactions.push({ name: line.slice(0, 35), amount: firstAmt, type: 'expense' });
+                    addedCount++;
+                } else {
+                    state.transactions.push({ name: line.slice(0, 35), amount: firstAmt, type: 'income' });
+                    addedCount++;
+                }
+            });
+
+            if (addedCount > 0) {
+                saveState();
+                renderHubEntries();
+                renderTransactions();
+                renderDebtGrid();
+                renderBotArrangedDetails();
+                document.getElementById('botDocPasteArea').value = '';
+                document.getElementById('botPhotoStatusText').innerText = state.lang === 'ta' ? `${addedCount} விவரங்கள் டேஷ்போர்டில் இணைக்கப்பட்டன!` : `${addedCount} item(s) synced to dashboard!`;
+                showToast('SYNCED TO CHART!', `${addedCount} item(s) updated.`);
+            } else {
+                showToast('INFO', 'Include numbers with item/income/investment/debt details.');
+            }
         }
 
         function toggleTopDownloadMenu() {
@@ -968,8 +1270,9 @@
                 else if (tx.type === 'income') totInc += tx.amount;
                 else if (tx.type === 'expense') totExp += tx.amount;
             });
-            state.radarRides.forEach(r => { totInc += r.amount; });
-            state.algoStrategies.forEach(a => { totInc += a.income; });
+            const { hubInv, hubInc } = getHubTotals();
+            totInc += hubInc;
+            totInv += hubInv;
             const netWorth = totInv - remDebt;
 
             const docHtml = `
@@ -1136,10 +1439,17 @@
                 if (dict[key]) el.placeholder = dict[key];
             });
 
+            if (editingHubId) {
+                document.getElementById('hubSubmitBtn').innerText = lang === 'ta' ? '✓ அப்டேட்' : '✓ UPDATE';
+            }
+
+            applyTheme();
             renderStory();
             renderPersonalNodes();
             renderBusinessBoard();
             renderLearnedSkills();
+            renderHubEntries();
+            updateAllAiSuggestions();
             updateBotTabStyles();
             if (!document.getElementById('floatingBotModal').classList.contains('hidden')) {
                 renderBotArrangedDetails();
@@ -1177,8 +1487,9 @@
                 else if (tx.type === 'income') totInc += tx.amount;
                 else if (tx.type === 'expense') totExp += tx.amount;
             });
-            state.radarRides.forEach(r => { totInc += r.amount; });
-            state.algoStrategies.forEach(a => { totInc += a.income; });
+            const { hubInv, hubInc } = getHubTotals();
+            totInc += hubInc;
+            totInv += hubInv;
             const netWorth = totInv - remDebt;
 
             const box = document.getElementById('botArrangedDetails');
@@ -1263,7 +1574,8 @@
 
         function renderLearnedSkills() {
             const disp = document.getElementById('learnedSkillsDisplay');
-            disp.innerHTML = `🎯 <strong>Learned Skills:</strong> ${state.learnedSkills.join(', ')}`;
+            const label = state.lang === 'ta' ? 'கற்ற திறன்கள்:' : 'Learned Skills:';
+            disp.innerHTML = `🎯 <strong>${label}</strong> ${state.learnedSkills.join(', ')}`;
         }
 
         function saveNotificationConfig() {
@@ -1308,105 +1620,14 @@
             });
         }
 
-        function addRadarRide() {
-            const customer = document.getElementById('radarCustName').value.trim();
-            const amount = Number(document.getElementById('radarAmount').value);
-            const category = document.getElementById('radarCategory').value;
-            if (!customer || !amount) return showToast('Error', 'Enter customer name and amount.');
-
-            state.radarRides.push({ customer, amount, category });
-            saveState();
-            renderRadarRides();
-            renderTransactions();
-            showToast('RIDE ADDED', `${customer} - ${formatINR(amount)}`);
-            document.getElementById('radarCustName').value = '';
-            document.getElementById('radarAmount').value = '';
-        }
-
-        function deleteRadarRide(idx) {
-            state.radarRides.splice(idx, 1);
-            saveState();
-            renderRadarRides();
-            renderTransactions();
-            showToast('REMOVED', 'Customer ride deleted.');
-        }
-
-        function renderRadarRides() {
-            const list = document.getElementById('radarRidesList');
-            list.innerHTML = '';
-            let monthlyTotal = 0;
-            state.radarRides.forEach((r, idx) => {
-                monthlyTotal += r.amount;
-                const card = document.createElement('div');
-                card.className = 'inset-box p-3 rounded-xl flex justify-between items-center border-l-4 border-l-cyberBlue';
-                card.innerHTML = `
-                    <div>
-                        <span class="text-[10px] uppercase font-bold text-cyberBlue">${r.category}</span>
-                        <div class="text-white font-bold">${r.customer}</div>
-                        <div class="text-emeraldGrowth font-mono font-extrabold">+${formatINR(r.amount)}</div>
-                    </div>
-                    <button onclick="deleteRadarRide(${idx})" class="text-slate-500 hover:text-red-500 font-bold text-sm">✕</button>
-                `;
-                list.appendChild(card);
-            });
-            document.getElementById('monthlyRadarTotal').innerText = formatINR(monthlyTotal);
-        }
-
-        function addAlgoStrategy() {
-            const strategy = document.getElementById('algoStrategyName').value.trim();
-            const amount = Number(document.getElementById('algoCapitalAmt').value);
-            const income = Number(document.getElementById('algoGeneratedIncome').value);
-            if (!strategy || !amount) return showToast('Error', 'Enter strategy name and amount.');
-
-            state.algoStrategies.push({ strategy, amount, income: income || 0 });
-            saveState();
-            renderAlgoStrategies();
-            renderTransactions();
-            showToast('ALGO ADDED', strategy);
-            document.getElementById('algoStrategyName').value = '';
-            document.getElementById('algoCapitalAmt').value = '';
-            document.getElementById('algoGeneratedIncome').value = '';
-        }
-
-        function deleteAlgoStrategy(idx) {
-            state.algoStrategies.splice(idx, 1);
-            saveState();
-            renderAlgoStrategies();
-            renderTransactions();
-            showToast('REMOVED', 'Strategy deleted.');
-        }
-
-        function renderAlgoStrategies() {
-            const list = document.getElementById('algoStrategiesList');
-            list.innerHTML = '';
-            let totalCap = 0, totalInc = 0;
-            state.algoStrategies.forEach((a, idx) => {
-                totalCap += Number(a.amount || 0);
-                totalInc += Number(a.income || 0);
-                const card = document.createElement('div');
-                card.className = 'inset-box p-3 rounded-xl flex justify-between items-center border-l-4 border-l-emeraldGrowth';
-                card.innerHTML = `
-                    <div>
-                        <div class="text-white font-bold">${a.strategy}</div>
-                        <div class="text-[11px] muted-text mt-0.5">Amount: <strong class="text-cyberBlue">${formatINR(a.amount)}</strong></div>
-                        <div class="text-[11px] text-emeraldGrowth font-extrabold mt-0.5">Income Generated: +${formatINR(a.income)}</div>
-                    </div>
-                    <button onclick="deleteAlgoStrategy(${idx})" class="text-slate-500 hover:text-red-500 font-bold text-sm">✕</button>
-                `;
-                list.appendChild(card);
-            });
-            document.getElementById('algoTotalCapital').innerText = formatINR(totalCap);
-            document.getElementById('algoTotalIncome').innerText = formatINR(totalInc);
-        }
-
         function addCustomStory() {
             const title = document.getElementById('newStoryTitle').value.trim();
             const desc = document.getElementById('newStoryDesc').value.trim();
             if (!title || !desc) return showToast('Error', 'Enter month & title and description.');
 
             const newId = 's_' + Date.now();
-            state.customStories.push({ id: newId, title, desc });
-            personalNodes.push({ id: newId, cx: 418, cy: 202, color: '#ef4444', year: title, title, desc });
+            state.customStories.push({ id: newId, title, titleTa: title, desc, descTa: desc });
+            personalNodes.push({ id: newId, cx: 418, cy: 202, color: '#ef4444', year: title, yearTa: title, title, titleTa: title, desc, descTa: desc });
             saveState();
             renderStory();
             renderPersonalNodes();
@@ -1426,17 +1647,28 @@
 
         function renderStory() {
             const container = document.getElementById('storyContent');
+            const isTa = state.lang === 'ta';
             let html = '';
-            if (state.lang === 'ta') {
-                html = `<p><strong>1993 - 2010 (வேர்கள் & பள்ளிப் பருவம்):</strong> தென்காசியில் எளிய குடும்பத்தில் பிறப்பு.</p>`;
+            if (isTa) {
+                html = `
+                    <p><strong>1993 - 2010 (வேர்கள் & பள்ளிப் பருவம்):</strong> தென்காசியில் பிறப்பு; அரசு ஆசிரியை அம்மா & ராணுவ அப்பா வழிகாட்டுதலில் தமிழ் & ஆங்கில வழி கல்வியுடன் வளர்ச்சி.</p>
+                    <p><strong>2015 - 2020 (பயோடெக்னாலஜி & Goobro தொடக்கம்):</strong> B.Tech பயோடெக்னாலஜி மற்றும் ஆரம்பகால உழைப்பிலிருந்து Goobro & பிசினஸ் அடித்தளம் உருவாக்கம்.</p>
+                `;
             } else {
-                html = `<p><strong>1993 - 2010 (Roots & Early Adaptability):</strong> Born in Tenkasi.</p>`;
+                html = `
+                    <p><strong>1993 - 2010 (Roots & Early Adaptability):</strong> Born in Tenkasi with Tamil & English medium adaptability and strong family values.</p>
+                    <p><strong>2015 - 2020 (Biotechnology & Goobro Foundation):</strong> B.Tech Biotechnology, early hustle, and building Goobro & business roots.</p>
+                `;
             }
             state.customStories.forEach(s => {
+                const dispTitle = isTa ? (s.titleTa || s.title) : s.title;
+                const dispDesc = isTa ? (s.descTa || s.desc) : s.desc;
+                const delLabel = isTa ? '✕ நீக்கு' : '✕ DELETE';
+                const tagLabel = isTa ? 'மைல்கல்' : 'Milestone';
                 html += `
                     <div class="flex justify-between items-center inset-box p-2 rounded-lg">
-                        <span class="text-amber-400"><strong>⚡ [Milestone]: ${s.title}</strong> — ${s.desc}</span>
-                        <button onclick="deleteCustomStory('${s.id}')" class="text-slate-500 hover:text-red-500 text-xs font-bold">✕ DELETE</button>
+                        <span class="text-amber-400"><strong>⚡ [${tagLabel}]: ${dispTitle}</strong> — ${dispDesc}</span>
+                        <button onclick="deleteCustomStory('${s.id}')" class="text-slate-500 hover:text-red-500 text-xs font-bold">${delLabel}</button>
                     </div>
                 `;
             });
@@ -1465,14 +1697,21 @@
                 };
                 group.appendChild(c);
             });
+            const isTa = state.lang === 'ta';
             const activeNode = personalNodes.find(n => n.id === state.selectedNodeId) || personalNodes[personalNodes.length - 1];
+            const periodLabel = isTa ? 'காலம்:' : 'Period:';
+            const statusBadge = isTa ? 'தற்போதைய நிலை' : 'CURRENT STATUS';
+            const nodeYear = isTa ? (activeNode.yearTa || activeNode.year) : activeNode.year;
+            const nodeTitle = isTa ? (activeNode.titleTa || activeNode.title) : activeNode.title;
+            const nodeDesc = isTa ? (activeNode.descTa || activeNode.desc) : activeNode.desc;
+
             document.getElementById('lifeInsightCard').innerHTML = `
                 <div class="flex items-center justify-between mb-1">
-                    <span class="font-mono text-[11px] font-bold text-amber-500">Period: ${activeNode.year}</span>
-                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-red-500/20 text-red-400 font-bold">CURRENT STATUS</span>
+                    <span class="font-mono text-[11px] font-bold text-amber-500">${periodLabel} ${nodeYear}</span>
+                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-red-500/20 text-red-400 font-bold">${statusBadge}</span>
                 </div>
-                <div class="font-heading text-base uppercase tracking-wide">${activeNode.title}</div>
-                <p class="text-xs muted-text mt-1">${activeNode.desc}</p>
+                <div class="font-heading text-base uppercase tracking-wide">${nodeTitle}</div>
+                <p class="text-xs muted-text mt-1">${nodeDesc}</p>
             `;
         }
 
@@ -1549,8 +1788,9 @@
                 `;
                 list.appendChild(row);
             });
-            state.radarRides.forEach(r => { totInc += Number(r.amount || 0); });
-            state.algoStrategies.forEach(a => { totInc += Number(a.income || 0); });
+            const { hubInv, hubInc } = getHubTotals();
+            totInc += hubInc;
+            totInv += hubInv;
 
             const surplus = totInc - (totExp + totInv);
             document.getElementById('calcTotalIncome').innerText = formatINR(totInc);
@@ -1564,6 +1804,7 @@
 
             state.totalInvestments = totInv;
             recalculateMetrics();
+            updateAllAiSuggestions();
         }
 
         function addNewDebt() {
@@ -1669,15 +1910,7 @@
         function renderBusinessBoard() {
             const grid = document.getElementById('businessBoardGrid');
             grid.innerHTML = '';
-            
-            const latestSkill = state.learnedSkills[state.learnedSkills.length - 1] || 'General Logistics';
-            let predText = '';
-            if (state.lang === 'ta') {
-                predText = `நீங்கள் சமீபத்தில் கற்கும் திறன் ("${latestSkill}") அடிப்படையில், ஏஐ அடுத்ததாக ஒரு 'Automated Mobility & Fleet SaaS App' தொடங்க பரிந்துரைக்கிறது.`;
-            } else {
-                predText = `Based on your recent skill ("${latestSkill}"), AI predicts launching an Automated Mobility & Fleet SaaS App next.`;
-            }
-            document.getElementById('skillAiPredictionText').innerText = predText;
+            updateAllAiSuggestions();
 
             state.businesses.forEach((b, idx) => {
                 const color = b.status === 'active' ? 'text-cyberBlue border-cyberBlue' : b.status === 'success' ? 'text-posterYellow border-posterYellow' : 'text-red-500 border-red-500';
@@ -1769,7 +2002,7 @@
             let reply = '';
             if (lang === 'ta') {
                 if (topic === 'finance') {
-                    reply = `Financial Assistant: "${q}" குறித்து கவனிக்க — கடன் முழுமையாக முடியும் வரை சிவப்பு நிறத்திலேயே இருக்கும். வருமானம், செலவு, முதலீடு மற்றும் ஆல்கோ வருமானத்தைக் கொண்டு கடன் குறைப்பிலும் முதலீட்டிலும் கவனம் செலுத்துங்கள்.`;
+                    reply = `Financial Assistant: "${q}" குறித்து கவனிக்க — கடன் முழுமையாக முடியும் வரை சிவப்பு நிறத்திலேயே இருக்கும். வருமானம், செலவு, முதலீடு மற்றும் Goobro/ஆல்கோ/பிசினஸ் வருமானத்தைக் கொண்டு கடன் குறைப்பிலும் முதலீட்டிலும் கவனம் செலுத்துங்கள்.`;
                 } else if (topic === 'growth') {
                     reply = `Personal Growth: "${q}" தொடர்பாக — உங்கள் டைம்லைன் மைல்கற்கள் மற்றும் புதிய திறன்களைத் தொடர்ந்து சேர்த்து, சிஸ்டம் மூலம் முன்னேற்றத்தைத் தக்கவைத்துக் கொள்ளுங்கள்.`;
                 } else {
@@ -1777,7 +2010,7 @@
                 }
             } else {
                 if (topic === 'finance') {
-                    reply = `Financial Assistant: Regarding "${q}" — keep remaining debt red until cleared, balance expenses and investments, and channel surplus & algo gains steadily.`;
+                    reply = `Financial Assistant: Regarding "${q}" — keep remaining debt red until cleared, balance expenses and investments, and channel surplus & hub gains steadily.`;
                 } else if (topic === 'growth') {
                     reply = `Personal Growth: Regarding "${q}" — log new skills and timeline milestones regularly to reinforce your system-driven progress.`;
                 } else {
@@ -1795,6 +2028,8 @@
             state.transactions.forEach(tx => {
                 if (tx.type === 'investment') totInv += tx.amount;
             });
+            const { hubInv } = getHubTotals();
+            totInv += hubInv;
 
             const remDebt = state.debts.reduce((s, d) => s + Number(d.remaining || 0), 0);
             const netWorth = totInv - remDebt;
@@ -1843,8 +2078,7 @@
             document.getElementById('userWhatsApp').value = state.whatsapp || '';
             document.getElementById('userEmail').value = state.email || '';
             renderCalendarEvents();
-            renderRadarRides();
-            renderAlgoStrategies();
+            renderHubEntries();
             renderStory();
             renderPersonalNodes();
             renderDebtGrid();
@@ -1853,6 +2087,7 @@
             renderPlanningTasks();
             renderLearnedSkills();
             recalculateMetrics();
+            updateAllAiSuggestions();
         }
 
         window.onload = initDashboard;
