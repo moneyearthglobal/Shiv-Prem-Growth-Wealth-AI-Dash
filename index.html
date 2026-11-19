@@ -6,9 +6,6 @@
     <title>SHIV PREM — AI Growth & Wealth Master Dashboard</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- html2canvas & jsPDF for Clean Aligned PDF Download -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&family=Noto+Sans+Tamil:wght@400;600;700&family=Oswald:wght@600;700&display=swap" rel="stylesheet">
 
     <script>
@@ -77,7 +74,7 @@
         }
 
         .poster-title { font-family: 'Anton', 'Oswald', 'Noto Sans Tamil', sans-serif; letter-spacing: 0.03em; text-transform: uppercase; }
-        .comic-card { background-color: var(--bg-card); border: 2px solid var(--border-card); box-shadow: var(--shadow-card); break-inside: avoid; }
+        .comic-card { background-color: var(--bg-card); border: 2px solid var(--border-card); box-shadow: var(--shadow-card); }
         .inset-box { background-color: var(--bg-inset); border: 1.5px solid var(--border-card); }
         .muted-text { color: var(--text-secondary); }
 
@@ -96,8 +93,8 @@
 </head>
 <body class="antialiased pb-24 p-3 sm:p-6">
 
-    <!-- Hidden File Input for Overall Data Import -->
-    <input type="file" id="importOverallFile" accept=".json" class="hidden" onchange="handleImportOverallData(event)">
+    <!-- Hidden File Input for Importing Whole Data -->
+    <input type="file" id="importWholeDataInput" accept=".json,application/json" class="hidden" onchange="importWholeData(event)">
 
     <!-- Toast Notification -->
     <div id="comicToast" class="fixed bottom-24 right-5 z-50 transform translate-y-28 opacity-0 transition-all duration-300 bg-posterYellow text-matteBlack border-2 border-slate-900 px-4 py-3 rounded-xl shadow-[5px_5px_0px_#3b82f6] flex items-center gap-3">
@@ -181,12 +178,12 @@
     </div>
 
     <!-- Main Container -->
-    <div id="shivPremDashboardRoot" class="max-w-7xl mx-auto space-y-6">
+    <div class="max-w-7xl mx-auto space-y-6">
 
-        <!-- 1. TOP NAV WITH TOP QUICK ICON, DIRECT PDF DOWNLOAD ICON, LIVE DATE/TIME & LANGUAGE SWITCHER -->
+        <!-- 1. TOP NAV WITH TOP QUICK ICON, LIVE DATE/TIME & LANGUAGE SWITCHER -->
         <nav class="comic-card rounded-2xl px-4 py-3 flex flex-wrap items-center justify-between gap-3 border-cyberBlue relative">
             <div class="flex items-center gap-2.5">
-                <button onclick="toggleTopQuickMenu()" class="w-9 h-9 rounded-xl bg-posterYellow text-matteBlack border border-slate-900 flex items-center justify-center font-bold text-base shadow hover:scale-105 transition" title="Quick Sections & Export/Import">
+                <button onclick="toggleTopQuickMenu()" class="w-9 h-9 rounded-xl bg-posterYellow text-matteBlack border border-slate-900 flex items-center justify-center font-bold text-base shadow hover:scale-105 transition" title="Quick Sections">
                     ☰
                 </button>
                 <span class="w-3 h-3 rounded-full bg-cyberBlue animate-ping"></span>
@@ -195,8 +192,8 @@
                 </span>
             </div>
 
-            <!-- Dropdown Menu Opened by Top Icon (Sections + Export/Import Overall at Bottom) -->
-            <div id="topQuickMenuDrawer" class="hidden absolute left-4 top-16 z-40 flex flex-col gap-1 bg-panelDark border-2 border-cyberBlue rounded-2xl p-2 shadow-[4px_4px_0px_#000] text-xs font-mono min-w-[225px]">
+            <!-- Dropdown Menu Opened by Top Icon -->
+            <div id="topQuickMenuDrawer" class="hidden absolute left-4 top-16 z-40 flex flex-col gap-1 bg-panelDark border-2 border-cyberBlue rounded-2xl p-2 shadow-[4px_4px_0px_#000] text-xs font-mono min-w-[215px]">
                 <button onclick="scrollToSection('sec-portfolio')" class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-cyberBlue/20 text-white text-left">
                     <span>💼</span> <span>Portfolio</span>
                 </button>
@@ -213,21 +210,20 @@
                     <span>🚀</span> <span>Business</span>
                 </button>
                 <div class="border-t border-slate-700 my-1"></div>
-                <button onclick="exportOverallData()" class="flex items-center justify-between px-3 py-2 rounded-xl hover:bg-emeraldGrowth/20 text-emeraldGrowth font-bold text-left">
-                    <span>⬇ Export Overall Data</span>
-                    <span class="text-[10px]">JSON</span>
+                <button onclick="exportWholeData()" class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-emeraldGrowth/20 text-emeraldGrowth font-bold text-left">
+                    <span>⬇</span> <span>Export Whole Data</span>
                 </button>
-                <button onclick="triggerImportOverallData()" class="flex items-center justify-between px-3 py-2 rounded-xl hover:bg-posterYellow/20 text-posterYellow font-bold text-left">
-                    <span>⬆ Import Overall Data</span>
-                    <span class="text-[10px]">JSON</span>
+                <button onclick="triggerImportWholeData()" class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-posterYellow/20 text-posterYellow font-bold text-left">
+                    <span>⬆</span> <span>Import Whole Data</span>
                 </button>
             </div>
 
             <div class="flex flex-wrap items-center gap-2">
-                <!-- Direct PDF Download Icon Button -->
-                <button onclick="downloadDirectPDF()" class="px-3 py-1.5 rounded-xl bg-posterYellow hover:bg-yellow-300 text-matteBlack border border-slate-900 font-mono text-xs font-extrabold shadow flex items-center gap-1.5 transition" title="Download PDF">
-                    <span>⬇</span>
-                    <span>PDF</span>
+                <button onclick="exportWholeData()" class="px-3 py-1.5 rounded-xl bg-emeraldGrowth hover:bg-green-400 text-matteBlack border border-slate-900 font-mono text-xs font-extrabold shadow transition">
+                    ⬇ Export Whole Data
+                </button>
+                <button onclick="triggerImportWholeData()" class="px-3 py-1.5 rounded-xl bg-posterYellow hover:bg-yellow-300 text-matteBlack border border-slate-900 font-mono text-xs font-extrabold shadow transition">
+                    ⬆ Import Whole Data
                 </button>
 
                 <div class="inset-box px-3 py-1 rounded-xl font-mono text-xs font-bold text-cyberBlue flex items-center gap-2">
@@ -247,7 +243,7 @@
         </nav>
 
         <!-- 2. PROFILE HERO BANNER + COMPACT PROGRESS & TARGET BOX -->
-        <header class="pdf-block comic-card rounded-2xl p-4 sm:p-6 border-cyberBlue relative overflow-hidden">
+        <header class="comic-card rounded-2xl p-4 sm:p-6 border-cyberBlue relative overflow-hidden">
             <div class="flex flex-col lg:flex-row items-center lg:items-start justify-between gap-6">
                 <div class="flex flex-col sm:flex-row items-center gap-5">
                     <div class="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-cyberBlue border-4 border-white shadow-[0_0_0_4px_#090a0f,6px_6px_0px_#facc15] flex-shrink-0 overflow-hidden flex items-center justify-center">
@@ -291,8 +287,1463 @@
         </header>
 
         <!-- 3. PORTFOLIO OVERVIEW SECTION (ABOVE GRAPH) -->
-        <section id="sec-portfolio" class="pdf-block comic-card rounded-2xl p-4 sm:p-6 border-cyberBlue space-y-4">
+        <section id="sec-portfolio" class="comic-card rounded-2xl p-4 sm:p-6 border-cyberBlue space-y-4">
             <div class="flex items-center justify-between gap-2">
                 <div>
                     <span class="bg-cyberBlue text-white font-poster text-xs px-3 py-0.5 rounded uppercase" data-i18n="portTag">PORTFOLIO SUMMARY</span>
-                    <h2 class="poster-title text-2xl sm:text-3xl mt-1" data-i18n="port
+                    <h2 class="poster-title text-2xl sm:text-3xl mt-1" data-i18n="portTitle">OVERALL PORTFOLIO</h2>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 text-xs font-mono">
+                <div class="inset-box p-3.5 rounded-xl border-l-4 border-l-emeraldGrowth">
+                    <div class="muted-text uppercase text-[11px]" data-i18n="portInvLabel">Overall Investment</div>
+                    <div id="portOverallInv" class="text-base font-extrabold text-emeraldGrowth mt-1">₹0</div>
+                </div>
+                <div class="inset-box p-3.5 rounded-xl border-l-4 border-l-red-500">
+                    <div class="muted-text uppercase text-[11px]" data-i18n="portDebtLabel">Overall Remaining Debt</div>
+                    <div id="portOverallDebt" class="text-base font-extrabold text-red-500 mt-1">-₹27,00,000</div>
+                </div>
+                <div class="inset-box p-3.5 rounded-xl border-l-4 border-l-posterYellow">
+                    <div class="muted-text uppercase text-[11px]" data-i18n="portExpLabel">Overall Expenses</div>
+                    <div id="portOverallExp" class="text-base font-extrabold text-posterYellow mt-1">₹0</div>
+                </div>
+                <div class="inset-box p-3.5 rounded-xl border-l-4 border-l-cyberBlue">
+                    <div class="muted-text uppercase text-[11px]" data-i18n="portIncLabel">Overall Income</div>
+                    <div id="portOverallInc" class="text-base font-extrabold text-cyberBlue mt-1">₹0</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. INCOME, EXPENSES & INVESTMENTS BOX (ABOVE GRAPH) -->
+        <section class="comic-card rounded-2xl p-4 sm:p-6 border-posterYellow space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                    <span class="bg-posterYellow text-matteBlack font-poster text-xs px-3 py-0.5 rounded uppercase" data-i18n="finTag">FINANCIAL PORTFOLIO DATABASE</span>
+                    <h2 class="poster-title text-2xl sm:text-3xl mt-1" data-i18n="finTitle">INCOME, EXPENSES & INVESTMENTS</h2>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <input type="text" id="txName" placeholder="Item Name..." class="inset-box rounded-xl px-3 py-2 text-xs font-mono w-36">
+                    <input type="number" id="txAmount" placeholder="Amount (₹)" class="inset-box rounded-xl px-3 py-2 text-xs font-mono w-24">
+                    <select id="txType" class="inset-box rounded-xl px-2 py-2 text-xs font-mono bg-slate-900 text-white">
+                        <option value="income" data-i18n="optInc">Income (+)</option>
+                        <option value="expense" data-i18n="optExp">Expense (-)</option>
+                        <option value="investment" data-i18n="optInv">Investment (📈)</option>
+                    </select>
+                    <button onclick="addTransaction()" class="bg-posterYellow hover:bg-yellow-300 text-matteBlack font-poster text-xs px-4 py-2 rounded-xl font-bold shadow" data-i18n="addBtn">+ ADD</button>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs font-mono">
+                <div class="inset-box p-3 rounded-xl"><span data-i18n="totInc">Total Income</span>: <strong id="calcTotalIncome" class="text-emeraldGrowth">₹0</strong></div>
+                <div class="inset-box p-3 rounded-xl"><span data-i18n="totExp">Total Expenses</span>: <strong id="calcTotalExpense" class="text-red-500">₹0</strong></div>
+                <div class="inset-box p-3 rounded-xl"><span data-i18n="totInv">Total Investments</span>: <strong id="calcTotalInvestment" class="text-posterYellow">₹0</strong></div>
+                <div class="inset-box p-3 rounded-xl border-emeraldGrowth"><span data-i18n="netSurplus">Monthly Net Surplus</span>: <strong id="calcNetSurplus" class="text-emeraldGrowth">₹0</strong></div>
+            </div>
+            <div class="inset-box p-3.5 rounded-xl border-l-4 border-l-posterYellow text-xs font-mono text-slate-300">
+                💡 <strong class="text-white" data-i18n="aiFinSugg">AI Financial Feedback:</strong> <span id="aiFinSuggestionText">Allocate at least 50% of surplus towards high-interest debt clearance to reach your ₹1 Crore goal.</span>
+            </div>
+            <div class="inset-box p-3 rounded-xl max-h-40 overflow-y-auto text-xs font-mono space-y-1.5" id="txList"></div>
+        </section>
+
+        <!-- 5. WEALTH GROWTH & NET WORTH GRAPH (BELOW PORTFOLIO & INCOME/EXPENSE/INVESTMENT BOXES) -->
+        <section id="sec-financial-growth" class="grid grid-cols-1 gap-6">
+            <div class="comic-card rounded-2xl p-4 sm:p-6 border-cyberBlue flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between gap-2 mb-3">
+                        <div>
+                            <span class="bg-cyberBlue text-white font-poster text-xs px-3 py-0.5 rounded uppercase" data-i18n="rightGraphTag">FINANCIAL WEALTH & LIVE STAGE</span>
+                            <h2 class="poster-title text-2xl sm:text-3xl mt-1" data-i18n="rightGraphTitle">WEALTH GROWTH & NET WORTH</h2>
+                        </div>
+                        <button onclick="openZoomModal('wealth')" class="px-3 py-1.5 rounded-lg bg-cyberBlue text-white font-bold text-xs shadow" data-i18n="zoomBtn">🔍 Zoom</button>
+                    </div>
+                    <div class="bg-matteBlack border-2 border-slate-800 rounded-xl p-3 mb-3 cursor-pointer" onclick="openZoomModal('wealth')">
+                        <svg id="wealthGrowthSvg" viewBox="0 0 900 260" class="w-full h-auto select-none" xmlns="http://www.w3.org/2000/svg">
+                            <g stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3">
+                                <line x1="70" y1="35" x2="870" y2="35"/><line x1="70" y1="80" x2="870" y2="80"/><line x1="70" y1="125" x2="870" y2="125"/><line x1="70" y1="168" x2="870" y2="168"/><line x1="70" y1="215" x2="870" y2="215"/>
+                            </g>
+                            <g fill="#94a3b8" font-family="JetBrains Mono" font-size="10.5" text-anchor="end">
+                                <text x="62" y="39" fill="#22c55e">+₹1 Cr</text><text x="62" y="172" fill="#facc15" font-weight="bold">₹0</text><text x="62" y="219" fill="#ef4444">-₹27L</text>
+                            </g>
+                            <line x1="70" y1="168" x2="870" y2="168" stroke="#facc15" stroke-width="1.6" stroke-dasharray="6 4"/>
+                            <g id="wealthSvgDynamicLayer"></g>
+                            <g fill="#94a3b8" font-family="JetBrains Mono" font-size="10.5" text-anchor="middle">
+                                <text x="140" y="240" fill="#ef4444">2025</text><text x="320" y="240" fill="#facc15" font-weight="bold">2026 (Current Point)</text>
+                            </g>
+                        </svg>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3 text-center text-xs sm:text-sm font-mono">
+                    <div class="inset-box p-2.5 rounded-xl"><span data-i18n="netWorthLabel">Net Worth</span>: <strong id="netWorthDisplay" class="text-red-500">-₹27,00,000</strong></div>
+                    <div class="inset-box p-2.5 rounded-xl border-emeraldGrowth"><span data-i18n="goalLabel">2030 Goal</span>: <strong class="text-emeraldGrowth">₹1,00,00,000</strong></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. DYNAMIC DEBT MANAGER -->
+        <section class="comic-card rounded-2xl p-4 sm:p-6 border-red-500 space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                    <span class="bg-red-600 text-white font-poster text-xs px-3 py-0.5 rounded uppercase" data-i18n="debtTag">AVALANCHE DEBT MANAGER</span>
+                    <h2 class="poster-title text-2xl sm:text-3xl mt-1" data-i18n="debtTitle">ADD & MANAGE LENDERS / DEBTS</h2>
+                </div>
+                <div class="flex gap-2">
+                    <input type="text" id="newLenderName" placeholder="Lender Name..." class="inset-box rounded-xl px-3 py-2 text-xs font-mono w-40">
+                    <input type="number" id="newLenderAmt" placeholder="Amount (₹)" class="inset-box rounded-xl px-3 py-2 text-xs font-mono w-28">
+                    <button onclick="addNewDebt()" class="bg-red-600 hover:bg-red-500 text-white font-poster text-xs px-4 py-2 rounded-xl font-bold shadow" data-i18n="addDebtBtn">+ ADD DEBT</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs font-mono">
+                <div class="inset-box p-3 rounded-xl border-red-500">
+                    <span data-i18n="overallDebtLabel">Overall Remaining Debt</span>: <strong id="overallRemainingDebt" class="text-red-500 text-sm">-₹27,00,000</strong>
+                </div>
+                <div class="inset-box p-3 rounded-xl border-emeraldGrowth">
+                    <span data-i18n="overallClearedLabel">Total Debt Cleared</span>: <strong id="overallClearedDebt" class="text-emeraldGrowth text-sm">₹0</strong>
+                </div>
+                <div class="inset-box p-3 rounded-xl border-posterYellow">
+                    <span data-i18n="overallInitialLabel">Total Initial Debt</span>: <strong id="overallInitialDebt" class="text-posterYellow text-sm">₹27,00,000</strong>
+                </div>
+            </div>
+
+            <div class="inset-box p-3.5 rounded-xl border-l-4 border-l-red-500 text-xs font-mono text-slate-300">
+                💡 <strong class="text-white" data-i18n="aiDebtSugg">AI Debt Feedback:</strong> <span id="aiDebtSuggDesc">Remaining debt stays red until 100% cleared. Once cleared, status turns green.</span>
+            </div>
+            <div id="avalancheDebtGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5"></div>
+        </section>
+
+        <!-- 7. STARTUP BRANDS BOARD -->
+        <section id="sec-business" class="comic-card rounded-2xl p-4 sm:p-6 border-cyberBlue space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                    <span class="bg-cyberBlue text-white font-poster text-xs px-3 py-0.5 rounded uppercase" data-i18n="bizTag">STARTUP & BUSINESS BRANDS</span>
+                    <h2 class="poster-title text-2xl sm:text-3xl mt-1" data-i18n="bizHeader">BUSINESS LAUNCH & PRIORITY BOARD</h2>
+                </div>
+                <div class="flex gap-2">
+                    <input type="text" id="newBizName" placeholder="Business / Brand..." class="inset-box rounded-xl px-3 py-2 text-xs font-mono w-36">
+                    <select id="newBizStatus" class="inset-box rounded-xl px-2 py-2 text-xs font-mono bg-slate-900 text-white">
+                        <option value="active" data-i18n="optActive">Active / Scaling</option>
+                        <option value="paused" data-i18n="optPaused">On Hold / Paused</option>
+                        <option value="success" data-i18n="optSuccess">High Success Potential</option>
+                    </select>
+                    <button onclick="addBusinessBrand()" class="bg-cyberBlue hover:bg-blue-600 text-white font-poster text-xs px-4 py-2 rounded-xl font-bold shadow" data-i18n="addBizBtn">+ ADD</button>
+                </div>
+            </div>
+            <div class="inset-box p-3.5 rounded-xl border-l-4 border-l-cyberBlue text-xs font-mono text-slate-300">
+                💡 <strong class="text-white" data-i18n="aiBizPred">AI Skill-Based Prediction:</strong> <span id="skillAiPredictionText">Based on your recent skill, AI predicts launching an Automated Mobility SaaS app next.</span>
+            </div>
+            <div id="businessBoardGrid" class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 text-xs font-mono"></div>
+        </section>
+
+        <!-- 8. SYSTEMATIC PLANNING BOARD -->
+        <section class="comic-card rounded-2xl p-4 sm:p-6 border-posterYellow space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                    <span class="bg-posterYellow text-matteBlack font-poster text-xs px-3 py-0.5 rounded uppercase" data-i18n="planTag">SYSTEMATIC PLANNING BOARD</span>
+                    <h2 class="poster-title text-2xl sm:text-3xl mt-1" data-i18n="planHeader">TASKS, REMINDERS & GOALS</h2>
+                </div>
+                <div class="flex gap-2">
+                    <input type="text" id="newPlanTask" placeholder="New planning task..." class="inset-box rounded-xl px-3 py-2 text-xs font-mono w-52">
+                    <button onclick="addPlanningTask()" class="bg-posterYellow hover:bg-yellow-300 text-matteBlack font-poster text-xs px-4 py-2 rounded-xl font-bold shadow" data-i18n="addTaskBtn">+ ADD TASK</button>
+                </div>
+            </div>
+            <div class="inset-box p-3.5 rounded-xl border-l-4 border-l-posterYellow text-xs font-mono text-slate-300">
+                💡 <strong class="text-white" data-i18n="aiPlanSugg">AI Plan Feedback:</strong> <span data-i18n="aiPlanSuggDesc">Execute tasks systematically to keep daily driving and business brand scaling on track.</span>
+            </div>
+            <div id="planningTaskList" class="space-y-2 text-xs font-mono"></div>
+        </section>
+
+        <!-- 9. GOOGLE CALENDAR & WHATSAPP / EMAIL NOTIFICATION SYNC -->
+        <section class="comic-card rounded-2xl p-4 sm:p-6 border-posterYellow space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                    <span class="bg-posterYellow text-matteBlack font-poster text-xs px-3 py-0.5 rounded uppercase" data-i18n="calTag">SYSTEM CALENDAR & SCHEDULE</span>
+                    <h2 class="poster-title text-2xl sm:text-3xl mt-1" data-i18n="calHeader">GOOGLE CALENDAR & SCHEDULER</h2>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <input type="text" id="userWhatsApp" placeholder="WhatsApp Number (+91...)" class="inset-box rounded-xl px-3 py-2 text-xs font-mono">
+                <input type="email" id="userEmail" placeholder="Email Address..." class="inset-box rounded-xl px-3 py-2 text-xs font-mono">
+                <button onclick="saveNotificationConfig()" class="bg-posterYellow hover:bg-yellow-300 text-matteBlack font-poster text-xs px-4 py-2 rounded-xl font-bold shadow" data-i18n="syncAlertBtn">🔗 SYNC WHATSAPP & EMAIL</button>
+            </div>
+            <div class="flex flex-wrap gap-2 pt-2">
+                <input type="date" id="calDate" class="inset-box rounded-xl px-3 py-2 text-xs font-mono">
+                <input type="text" id="calEventTitle" placeholder="Event / Travel / Checkup..." class="inset-box rounded-xl px-3 py-2 text-xs font-mono flex-1">
+                <button onclick="addCalendarEvent()" class="bg-posterYellow hover:bg-yellow-300 text-matteBlack font-poster text-xs px-4 py-2 rounded-xl font-bold shadow" data-i18n="addEventBtn">+ ADD EVENT</button>
+            </div>
+            <div class="inset-box p-3.5 rounded-xl border-l-4 border-l-posterYellow text-xs font-mono text-slate-300">
+                💡 <strong class="text-white" data-i18n="aiCalSugg">AI Calendar Feedback:</strong> <span data-i18n="aiCalSuggDesc">Events scheduled here automatically dispatch alerts to your synced WhatsApp and Email.</span>
+            </div>
+            <div id="calendarEventsList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs font-mono"></div>
+        </section>
+
+        <!-- 10. GOOBRO RIDE CALENDAR & MONTHLY INCOME RADAR -->
+        <section class="comic-card rounded-2xl p-4 sm:p-6 border-cyberBlue space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                    <span class="bg-cyberBlue text-white font-poster text-xs px-3 py-0.5 rounded uppercase" data-i18n="radarTag">DAILY INCOME & RIDE CALENDAR</span>
+                    <h2 class="poster-title text-2xl sm:text-3xl mt-1" data-i18n="radarHeader">GOOBRO RIDE RADAR & MONTHLY EARNINGS</h2>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <input type="text" id="radarCustName" placeholder="Customer Name..." class="inset-box rounded-xl px-3 py-2 text-xs font-mono w-36">
+                    <input type="number" id="radarAmount" placeholder="Amount (₹)" class="inset-box rounded-xl px-3 py-2 text-xs font-mono w-24">
+                    <select id="radarCategory" class="inset-box rounded-xl px-2 py-2 text-xs font-mono bg-slate-900 text-white">
+                        <option value="Driving" data-i18n="optDriving">Driving</option>
+                        <option value="Goobro" data-i18n="optGoobro">Goobro</option>
+                    </select>
+                    <button onclick="addRadarRide()" class="bg-cyberBlue hover:bg-blue-600 text-white font-poster text-xs px-4 py-2 rounded-xl font-bold shadow" data-i18n="addRideBtn">+ ADD RIDE</button>
+                </div>
+            </div>
+            <div class="inset-box p-3.5 rounded-xl border-emeraldGrowth flex items-center justify-between font-mono text-xs">
+                <span>📅 <strong class="text-white" data-i18n="monthlyRadarSum">Monthly Ride & Goobro Total Income:</strong></span>
+                <span id="monthlyRadarTotal" class="text-emeraldGrowth text-sm font-extrabold">₹0</span>
+            </div>
+            <div id="radarRidesList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs font-mono"></div>
+        </section>
+
+        <!-- 11. PERSONAL EVOLUTION, TIMELINE MILESTONES & GROWTH PROGRESS TRACKERS -->
+        <section id="sec-personal-growth" class="comic-card rounded-2xl p-4 sm:p-6 border-cyberBlue space-y-5">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                    <span class="bg-posterYellow text-matteBlack font-poster text-xs px-3 py-0.5 rounded uppercase" data-i18n="leftGraphTag">CHRONOLOGICAL GROWTH & LIVE STAGE</span>
+                    <h3 class="poster-title text-xl sm:text-2xl mt-1" data-i18n="leftGraphTitle">PERSONAL EVOLUTION, TIMELINE & PROGRESS</h3>
+                </div>
+                <button onclick="openZoomModal('personal')" class="px-3 py-1.5 rounded-lg bg-posterYellow text-matteBlack font-bold text-xs shadow" data-i18n="zoomBtn">🔍 Zoom</button>
+            </div>
+
+            <div class="bg-matteBlack border-2 border-slate-800 rounded-xl p-3 cursor-pointer" onclick="openZoomModal('personal')">
+                <svg id="personalGrowthSvg" viewBox="0 0 540 235" class="w-full h-auto select-none" xmlns="http://www.w3.org/2000/svg">
+                    <g stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3">
+                        <line x1="35" y1="195" x2="520" y2="195"/><line x1="35" y1="145" x2="520" y2="145"/><line x1="35" y1="95" x2="520" y2="95"/><line x1="35" y1="45" x2="520" y2="45"/>
+                    </g>
+                    <line x1="35" y1="110" x2="520" y2="110" stroke="#facc15" stroke-width="1.3" stroke-dasharray="5 4"/>
+                    <text x="42" y="104" fill="#facc15" font-family="Oswald" font-size="10">BREAKOUT LINE (SYSTEM BUILT)</text>
+                    <path d="M 48,160 L 95,140 L 142,120 L 188,165 L 235,100 L 282,205 L 328,115 L 372,210 L 418,85 L 418,225 L 48,225 Z" fill="rgba(59,130,246,0.18)"/>
+                    <path d="M 48,160 L 95,140 L 142,120 L 188,165 L 235,100 L 282,205 L 328,115 L 372,210 L 418,85" fill="none" stroke="#3b82f6" stroke-width="3.2" stroke-linecap="round"/>
+                    <g id="personalNodesGroup"></g>
+                    <g fill="#94a3b8" font-family="JetBrains Mono" font-size="9" text-anchor="middle">
+                        <text x="48" y="222">1993</text><text x="95" y="222">2010</text><text x="142" y="222">2015</text><text x="188" y="222">2017</text><text x="235" y="222">2020</text><text x="282" y="222" fill="#ef4444">Aug 2022</text><text x="328" y="222">2023</text><text x="372" y="222" fill="#ef4444">Nov 2024</text><text x="418" y="222" fill="#facc15" font-weight="bold">2026 (Current Point)</text>
+                    </g>
+                </svg>
+            </div>
+
+            <div id="lifeInsightCard" class="inset-box rounded-xl p-3.5 border-l-4 border-l-posterYellow text-xs font-mono"></div>
+
+            <div id="sec-growth-progress" class="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono text-xs">
+                <div class="inset-box rounded-xl p-3.5 border-l-4 border-l-cyberBlue">
+                    <div class="flex justify-between items-center mb-1.5">
+                        <strong class="text-white" data-i18n="persProgLabel">PERSONAL PROGRESS</strong>
+                        <span id="personalProgressPct" class="text-cyberBlue font-extrabold">35%</span>
+                    </div>
+                    <div class="w-full h-2.5 bg-slate-900 rounded-full overflow-hidden">
+                        <div id="personalProgressBar" class="h-full bg-cyberBlue transition-all duration-300" style="width: 35%;"></div>
+                    </div>
+                </div>
+
+                <div class="inset-box rounded-xl p-3.5 border-l-4 border-l-emeraldGrowth">
+                    <div class="flex justify-between items-center mb-1.5">
+                        <strong class="text-white" data-i18n="finLifeProgLabel">FINANCE & LIFE PROGRESS</strong>
+                        <span id="financeLifeProgressPct" class="text-emeraldGrowth font-extrabold">20%</span>
+                    </div>
+                    <div class="w-full h-2.5 bg-slate-900 rounded-full overflow-hidden">
+                        <div id="financeLifeProgressBar" class="h-full bg-emeraldGrowth transition-all duration-300" style="width: 20%;"></div>
+                    </div>
+                </div>
+
+                <div class="inset-box rounded-xl p-3.5 border-l-4 border-l-posterYellow">
+                    <div class="flex justify-between items-center mb-1.5">
+                        <strong class="text-white" data-i18n="skillSysProgLabel">SKILL SYSTEM PROGRESS</strong>
+                        <span id="skillSystemProgressPct" class="text-posterYellow font-extrabold">40%</span>
+                    </div>
+                    <div class="w-full h-2.5 bg-slate-900 rounded-full overflow-hidden mb-2">
+                        <div id="skillSystemProgressBar" class="h-full bg-posterYellow transition-all duration-300" style="width: 40%;"></div>
+                    </div>
+                    <div class="flex gap-1.5">
+                        <input type="text" id="newSkillInput" placeholder="New Skill Learned..." class="inset-box rounded-lg px-2 py-1 text-[11px] flex-1">
+                        <button onclick="addLearnedSkill()" class="bg-cyberBlue text-white text-[11px] font-bold px-2.5 py-1 rounded-lg" data-i18n="addSkillBtn">+ SKILL</button>
+                    </div>
+                    <div id="learnedSkillsDisplay" class="text-[11px] muted-text mt-1.5"></div>
+                </div>
+            </div>
+
+            <div class="space-y-3 pt-2 border-t border-slate-800">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <h4 class="font-heading text-base uppercase text-posterYellow" data-i18n="storyTitle">📖 SHIV PREM — TIMELINE MILESTONES</h4>
+                    <div class="flex gap-2">
+                        <input type="text" id="newStoryTitle" placeholder="Month & Year..." class="inset-box rounded-xl px-3 py-1.5 text-xs font-mono w-36">
+                        <input type="text" id="newStoryDesc" placeholder="Struggle / Growth details..." class="inset-box rounded-xl px-3 py-1.5 text-xs font-mono w-52">
+                        <button onclick="addCustomStory()" class="bg-posterYellow hover:bg-yellow-300 text-matteBlack font-poster text-xs px-4 py-1.5 rounded-xl font-bold shadow" data-i18n="addStoryBtn">+ ADD</button>
+                    </div>
+                </div>
+                <div id="storyContent" class="text-xs sm:text-sm muted-text space-y-2 leading-relaxed font-mono"></div>
+            </div>
+        </section>
+
+        <!-- 12. ALGO TRADING & STRATEGY PERFORMANCE BOX (AT BOTTOM) -->
+        <section class="comic-card rounded-2xl p-4 sm:p-6 border-emeraldGrowth space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                    <span class="bg-emeraldGrowth text-matteBlack font-poster text-xs px-3 py-0.5 rounded uppercase" data-i18n="algoTag">ALGO & STRATEGY ENGINE</span>
+                    <h2 class="poster-title text-2xl sm:text-3xl mt-1" data-i18n="algoHeader">ALGO TRADING & STRATEGY PERFORMANCE</h2>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <input type="text" id="algoStrategyName" placeholder="Strategy Name..." class="inset-box rounded-xl px-3 py-2 text-xs font-mono w-36">
+                    <input type="number" id="algoCapitalAmt" placeholder="Amount (₹)" class="inset-box rounded-xl px-3 py-2 text-xs font-mono w-28">
+                    <input type="number" id="algoGeneratedIncome" placeholder="Income Gen (₹)" class="inset-box rounded-xl px-3 py-2 text-xs font-mono w-32">
+                    <button onclick="addAlgoStrategy()" class="bg-emeraldGrowth hover:bg-green-400 text-matteBlack font-poster text-xs px-4 py-2 rounded-xl font-bold shadow" data-i18n="addAlgoBtn">+ ADD STRATEGY</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-mono">
+                <div class="inset-box p-3 rounded-xl border-cyberBlue">
+                    <span data-i18n="algoTotalCapLabel">Total Strategy Capital</span>: <strong id="algoTotalCapital" class="text-cyberBlue text-sm">₹0</strong>
+                </div>
+                <div class="inset-box p-3 rounded-xl border-emeraldGrowth">
+                    <span data-i18n="algoTotalIncLabel">Total Algo Income Generated</span>: <strong id="algoTotalIncome" class="text-emeraldGrowth text-sm">₹0</strong>
+                </div>
+            </div>
+
+            <div id="algoStrategiesList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs font-mono"></div>
+        </section>
+
+    </div>
+
+    <!-- JavaScript Engine -->
+    <script>
+        const i18n = {
+            en: {
+                brandTitle: 'SHIV PREM // AI GROWTH & WEALTH DASHBOARD',
+                themeWhite: 'White',
+                heroBannerTag: '⚡ “SYSTEM > SPEED — PERSONAL GROWTH & WEALTH DASHBOARD”',
+                heroSub: 'Life Evolution, Debt Avalanche & Investment Portfolio Tracker',
+                statDebt: 'Total Debt',
+                statInv: 'Investments',
+                heroProgPctLabel: 'PROGRESS %',
+                heroTargetBox: '🎯 Life & Financial Target: Clear ₹27L debt & build ₹1 Cr wealth with Goobro & Shiv Foundation.',
+                portTag: 'PORTFOLIO SUMMARY',
+                portTitle: 'OVERALL PORTFOLIO',
+                portInvLabel: 'Overall Investment',
+                portDebtLabel: 'Overall Remaining Debt',
+                portExpLabel: 'Overall Expenses',
+                portIncLabel: 'Overall Income',
+                leftGraphTag: 'CHRONOLOGICAL GROWTH & LIVE STAGE',
+                leftGraphTitle: 'PERSONAL EVOLUTION, TIMELINE & PROGRESS',
+                zoomBtn: '🔍 Zoom',
+                rightGraphTag: 'FINANCIAL WEALTH & LIVE STAGE',
+                rightGraphTitle: 'WEALTH GROWTH & NET WORTH',
+                netWorthLabel: 'Net Worth',
+                goalLabel: '2030 Goal',
+                overallDebtLabel: 'Overall Remaining Debt',
+                overallClearedLabel: 'Total Debt Cleared',
+                overallInitialLabel: 'Total Initial Debt',
+                persProgLabel: 'PERSONAL PROGRESS',
+                finLifeProgLabel: 'FINANCE & LIFE PROGRESS',
+                skillSysProgLabel: 'SKILL SYSTEM PROGRESS',
+                addSkillBtn: '+ SKILL',
+                storyTitle: '📖 SHIV PREM — TIMELINE MILESTONES',
+                addStoryBtn: '+ ADD',
+                finTag: 'FINANCIAL PORTFOLIO DATABASE',
+                finTitle: 'INCOME, EXPENSES & INVESTMENTS',
+                optInc: 'Income (+)',
+                optExp: 'Expense (-)',
+                optInv: 'Investment (📈)',
+                addBtn: '+ ADD',
+                totInc: 'Total Income',
+                totExp: 'Total Expenses',
+                totInv: 'Total Investments',
+                netSurplus: 'Monthly Net Surplus',
+                aiFinSugg: 'AI Financial Feedback:',
+                debtTag: 'AVALANCHE DEBT MANAGER',
+                debtTitle: 'ADD & MANAGE LENDERS / DEBTS',
+                addDebtBtn: '+ ADD DEBT',
+                aiDebtSugg: 'AI Debt Feedback:',
+                aiDebtSuggDesc: 'Remaining debt stays red until 100% cleared. Once cleared, status turns green.',
+                bizTag: 'STARTUP & BUSINESS BRANDS',
+                bizHeader: 'BUSINESS LAUNCH & PRIORITY BOARD',
+                optActive: 'Active / Scaling',
+                optPaused: 'On Hold / Paused',
+                optSuccess: 'High Success Potential',
+                addBizBtn: '+ ADD',
+                aiBizPred: 'AI Skill-Based Prediction:',
+                planTag: 'SYSTEMATIC PLANNING BOARD',
+                planHeader: 'TASKS, REMINDERS & GOALS',
+                addTaskBtn: '+ ADD TASK',
+                aiPlanSugg: 'AI Plan Feedback:',
+                aiPlanSuggDesc: 'Execute tasks systematically to keep daily driving and business brand scaling on track.',
+                calTag: 'SYSTEM CALENDAR & SCHEDULE',
+                calHeader: 'GOOGLE CALENDAR & SCHEDULER',
+                syncAlertBtn: '🔗 SYNC WHATSAPP & EMAIL',
+                addEventBtn: '+ ADD EVENT',
+                aiCalSugg: 'AI Calendar Feedback:',
+                aiCalSuggDesc: 'Events scheduled here automatically dispatch alerts to your synced WhatsApp and Email.',
+                radarTag: 'DAILY INCOME & RIDE CALENDAR',
+                radarHeader: 'GOOBRO RIDE RADAR & MONTHLY EARNINGS',
+                optDriving: 'Driving',
+                optGoobro: 'Goobro',
+                addRideBtn: '+ ADD RIDE',
+                monthlyRadarSum: 'Monthly Ride & Goobro Total Income:',
+                algoTag: 'ALGO & STRATEGY ENGINE',
+                algoHeader: 'ALGO TRADING & STRATEGY PERFORMANCE',
+                addAlgoBtn: '+ ADD STRATEGY',
+                algoTotalCapLabel: 'Total Strategy Capital',
+                algoTotalIncLabel: 'Total Algo Income Generated',
+                botTitle: 'SHIV PREM AI & DETAILS',
+                botSub: 'Arranged Dashboard Summary & AI Modes',
+                botTabFinance: 'Financial Assistant',
+                botTabGrowth: 'Personal Growth',
+                botTabNextPlan: 'Next Plan',
+                botPlaceholder: 'Ask about finance, personal growth or next plan...',
+                sendBtn: 'ASK ⚡'
+            },
+            ta: {
+                brandTitle: 'ஷிவ் பிரேம் // AI வளர்ச்சி & செல்வ டேஷ்போர்டு',
+                themeWhite: 'ஒயிட்',
+                heroBannerTag: '⚡ “சிஸ்டம் > வேகம் — தனிப்பட்ட வளர்ச்சி & செல்வ டேஷ்போர்டு”',
+                heroSub: 'வாழ்க்கை வளர்ச்சி, கடன் ஒழிப்பு மற்றும் முதலீட்டு போர்ட்ஃபோலியோ டிராக்கர்',
+                statDebt: 'மொத்த கடன்',
+                statInv: 'முதலீடுகள்',
+                heroProgPctLabel: 'முன்னேற்ற சதவீதம்',
+                heroTargetBox: '🎯 வாழ்க்கை & நிதி இலக்கு: ₹27L கடனை அடைத்து Goobro & சிவ அறக்கட்டளை மூலம் ₹1 கோடி செல்வம் உருவாக்குதல்.',
+                portTag: 'போர்ட்ஃபோலியோ சுருக்கம்',
+                portTitle: 'ஒட்டுமொத்த போர்ட்ஃபோலியோ',
+                portInvLabel: 'ஒட்டுமொத்த முதலீடு',
+                portDebtLabel: 'ஒட்டுமொத்த மீதமுள்ள கடன்',
+                portExpLabel: 'ஒட்டுமொத்த செலவுகள்',
+                portIncLabel: 'ஒட்டுமொத்த வருமானம்',
+                leftGraphTag: 'காலவரிசை வளர்ச்சி & தற்போதைய நிலை',
+                leftGraphTitle: 'தனிப்பட்ட வளர்ச்சி, டைம்லைன் & ப்ராக்ரஸ்',
+                zoomBtn: '🔍 பெரிதாக்கு',
+                rightGraphTag: 'செல்வ வளர்ச்சி & தற்போதைய நிலை',
+                rightGraphTitle: 'செல்வ வளர்ச்சி & நிகர சொத்து மதிப்பு',
+                netWorthLabel: 'நிகர சொத்து',
+                goalLabel: '2030 இலக்கு',
+                overallDebtLabel: 'ஒட்டுமொத்த மீதமுள்ள கடன்',
+                overallClearedLabel: 'அடைக்கப்பட்ட மொத்த கடன்',
+                overallInitialLabel: 'தொடக்க மொத்த கடன்',
+                persProgLabel: 'தனிப்பட்ட முன்னேற்றம்',
+                finLifeProgLabel: 'நிதி & வாழ்க்கை முன்னேற்றம்',
+                skillSysProgLabel: 'திறன் & சிஸ்டம் முன்னேற்றம்',
+                addSkillBtn: '+ திறன்',
+                storyTitle: '📖 சிவ்பிரேம் — டைம்லைன் மைல்கற்கள்',
+                addStoryBtn: '+ சேர்',
+                finTag: 'நிதி போர்ட்ஃபோலியோ டேட்டாபேஸ்',
+                finTitle: 'வருமானம், செலவுகள் & முதலீடுகள்',
+                optInc: 'வருமானம் (+)',
+                optExp: 'செலவு (-)',
+                optInv: 'முதலீடு (📈)',
+                addBtn: '+ சேர்',
+                totInc: 'மொத்த வருமானம்',
+                totExp: 'மொத்த செலவுகள்',
+                totInv: 'மொத்த முதலீடுகள்',
+                netSurplus: 'மாதாந்திர நிகர மிச்சம்',
+                aiFinSugg: 'AI நிதி ஃபீட்பேக்:',
+                debtTag: 'கடன் மேலாண்மை (AVALANCHE)',
+                debtTitle: 'கடன்களைச் சேர்த்து நிர்வகிக்கவும்',
+                addDebtBtn: '+ கடன் சேர்',
+                aiDebtSugg: 'AI கடன் ஃபீட்பேக்:',
+                aiDebtSuggDesc: 'கடன் முழுமையாக முடியும் வரை சிவப்பு நிறத்திலேயே இருக்கும்; முடிந்த பிறகே பச்சை நிறமாக மாறும்.',
+                bizTag: 'ஸ்டார்ட்அப் & பிசினஸ் பிராண்டுகள்',
+                bizHeader: 'பிசினஸ் தொடக்கம் & முன்னுரிமை பலகை',
+                optActive: 'செயலில் / வளர்ச்சி',
+                optPaused: 'நிறுத்திவைக்கப்பட்டது',
+                optSuccess: 'அதிக வெற்றி வாய்ப்பு',
+                addBizBtn: '+ சேர்',
+                aiBizPred: 'AI திறன் அடிப்படையிலான கணிப்பு:',
+                planTag: 'திட்டமிடல் பலகை',
+                planHeader: 'பணிகள், நினைவூட்டல்கள் & இலக்குகள்',
+                addTaskBtn: '+ பணி சேர்',
+                aiPlanSugg: 'AI திட்ட ஃபீட்பேக்:',
+                aiPlanSuggDesc: 'ஒவ்வொரு பணியையும் முறையாக முடித்து தினசரி டிரைவிங் மற்றும் பிசினஸ் வளர்ச்சியை உறுதிப்படுத்துங்கள்.',
+                calTag: 'சிஸ்டம் காலண்டர் & அட்டவணை',
+                calHeader: 'கூகுள் காலண்டர் & ஷெட்யூலர்',
+                syncAlertBtn: '🔗 வாட்ஸ்அப் & ஈமெயில் இணைக்கவும்',
+                addEventBtn: '+ நிகழ்வு சேர்',
+                aiCalSugg: 'AI காலண்டர் ஃபீட்பேக்:',
+                aiCalSuggDesc: 'இங்கு பதிவு செய்யப்படும் நிகழ்வுகள் உங்கள் வாட்ஸ்அப் மற்றும் ஈமெயிலுக்கு தானாகவே நினைவூட்டப்படும்.',
+                radarTag: 'தினசரி வருமானம் & ரைடு காலண்டர்',
+                radarHeader: 'Goobro ரைடு ரேடார் & மாதாந்திர வருவாய்',
+                optDriving: 'டிரைவிங்',
+                optGoobro: 'Goobro',
+                addRideBtn: '+ ரைடு சேர்',
+                monthlyRadarSum: 'மாதாந்திர ரைடு & Goobro மொத்த வருமானம்:',
+                algoTag: 'ஆல்கோ & ஸ்ட்ராட்டஜி இன்ஜின்',
+                algoHeader: 'ஆல்கோ டிரேடிங் & ஸ்ட்ராட்டஜி பெர்ஃபார்மன்ஸ்',
+                addAlgoBtn: '+ ஸ்ட்ராட்டஜி சேர்',
+                algoTotalCapLabel: 'மொத்த ஸ்ட்ராட்டஜி தொகை',
+                algoTotalIncLabel: 'ஆல்கோ மூலம் கிடைத்த வருமானம்',
+                botTitle: 'ஷிவ் பிரேம் AI & விவரங்கள்',
+                botSub: 'ஒழுங்குபடுத்தப்பட்ட டேஷ்போர்டு சுருக்கம் & பிரிவுகள்',
+                botTabFinance: 'Financial Assistant',
+                botTabGrowth: 'Personal Growth',
+                botTabNextPlan: 'Next Plan',
+                botPlaceholder: 'பைனான்ஸ், பர்சனல் க்ரோத் அல்லது நெக்ஸ்ட் பிளான் பற்றி கேளுங்கள்...',
+                sendBtn: 'கேள் ⚡'
+            }
+        };
+
+        const defaultBotThreads = {
+            en: {
+                finance: [
+                    { sender: 'ai', text: 'Financial Assistant active: Track Income, Expenses, Investments, Remaining Debt (red until cleared) and Algo Strategy earnings to grow your Net Worth towards ₹1 Crore.' }
+                ],
+                growth: [
+                    { sender: 'ai', text: 'Personal Growth active: From 2022 & 2024 challenges to building a disciplined system in 2026, your steady milestone tracking builds long-term resilience.' }
+                ],
+                nextplan: [
+                    { sender: 'ai', text: 'Next Plan active: Keep executing Goobro & driving cashflow, clear high-priority debt step by step, and prepare Auth/Cloud when shifting to a public app later.' }
+                ]
+            },
+            ta: {
+                finance: [
+                    { sender: 'ai', text: 'Financial Assistant செயலில் உள்ளது: வருமானம், செலவு, முதலீடு, பாக்கி கடன் (முடியும் வரை சிவப்பு) மற்றும் ஆல்கோ வருமானத்தைக் கவனித்து ₹1 கோடி இலக்கை நோக்கிச் செல்லுங்கள்.' }
+                ],
+                growth: [
+                    { sender: 'ai', text: 'Personal Growth செயலில் உள்ளது: 2022 & 2024 சவால்களைக் கடந்து 2026-ல் சிஸ்டம் உருவாக்கியுள்ள உங்கள் பயணம் நிலையான வளர்ச்சியைத் தரும்.' }
+                ],
+                nextplan: [
+                    { sender: 'ai', text: 'Next Plan செயலில் உள்ளது: Goobro & டிரைவிங் வருமானத்தைத் தொடருங்கள், கடன்களைத் திட்டமிட்டுக் குறையுங்கள்; எதிர்காலத்தில் பப்ளிக் ஆப்பாக மாற்றும்போது Login & Cloud சேர்த்துக் கொள்ளலாம்.' }
+                ]
+            }
+        };
+
+        let personalNodes = [
+            { id: 'n1', cx: 48, cy: 160, color: '#3b82f6', year: '1993', title: 'Birth & Roots — Tenkasi', desc: 'Govt Teacher mom & Army dad. Grounded values.' },
+            { id: 'n2', cx: 95, cy: 140, color: '#3b82f6', year: '2010', title: 'Schooling & Adaptability', desc: 'Tamil & English medium flexibility.' },
+            { id: 'n3', cx: 142, cy: 120, color: '#3b82f6', year: '2015', title: 'B.Tech Biotechnology', desc: 'Analytical problem solving.' },
+            { id: 'n4', cx: 188, cy: 165, color: '#facc15', year: '2017', title: 'Hustle & Abroad Prep', desc: 'Domino’s, coding & studio work.' },
+            { id: 'n5', cx: 235, cy: 100, color: '#3b82f6', year: '2020', title: 'Goobro & Sivakasi Legacy', desc: 'Launched Goobro & business foundation.' },
+            { id: 'n6', cx: 282, cy: 205, color: '#ef4444', year: 'Aug 2022', title: 'Struggle Peak: COVID & Loss', desc: 'Severe financial crunch & heavy personal losses.' },
+            { id: 'n7', cx: 328, cy: 115, color: '#3b82f6', year: '2023', title: 'Marriage & Investing', desc: 'Demat opening & investor mindset.' },
+            { id: 'n8', cx: 372, cy: 210, color: '#ef4444', year: 'Nov 2024', title: 'Struggle Peak: ₹27L Debt', desc: 'Intense trading loss & mental breakdown.' },
+            { id: 'n9', cx: 418, cy: 85, color: '#facc15', year: '2026 (Current Point)', title: 'Son சிவருத்ரா & System Breakout (Current Point)', desc: 'Son born. Active driving + Goobro + Prem Diary. Current standing point.' }
+        ];
+
+        const defaultState = {
+            lang: 'en',
+            theme: 'dark',
+            selectedNodeId: 'n9',
+            activeBotTopic: 'finance',
+            whatsapp: '',
+            email: '',
+            learnedSkills: ['System Architecture', 'Driving Logistics', 'Debt Avalanche Calculation'],
+            customStories: [
+                { id: 's1', title: 'Aug 2022 (COVID Struggle)', desc: 'Severe financial setbacks, managing family pressure and rebuilding from scratch.' },
+                { id: 's2', title: 'Nov 2024 (₹27L Debt Crisis)', desc: 'The darkest struggle period with trading loss, turning into a disciplined System Builder.' }
+            ],
+            calendarEvents: [
+                { date: '2026-11-19', title: 'Health Checkup & Insurance Review (WhatsApp/Email Sync Active)' }
+            ],
+            radarRides: [
+                { customer: 'Ramesh Kumar', amount: 1500, category: 'Driving' },
+                { customer: 'Senthil Vel', amount: 2500, category: 'Goobro' }
+            ],
+            algoStrategies: [
+                { strategy: 'Intraday Trend Algo v1', amount: 50000, income: 8500 }
+            ],
+            debts: [
+                { id: 'd1', lender: 'Gold Loan', total: 1500000, remaining: 1500000, tag: 'Priority #1 • Secured' },
+                { id: 'd2', lender: 'Marutheasan', total: 400000, remaining: 400000, tag: 'Priority #2 • Private' },
+                { id: 'd3', lender: 'IOB Bank', total: 200000, remaining: 200000, tag: 'Priority #3 • Bank Loan' },
+                { id: 'd4', lender: 'Canara Bank', total: 40000, remaining: 40000, tag: 'Quick Snowball #4' }
+            ],
+            transactions: [
+                { name: 'Driving & Goobro Income', amount: 130000, type: 'income' },
+                { name: 'Room & Family Expenses', amount: 45000, type: 'expense' },
+                { name: 'Mutual Fund SIP / Assets', amount: 15000, type: 'investment' }
+            ],
+            businesses: [
+                { name: 'Goobro Logistics', status: 'active', note: 'Active cashflow engine. Scale outstation bookings.' },
+                { name: 'Money Earth Global', status: 'success', note: 'High success potential brand. Focus next.' }
+            ],
+            planningTasks: [
+                { task: 'Complete 15-20 driving days this month', done: false }
+            ],
+            botThreads: {
+                en: {
+                    finance: [...defaultBotThreads.en.finance],
+                    growth: [...defaultBotThreads.en.growth],
+                    nextplan: [...defaultBotThreads.en.nextplan]
+                },
+                ta: {
+                    finance: [...defaultBotThreads.ta.finance],
+                    growth: [...defaultBotThreads.ta.growth],
+                    nextplan: [...defaultBotThreads.ta.nextplan]
+                }
+            }
+        };
+
+        function loadInitialState() {
+            const candidateKeys = ['shivPremMasterOS_v21', 'shivPremMasterOS_v22', 'shivPremMasterOS_v20', 'shivPremMasterOS'];
+            for (const key of candidateKeys) {
+                try {
+                    const raw = localStorage.getItem(key);
+                    if (raw) {
+                        const parsed = JSON.parse(raw);
+                        if (parsed && typeof parsed === 'object' && Array.isArray(parsed.debts)) {
+                            return Object.assign({}, JSON.parse(JSON.stringify(defaultState)), parsed);
+                        }
+                    }
+                } catch (e) {}
+            }
+            return JSON.parse(JSON.stringify(defaultState));
+        }
+
+        let state = loadInitialState();
+
+        function saveState() {
+            try {
+                const serialized = JSON.stringify(state);
+                localStorage.setItem('shivPremMasterOS_v21', serialized);
+            } catch (e) {}
+            recalculateMetrics();
+        }
+
+        // Export Whole Data (including all localStorage keys + current state + personalNodes)
+        function exportWholeData() {
+            document.getElementById('topQuickMenuDrawer').classList.add('hidden');
+            const allLocalStorage = {};
+            try {
+                for (let i = 0; i < localStorage.length; i++) {
+                    const k = localStorage.key(i);
+                    allLocalStorage[k] = localStorage.getItem(k);
+                }
+            } catch (e) {}
+
+            const wholeDataPayload = {
+                app: 'SHIV_PREM_MASTER_OS',
+                exportedAt: new Date().toISOString(),
+                state: state,
+                personalNodes: personalNodes,
+                localStorageDump: allLocalStorage
+            };
+
+            const blob = new Blob([JSON.stringify(wholeDataPayload, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            const dateStr = new Date().toISOString().slice(0, 10);
+            a.href = url;
+            a.download = `shiv-prem-whole-data-${dateStr}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast('EXPORTED WHOLE DATA!', 'Saved all dashboard data as JSON.');
+        }
+
+        function triggerImportWholeData() {
+            document.getElementById('topQuickMenuDrawer').classList.add('hidden');
+            document.getElementById('importWholeDataInput').click();
+        }
+
+        function importWholeData(event) {
+            const file = event.target.files && event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const parsed = JSON.parse(e.target.result);
+                    if (parsed && parsed.localStorageDump && typeof parsed.localStorageDump === 'object') {
+                        Object.keys(parsed.localStorageDump).forEach(k => {
+                            try {
+                                localStorage.setItem(k, parsed.localStorageDump[k]);
+                            } catch (err) {}
+                        });
+                    }
+                    if (parsed && parsed.state && typeof parsed.state === 'object') {
+                        state = Object.assign({}, JSON.parse(JSON.stringify(defaultState)), parsed.state);
+                    } else if (parsed && Array.isArray(parsed.debts)) {
+                        state = Object.assign({}, JSON.parse(JSON.stringify(defaultState)), parsed);
+                    } else {
+                        showToast('IMPORT ERROR', 'Invalid data file.');
+                        event.target.value = '';
+                        return;
+                    }
+                    if (Array.isArray(parsed.personalNodes) && parsed.personalNodes.length > 0) {
+                        personalNodes = parsed.personalNodes;
+                    }
+                    saveState();
+                    initDashboard();
+                    showToast('IMPORTED WHOLE DATA!', 'All your data is restored.');
+                } catch (err) {
+                    showToast('IMPORT ERROR', 'Could not read JSON file.');
+                }
+                event.target.value = '';
+            };
+            reader.readAsText(file);
+        }
+
+        function updateLiveClock() {
+            const now = new Date();
+            document.getElementById('liveDateDisplay').innerText = now.toLocaleDateString('en-IN', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric'
+            });
+            document.getElementById('liveTimeDisplay').innerText = now.toLocaleTimeString('en-IN', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+        }
+
+        function toggleTopQuickMenu() {
+            document.getElementById('topQuickMenuDrawer').classList.toggle('hidden');
+        }
+
+        function scrollToSection(id) {
+            const el = document.getElementById(id);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            document.getElementById('topQuickMenuDrawer').classList.add('hidden');
+        }
+
+        function formatINR(val) {
+            const n = Number(val || 0);
+            return (n < 0 ? '-' : '') + '₹' + Math.abs(n).toLocaleString('en-IN');
+        }
+
+        function showToast(title, desc) {
+            const t = document.getElementById('comicToast');
+            document.getElementById('toastTitle').innerText = title;
+            document.getElementById('toastDesc').innerText = desc;
+            t.classList.remove('translate-y-28', 'opacity-0');
+            setTimeout(() => t.classList.add('translate-y-28', 'opacity-0'), 2500);
+        }
+
+        function setLanguage(lang) {
+            state.lang = lang;
+            ['en', 'ta'].forEach(l => {
+                const btn = document.getElementById(`lang-${l}`);
+                if (btn) btn.className = l === lang ? 'px-3 py-1 rounded-lg text-xs font-bold bg-posterYellow text-matteBlack transition' : 'px-3 py-1 rounded-lg text-xs font-bold text-slate-300 hover:text-white transition';
+            });
+
+            const dict = i18n[lang] || i18n.en;
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (dict[key]) el.innerText = dict[key];
+            });
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                if (dict[key]) el.placeholder = dict[key];
+            });
+
+            renderStory();
+            renderPersonalNodes();
+            renderBusinessBoard();
+            renderLearnedSkills();
+            updateBotTabStyles();
+            if (!document.getElementById('floatingBotModal').classList.contains('hidden')) {
+                renderBotArrangedDetails();
+                renderBotChat();
+            }
+            saveState();
+        }
+
+        function applyTheme() {
+            const htmlEl = document.documentElement;
+            const icon = document.getElementById('themeIcon');
+            const label = document.getElementById('themeLabel');
+            if (state.theme === 'dark') {
+                htmlEl.classList.add('dark');
+                icon.innerText = '☀️';
+                label.innerText = state.lang === 'ta' ? 'ஒயிட்' : 'White';
+            } else {
+                htmlEl.classList.remove('dark');
+                icon.innerText = '🌙';
+                label.innerText = state.lang === 'ta' ? 'டார்க்' : 'Dark';
+            }
+        }
+
+        function toggleThemeMode() {
+            state.theme = state.theme === 'dark' ? 'light' : 'dark';
+            applyTheme();
+            saveState();
+        }
+
+        function renderBotArrangedDetails() {
+            const remDebt = state.debts.reduce((s, d) => s + Number(d.remaining || 0), 0);
+            let totInv = 0, totInc = 0, totExp = 0;
+            state.transactions.forEach(tx => {
+                if (tx.type === 'investment') totInv += tx.amount;
+                else if (tx.type === 'income') totInc += tx.amount;
+                else if (tx.type === 'expense') totExp += tx.amount;
+            });
+            state.radarRides.forEach(r => { totInc += r.amount; });
+            state.algoStrategies.forEach(a => { totInc += a.income; });
+            const netWorth = totInv - remDebt;
+
+            const box = document.getElementById('botArrangedDetails');
+            box.innerHTML = `
+                <div class="inset-box p-2.5 rounded-xl">
+                    <div class="text-[10px] muted-text">NET WORTH</div>
+                    <div class="font-extrabold ${netWorth < 0 ? 'text-red-500' : 'text-emeraldGrowth'}">${formatINR(netWorth)}</div>
+                </div>
+                <div class="inset-box p-2.5 rounded-xl">
+                    <div class="text-[10px] muted-text">DEBT LEFT</div>
+                    <div class="font-extrabold ${remDebt > 0 ? 'text-red-500' : 'text-emeraldGrowth'}">${remDebt > 0 ? '-' + formatINR(remDebt) : '₹0'}</div>
+                </div>
+                <div class="inset-box p-2.5 rounded-xl">
+                    <div class="text-[10px] muted-text">INVESTMENTS</div>
+                    <div class="font-extrabold text-emeraldGrowth">${formatINR(totInv)}</div>
+                </div>
+                <div class="inset-box p-2.5 rounded-xl">
+                    <div class="text-[10px] muted-text">INCOME / EXP</div>
+                    <div class="font-extrabold text-cyberBlue">${formatINR(totInc)} / <span class="text-red-500">${formatINR(totExp)}</span></div>
+                </div>
+            `;
+        }
+
+        function updateBotTabStyles() {
+            const topics = ['finance', 'growth', 'nextplan'];
+            topics.forEach(t => {
+                const btn = document.getElementById(`bot-tab-${t}`);
+                if (!btn) return;
+                if (state.activeBotTopic === t) {
+                    btn.className = 'py-2 px-2 rounded-xl font-bold bg-posterYellow text-matteBlack transition';
+                } else {
+                    btn.className = 'py-2 px-2 rounded-xl font-bold bg-slate-800 text-slate-200 hover:bg-slate-700 transition';
+                }
+            });
+        }
+
+        function switchBotTopic(topic) {
+            state.activeBotTopic = topic;
+            updateBotTabStyles();
+            renderBotChat();
+            saveState();
+        }
+
+        function toggleFloatingBot() {
+            const modal = document.getElementById('floatingBotModal');
+            modal.classList.toggle('hidden');
+            if (!modal.classList.contains('hidden')) {
+                updateBotTabStyles();
+                renderBotArrangedDetails();
+                renderBotChat();
+            }
+        }
+
+        function openZoomModal(type) {
+            const modal = document.getElementById('graphZoomModal');
+            const title = document.getElementById('zoomModalTitle');
+            const body = document.getElementById('zoomModalBody');
+            modal.classList.remove('hidden');
+            if (type === 'personal') {
+                title.innerText = 'PERSONAL EVOLUTION & LIVE STAGE (MAXIMIZED)';
+                body.innerHTML = document.getElementById('personalGrowthSvg').outerHTML;
+            } else {
+                title.innerText = 'WEALTH GROWTH & LIVE STAGE (MAXIMIZED)';
+                body.innerHTML = document.getElementById('wealthGrowthSvg').outerHTML;
+            }
+        }
+
+        function closeZoomModal() {
+            document.getElementById('graphZoomModal').classList.add('hidden');
+        }
+
+        function addLearnedSkill() {
+            const skill = document.getElementById('newSkillInput').value.trim();
+            if (!skill) return showToast('Error', 'Enter skill name.');
+            state.learnedSkills.push(skill);
+            saveState();
+            renderLearnedSkills();
+            renderBusinessBoard();
+            showToast('SKILL ADDED', `Learned: ${skill}`);
+            document.getElementById('newSkillInput').value = '';
+        }
+
+        function renderLearnedSkills() {
+            const disp = document.getElementById('learnedSkillsDisplay');
+            disp.innerHTML = `🎯 <strong>Learned Skills:</strong> ${state.learnedSkills.join(', ')}`;
+        }
+
+        function saveNotificationConfig() {
+            state.whatsapp = document.getElementById('userWhatsApp').value.trim();
+            state.email = document.getElementById('userEmail').value.trim();
+            saveState();
+            showToast('SYNCED!', `WhatsApp (${state.whatsapp}) & Email (${state.email}) synced.`);
+        }
+
+        function addCalendarEvent() {
+            const date = document.getElementById('calDate').value;
+            const title = document.getElementById('calEventTitle').value.trim() + ' (Alerts sent to WhatsApp/Email)';
+            if (!date || !title) return showToast('Error', 'Enter date and title.');
+            state.calendarEvents.push({ date, title });
+            saveState();
+            renderCalendarEvents();
+            showToast('REMINDER SET', 'Synced with WhatsApp & Email API!');
+            document.getElementById('calEventTitle').value = '';
+        }
+
+        function deleteCalendarEvent(idx) {
+            state.calendarEvents.splice(idx, 1);
+            saveState();
+            renderCalendarEvents();
+            showToast('REMOVED', 'Event deleted.');
+        }
+
+        function renderCalendarEvents() {
+            const list = document.getElementById('calendarEventsList');
+            list.innerHTML = '';
+            state.calendarEvents.forEach((ev, idx) => {
+                const row = document.createElement('div');
+                row.className = 'inset-box p-3 rounded-xl flex justify-between items-center';
+                row.innerHTML = `
+                    <div>
+                        <strong class="text-posterYellow">📅 ${ev.date}</strong>
+                        <div class="text-white mt-0.5">${ev.title}</div>
+                    </div>
+                    <button onclick="deleteCalendarEvent(${idx})" class="text-slate-500 hover:text-red-500 font-bold text-sm">✕</button>
+                `;
+                list.appendChild(row);
+            });
+        }
+
+        function addRadarRide() {
+            const customer = document.getElementById('radarCustName').value.trim();
+            const amount = Number(document.getElementById('radarAmount').value);
+            const category = document.getElementById('radarCategory').value;
+            if (!customer || !amount) return showToast('Error', 'Enter customer name and amount.');
+
+            state.radarRides.push({ customer, amount, category });
+            saveState();
+            renderRadarRides();
+            renderTransactions();
+            showToast('RIDE ADDED', `${customer} - ${formatINR(amount)}`);
+            document.getElementById('radarCustName').value = '';
+            document.getElementById('radarAmount').value = '';
+        }
+
+        function deleteRadarRide(idx) {
+            state.radarRides.splice(idx, 1);
+            saveState();
+            renderRadarRides();
+            renderTransactions();
+            showToast('REMOVED', 'Customer ride deleted.');
+        }
+
+        function renderRadarRides() {
+            const list = document.getElementById('radarRidesList');
+            list.innerHTML = '';
+            let monthlyTotal = 0;
+            state.radarRides.forEach((r, idx) => {
+                monthlyTotal += r.amount;
+                const card = document.createElement('div');
+                card.className = 'inset-box p-3 rounded-xl flex justify-between items-center border-l-4 border-l-cyberBlue';
+                card.innerHTML = `
+                    <div>
+                        <span class="text-[10px] uppercase font-bold text-cyberBlue">${r.category}</span>
+                        <div class="text-white font-bold">${r.customer}</div>
+                        <div class="text-emeraldGrowth font-mono font-extrabold">+${formatINR(r.amount)}</div>
+                    </div>
+                    <button onclick="deleteRadarRide(${idx})" class="text-slate-500 hover:text-red-500 font-bold text-sm">✕</button>
+                `;
+                list.appendChild(card);
+            });
+            document.getElementById('monthlyRadarTotal').innerText = formatINR(monthlyTotal);
+        }
+
+        function addAlgoStrategy() {
+            const strategy = document.getElementById('algoStrategyName').value.trim();
+            const amount = Number(document.getElementById('algoCapitalAmt').value);
+            const income = Number(document.getElementById('algoGeneratedIncome').value);
+            if (!strategy || !amount) return showToast('Error', 'Enter strategy name and amount.');
+
+            state.algoStrategies.push({ strategy, amount, income: income || 0 });
+            saveState();
+            renderAlgoStrategies();
+            renderTransactions();
+            showToast('ALGO ADDED', strategy);
+            document.getElementById('algoStrategyName').value = '';
+            document.getElementById('algoCapitalAmt').value = '';
+            document.getElementById('algoGeneratedIncome').value = '';
+        }
+
+        function deleteAlgoStrategy(idx) {
+            state.algoStrategies.splice(idx, 1);
+            saveState();
+            renderAlgoStrategies();
+            renderTransactions();
+            showToast('REMOVED', 'Strategy deleted.');
+        }
+
+        function renderAlgoStrategies() {
+            const list = document.getElementById('algoStrategiesList');
+            list.innerHTML = '';
+            let totalCap = 0, totalInc = 0;
+            state.algoStrategies.forEach((a, idx) => {
+                totalCap += Number(a.amount || 0);
+                totalInc += Number(a.income || 0);
+                const card = document.createElement('div');
+                card.className = 'inset-box p-3 rounded-xl flex justify-between items-center border-l-4 border-l-emeraldGrowth';
+                card.innerHTML = `
+                    <div>
+                        <div class="text-white font-bold">${a.strategy}</div>
+                        <div class="text-[11px] muted-text mt-0.5">Amount: <strong class="text-cyberBlue">${formatINR(a.amount)}</strong></div>
+                        <div class="text-[11px] text-emeraldGrowth font-extrabold mt-0.5">Income Generated: +${formatINR(a.income)}</div>
+                    </div>
+                    <button onclick="deleteAlgoStrategy(${idx})" class="text-slate-500 hover:text-red-500 font-bold text-sm">✕</button>
+                `;
+                list.appendChild(card);
+            });
+            document.getElementById('algoTotalCapital').innerText = formatINR(totalCap);
+            document.getElementById('algoTotalIncome').innerText = formatINR(totalInc);
+        }
+
+        function addCustomStory() {
+            const title = document.getElementById('newStoryTitle').value.trim();
+            const desc = document.getElementById('newStoryDesc').value.trim();
+            if (!title || !desc) return showToast('Error', 'Enter month & title and description.');
+
+            const newId = 's_' + Date.now();
+            state.customStories.push({ id: newId, title, desc });
+            personalNodes.push({ id: newId, cx: 418, cy: 85, color: '#ef4444', year: title, title, desc });
+            saveState();
+            renderStory();
+            renderPersonalNodes();
+            showToast('ADDED', 'Timeline milestone added!');
+            document.getElementById('newStoryTitle').value = '';
+            document.getElementById('newStoryDesc').value = '';
+        }
+
+        function deleteCustomStory(id) {
+            state.customStories = state.customStories.filter(s => s.id !== id);
+            personalNodes = personalNodes.filter(n => n.id !== id);
+            saveState();
+            renderStory();
+            renderPersonalNodes();
+            showToast('REMOVED', 'Timeline milestone deleted.');
+        }
+
+        function renderStory() {
+            const container = document.getElementById('storyContent');
+            let html = '';
+            if (state.lang === 'ta') {
+                html = `<p><strong>1993 - 2010 (வேர்கள் & பள்ளிப் பருவம்):</strong> தென்காசியில் எளிய குடும்பத்தில் பிறப்பு.</p>`;
+            } else {
+                html = `<p><strong>1993 - 2010 (Roots & Early Adaptability):</strong> Born in Tenkasi.</p>`;
+            }
+            state.customStories.forEach(s => {
+                html += `
+                    <div class="flex justify-between items-center inset-box p-2 rounded-lg">
+                        <span class="text-amber-400"><strong>⚡ [Milestone]: ${s.title}</strong> — ${s.desc}</span>
+                        <button onclick="deleteCustomStory('${s.id}')" class="text-slate-500 hover:text-red-500 text-xs font-bold">✕ DELETE</button>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function renderPersonalNodes() {
+            const group = document.getElementById('personalNodesGroup');
+            group.innerHTML = '';
+            personalNodes.forEach((node, idx) => {
+                const active = node.id === state.selectedNodeId;
+                const isLast = idx === personalNodes.length - 1;
+                const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                c.setAttribute('cx', node.cx);
+                c.setAttribute('cy', node.cy);
+                c.setAttribute('r', isLast ? '8.5' : (active ? '7.5' : '5'));
+                c.setAttribute('fill', isLast ? '#facc15' : (active ? '#ffffff' : node.color));
+                c.setAttribute('stroke', isLast ? '#3b82f6' : (active ? '#3b82f6' : '#090a0f'));
+                c.setAttribute('stroke-width', isLast ? '3' : '2');
+                if (isLast) c.setAttribute('class', 'stable-current-dot');
+                c.style.cursor = 'pointer';
+                c.onclick = () => {
+                    state.selectedNodeId = node.id;
+                    saveState();
+                    renderPersonalNodes();
+                };
+                group.appendChild(c);
+            });
+            const activeNode = personalNodes.find(n => n.id === state.selectedNodeId) || personalNodes[personalNodes.length - 1];
+            document.getElementById('lifeInsightCard').innerHTML = `
+                <div class="flex items-center justify-between mb-1">
+                    <span class="font-mono text-[11px] font-bold text-amber-500">Period: ${activeNode.year}</span>
+                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-posterYellow/20 text-amber-500 font-bold">CURRENT STANDING POINT</span>
+                </div>
+                <div class="font-heading text-base uppercase tracking-wide">${activeNode.title}</div>
+                <p class="text-xs muted-text mt-1">${activeNode.desc}</p>
+            `;
+        }
+
+        function renderWealthGraph(remDebt, investments) {
+            const layer = document.getElementById('wealthSvgDynamicLayer');
+            layer.innerHTML = '';
+            const netWorth = investments - remDebt;
+            function mapNwToY(nw) {
+                if (nw >= 0) {
+                    const ratio = Math.min(1, nw / 10000000);
+                    return 168 - (ratio * 133);
+                } else {
+                    const ratio = Math.min(1, Math.abs(nw) / 2700000);
+                    return 168 + (ratio * 47);
+                }
+            }
+            const y2025 = 215, yNow = mapNwToY(netWorth);
+            const points = `140,${y2025} 320,${yNow}`;
+            const areaPoints = `140,218 ${points} 320,218`;
+            const nwColor = netWorth < 0 ? '#ef4444' : '#22c55e';
+
+            layer.innerHTML = `
+                <defs>
+                    <linearGradient id="wealthGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="${nwColor}" stop-opacity="0.32"/>
+                        <stop offset="100%" stop-color="${nwColor}" stop-opacity="0"/>
+                    </linearGradient>
+                </defs>
+                <polygon points="${areaPoints}" fill="url(#wealthGrad)"/>
+                <polyline points="${points}" fill="none" stroke="${nwColor}" stroke-width="3.5" stroke-linecap="round"/>
+                <circle cx="140" cy="${y2025}" r="5.5" fill="#ef4444"/>
+                <circle cx="320" cy="${yNow}" r="8.5" fill="${nwColor}" stroke="#facc15" stroke-width="2.5" class="stable-current-dot"/>
+                <text x="320" y="${yNow - 14}" fill="${nwColor}" font-family="JetBrains Mono" font-size="10.5" font-weight="bold" text-anchor="middle">${formatINR(netWorth)} (Standing Here)</text>
+            `;
+        }
+
+        function addTransaction() {
+            const name = document.getElementById('txName').value.trim();
+            const amount = Number(document.getElementById('txAmount').value);
+            const type = document.getElementById('txType').value;
+            if (!name || !amount) return showToast('Error', 'Enter name and amount.');
+            state.transactions.push({ name, amount, type });
+            saveState();
+            renderTransactions();
+            showToast('ADDED', `${name} recorded.`);
+            document.getElementById('txName').value = '';
+            document.getElementById('txAmount').value = '';
+        }
+
+        function deleteTransaction(idx) {
+            state.transactions.splice(idx, 1);
+            saveState();
+            renderTransactions();
+        }
+
+        function renderTransactions() {
+            const list = document.getElementById('txList');
+            list.innerHTML = '';
+            let totInc = 0, totExp = 0, totInv = 0;
+            state.transactions.forEach((tx, idx) => {
+                if (tx.type === 'income') totInc += tx.amount;
+                else if (tx.type === 'expense') totExp += tx.amount;
+                else if (tx.type === 'investment') totInv += tx.amount;
+                const badgeColor = tx.type === 'income' ? 'text-emeraldGrowth' : tx.type === 'expense' ? 'text-red-500' : 'text-posterYellow';
+                const sign = tx.type === 'income' ? '+' : tx.type === 'expense' ? '-' : '📈';
+                const row = document.createElement('div');
+                row.className = 'inset-box p-2 rounded-lg flex justify-between items-center';
+                row.innerHTML = `
+                    <span>${tx.type === 'income' ? '🟢' : tx.type === 'expense' ? '🔴' : '📊'} ${tx.name}</span>
+                    <div class="flex items-center gap-2">
+                        <strong class="${badgeColor}">${sign}${formatINR(tx.amount)}</strong>
+                        <button onclick="deleteTransaction(${idx})" class="text-slate-500 hover:text-red-500">✕</button>
+                    </div>
+                `;
+                list.appendChild(row);
+            });
+            state.radarRides.forEach(r => { totInc += Number(r.amount || 0); });
+            state.algoStrategies.forEach(a => { totInc += Number(a.income || 0); });
+
+            const surplus = totInc - (totExp + totInv);
+            document.getElementById('calcTotalIncome').innerText = formatINR(totInc);
+            document.getElementById('calcTotalExpense').innerText = formatINR(totExp);
+            document.getElementById('calcTotalInvestment').innerText = formatINR(totInv);
+            document.getElementById('calcNetSurplus').innerText = formatINR(surplus);
+
+            document.getElementById('portOverallInv').innerText = formatINR(totInv);
+            document.getElementById('portOverallExp').innerText = formatINR(totExp);
+            document.getElementById('portOverallInc').innerText = formatINR(totInc);
+
+            state.totalInvestments = totInv;
+            recalculateMetrics();
+        }
+
+        function addNewDebt() {
+            const lender = document.getElementById('newLenderName').value.trim();
+            const total = Number(document.getElementById('newLenderAmt').value);
+            if (!lender || !total) return showToast('Error', 'Enter lender name and amount.');
+            state.debts.push({ id: 'd_' + Date.now(), lender, total, remaining: total, tag: 'Custom Loan' });
+            saveState();
+            renderDebtGrid();
+            showToast('DEBT ADDED', lender);
+            document.getElementById('newLenderName').value = '';
+            document.getElementById('newLenderAmt').value = '';
+        }
+
+        function deleteDebt(idx) {
+            state.debts.splice(idx, 1);
+            saveState();
+            renderDebtGrid();
+            showToast('REMOVED', 'Debt lender removed.');
+        }
+
+        function renderDebtGrid() {
+            const grid = document.getElementById('avalancheDebtGrid');
+            grid.innerHTML = '';
+
+            let totalInitial = 0, totalRem = 0, totalCleared = 0;
+            state.debts.forEach(d => {
+                totalInitial += Number(d.total || 0);
+                totalRem += Number(d.remaining || 0);
+                totalCleared += Math.max(0, Number(d.total || 0) - Number(d.remaining || 0));
+            });
+
+            document.getElementById('overallRemainingDebt').innerText = totalRem > 0 ? '-' + formatINR(totalRem) : '₹0';
+            document.getElementById('overallRemainingDebt').className = totalRem > 0 ? 'text-red-500 text-sm font-extrabold' : 'text-emeraldGrowth text-sm font-extrabold';
+            document.getElementById('overallClearedDebt').innerText = formatINR(totalCleared);
+            document.getElementById('overallInitialDebt').innerText = formatINR(totalInitial);
+            document.getElementById('portOverallDebt').innerText = totalRem > 0 ? '-' + formatINR(totalRem) : '₹0';
+            document.getElementById('portOverallDebt').className = totalRem > 0 ? 'text-base font-extrabold text-red-500 mt-1' : 'text-base font-extrabold text-emeraldGrowth mt-1';
+
+            state.debts.forEach((d, idx) => {
+                const paid = Math.max(0, d.total - d.remaining);
+                const pct = d.total > 0 ? Math.min(100, Math.round((paid / d.total) * 100)) : 100;
+                const done = d.remaining <= 0;
+                const amountColor = done ? 'text-emeraldGrowth' : 'text-red-500';
+                const barColor = done ? 'bg-emeraldGrowth' : 'bg-red-500';
+                const displayAmt = done ? '₹0' : '-' + formatINR(d.remaining);
+
+                const card = document.createElement('div');
+                card.className = `inset-box rounded-xl p-3.5 flex flex-col justify-between ${done ? 'border-emeraldGrowth' : 'border-red-500/50'}`;
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between gap-1 mb-1">
+                            <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded ${done ? 'bg-emeraldGrowth text-matteBlack' : 'bg-red-500/20 text-red-500'}">${done ? '✅ CLEARED' : d.tag}</span>
+                            <button onclick="deleteDebt(${idx})" class="text-slate-500 hover:text-red-500 text-xs">✕</button>
+                        </div>
+                        <div class="font-heading text-base uppercase tracking-wide ${done ? 'line-through muted-text' : ''}">${idx + 1}. ${d.lender}</div>
+                        <div class="flex justify-between items-baseline mt-2 mb-1">
+                            <span class="text-[10px] font-mono muted-text">${pct}%</span>
+                            <span class="font-mono text-sm font-extrabold ${amountColor}">${displayAmt}</span>
+                        </div>
+                        <div class="w-full h-2 bg-slate-900 rounded-full overflow-hidden mb-3">
+                            <div class="h-full ${barColor} transition-all duration-300" style="width: ${pct}%"></div>
+                        </div>
+                    </div>
+                    <div class="flex gap-1.5">
+                        ${!done ? `
+                            <button onclick="payDebtChunk(${idx}, 10000)" class="flex-1 bg-slate-900 hover:bg-posterYellow hover:text-matteBlack text-posterYellow border border-posterYellow/40 py-1 rounded-lg font-mono text-[11px] font-bold">-₹10K</button>
+                            <button onclick="payDebtChunk(${idx}, 50000)" class="flex-1 bg-red-600 hover:bg-red-500 text-white py-1 rounded-lg font-mono text-[11px] font-bold">-₹50K</button>
+                        ` : `<div class="w-full text-center font-poster text-xs text-emeraldGrowth">100% CLEARED</div>`}
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function payDebtChunk(idx, amt) {
+            const debt = state.debts[idx];
+            if (debt.remaining <= 0) return;
+            const actual = Math.min(debt.remaining, amt);
+            debt.remaining -= actual;
+            saveState();
+            renderDebtGrid();
+            showToast('💥 DEBT REDUCED!', `Paid ${formatINR(actual)} toward ${debt.lender}!`);
+        }
+
+        function addBusinessBrand() {
+            const name = document.getElementById('newBizName').value.trim();
+            const status = document.getElementById('newBizStatus').value;
+            if (!name) return showToast('Error', 'Enter business brand name.');
+            state.businesses.push({ name, status, note: 'Custom brand.' });
+            saveState();
+            renderBusinessBoard();
+            showToast('ADDED', name);
+            document.getElementById('newBizName').value = '';
+        }
+
+        function deleteBusiness(idx) {
+            state.businesses.splice(idx, 1);
+            saveState();
+            renderBusinessBoard();
+        }
+
+        function renderBusinessBoard() {
+            const grid = document.getElementById('businessBoardGrid');
+            grid.innerHTML = '';
+            
+            const latestSkill = state.learnedSkills[state.learnedSkills.length - 1] || 'General Logistics';
+            let predText = '';
+            if (state.lang === 'ta') {
+                predText = `நீங்கள் சமீபத்தில் கற்கும் திறன் ("${latestSkill}") அடிப்படையில், ஏஐ அடுத்ததாக ஒரு 'Automated Mobility & Fleet SaaS App' தொடங்க பரிந்துரைக்கிறது.`;
+            } else {
+                predText = `Based on your recent skill ("${latestSkill}"), AI predicts launching an Automated Mobility & Fleet SaaS App next.`;
+            }
+            document.getElementById('skillAiPredictionText').innerText = predText;
+
+            state.businesses.forEach((b, idx) => {
+                const color = b.status === 'active' ? 'text-cyberBlue border-cyberBlue' : b.status === 'success' ? 'text-posterYellow border-posterYellow' : 'text-red-500 border-red-500';
+                const card = document.createElement('div');
+                card.className = `inset-box p-3 rounded-xl flex flex-col justify-between border-l-4 ${color}`;
+                card.innerHTML = `
+                    <div class="flex justify-between items-center mb-1">
+                        <strong class="text-white">${b.name}</strong>
+                        <button onclick="deleteBusiness(${idx})" class="text-slate-500 hover:text-red-500">✕</button>
+                    </div>
+                    <span class="text-[10px] uppercase font-bold text-slate-400">Status: ${b.status}</span>
+                    <p class="text-[11px] muted-text mt-1">${b.note}</p>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function addPlanningTask() {
+            const task = document.getElementById('newPlanTask').value.trim();
+            if (!task) return showToast('Error', 'Enter task.');
+            state.planningTasks.push({ task, done: false });
+            saveState();
+            renderPlanningTasks();
+            showToast('TASK ADDED', task);
+            document.getElementById('newPlanTask').value = '';
+        }
+
+        function toggleTask(idx) {
+            state.planningTasks[idx].done = !state.planningTasks[idx].done;
+            saveState();
+            renderPlanningTasks();
+        }
+
+        function deleteTask(idx) {
+            state.planningTasks.splice(idx, 1);
+            saveState();
+            renderPlanningTasks();
+        }
+
+        function renderPlanningTasks() {
+            const list = document.getElementById('planningTaskList');
+            list.innerHTML = '';
+            state.planningTasks.forEach((t, idx) => {
+                const row = document.createElement('div');
+                row.className = 'inset-box p-2.5 rounded-lg flex justify-between items-center';
+                row.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <input type="checkbox" ${t.done ? 'checked' : ''} onchange="toggleTask(${idx})" class="cursor-pointer">
+                        <span class="${t.done ? 'line-through muted-text' : 'text-white'}">${t.task}</span>
+                    </div>
+                    <button onclick="deleteTask(${idx})" class="text-slate-500 hover:text-red-500 text-xs">✕</button>
+                `;
+                list.appendChild(row);
+            });
+        }
+
+        function renderBotChat() {
+            const win = document.getElementById('botChatWindow');
+            win.innerHTML = '';
+            const lang = state.lang || 'en';
+            const topic = state.activeBotTopic || 'finance';
+            const thread = (state.botThreads && state.botThreads[lang] && state.botThreads[lang][topic]) || defaultBotThreads[lang][topic];
+
+            thread.forEach(msg => {
+                const isUser = msg.sender === 'user';
+                const row = document.createElement('div');
+                row.className = `flex ${isUser ? 'justify-end' : 'justify-start'}`;
+                row.innerHTML = `<div class="max-w-[85%] rounded-2xl px-3.5 py-2.5 text-xs ${isUser ? 'bg-posterYellow text-matteBlack font-semibold' : 'bg-slate-800 text-slate-100'}">${msg.text}</div>`;
+                win.appendChild(row);
+            });
+            win.scrollTop = win.scrollHeight;
+        }
+
+        function handleBotSubmit(e) {
+            e.preventDefault();
+            const input = document.getElementById('botUserInput');
+            const q = input.value.trim();
+            if (!q) return;
+
+            const lang = state.lang || 'en';
+            const topic = state.activeBotTopic || 'finance';
+            if (!state.botThreads) state.botThreads = JSON.parse(JSON.stringify(defaultBotThreads));
+            if (!state.botThreads[lang]) state.botThreads[lang] = JSON.parse(JSON.stringify(defaultBotThreads[lang]));
+            if (!state.botThreads[lang][topic]) state.botThreads[lang][topic] = [];
+
+            state.botThreads[lang][topic].push({ sender: 'user', text: q });
+            input.value = '';
+
+            let reply = '';
+            if (lang === 'ta') {
+                if (topic === 'finance') {
+                    reply = `Financial Assistant: "${q}" குறித்து கவனிக்க — கடன் முழுமையாக முடியும் வரை சிவப்பு நிறத்திலேயே இருக்கும். வருமானம், செலவு, முதலீடு மற்றும் ஆல்கோ வருமானத்தைக் கொண்டு கடன் குறைப்பிலும் முதலீட்டிலும் கவனம் செலுத்துங்கள்.`;
+                } else if (topic === 'growth') {
+                    reply = `Personal Growth: "${q}" தொடர்பாக — உங்கள் டைம்லைன் மைல்கற்கள் மற்றும் புதிய திறன்களைத் தொடர்ந்து சேர்த்து, சிஸ்டம் மூலம் முன்னேற்றத்தைத் தக்கவைத்துக் கொள்ளுங்கள்.`;
+                } else {
+                    reply = `Next Plan: "${q}" குறித்த அடுத்த படி — Goobro & டிரைவிங் செயல்பாடுகளைத் தொடர்ந்து, கடன் குறைப்பு மற்றும் திட்டமிடல் பணிகளை வாராந்திர இலக்குகளாக நிறைவேற்றுங்கள்.`;
+                }
+            } else {
+                if (topic === 'finance') {
+                    reply = `Financial Assistant: Regarding "${q}" — keep remaining debt red until cleared, balance expenses and investments, and channel surplus & algo gains steadily.`;
+                } else if (topic === 'growth') {
+                    reply = `Personal Growth: Regarding "${q}" — log new skills and timeline milestones regularly to reinforce your system-driven progress.`;
+                } else {
+                    reply = `Next Plan: Regarding "${q}" — focus on consistent Goobro & driving execution, step-by-step debt reduction, and future public/cloud readiness.`;
+                }
+            }
+
+            state.botThreads[lang][topic].push({ sender: 'ai', text: reply });
+            saveState();
+            renderBotChat();
+        }
+
+        function recalculateMetrics() {
+            let totInv = 0;
+            state.transactions.forEach(tx => {
+                if (tx.type === 'investment') totInv += tx.amount;
+            });
+
+            const remDebt = state.debts.reduce((s, d) => s + Number(d.remaining || 0), 0);
+            const netWorth = totInv - remDebt;
+
+            const topDebtEl = document.getElementById('topDebtStat');
+            topDebtEl.innerText = remDebt > 0 ? '-' + formatINR(remDebt) : '₹0';
+            topDebtEl.parentElement.className = remDebt > 0
+                ? 'px-2.5 py-1 rounded-lg bg-red-500/15 text-red-500 border border-red-500/30 font-bold'
+                : 'px-2.5 py-1 rounded-lg bg-emeraldGrowth/15 text-emeraldGrowth border border-emeraldGrowth/30 font-bold';
+
+            document.getElementById('topInvStat').innerText = formatINR(totInv);
+
+            const nwEl = document.getElementById('netWorthDisplay');
+            nwEl.innerText = formatINR(netWorth);
+            nwEl.className = netWorth < 0 ? 'text-red-500 font-extrabold' : 'text-emeraldGrowth font-extrabold';
+
+            const clearedDebts = state.debts.filter(d => d.remaining <= 0).length;
+            const finLifePct = Math.min(100, Math.round((clearedDebts / Math.max(1, state.debts.length)) * 50 + (totInv / 1000000) * 50));
+            const personalPct = Math.min(100, 30 + (state.customStories.length * 5));
+            const skillPct = Math.min(100, 20 + (state.learnedSkills.length * 10));
+
+            document.getElementById('overallProgressPct').innerText = `${finLifePct}%`;
+            document.getElementById('overallProgressBar').style.width = `${Math.max(5, finLifePct)}%`;
+
+            document.getElementById('personalProgressPct').innerText = `${personalPct}%`;
+            document.getElementById('personalProgressBar').style.width = `${personalPct}%`;
+
+            document.getElementById('financeLifeProgressPct').innerText = `${finLifePct}%`;
+            document.getElementById('financeLifeProgressBar').style.width = `${Math.max(5, finLifePct)}%`;
+
+            document.getElementById('skillSystemProgressPct').innerText = `${skillPct}%`;
+            document.getElementById('skillSystemProgressBar').style.width = `${skillPct}%`;
+
+            renderWealthGraph(remDebt, totInv);
+            if (!document.getElementById('floatingBotModal').classList.contains('hidden')) {
+                renderBotArrangedDetails();
+            }
+        }
+
+        function initDashboard() {
+            applyTheme();
+            setLanguage(state.lang || 'en');
+            updateLiveClock();
+            setInterval(updateLiveClock, 1000);
+            document.getElementById('calDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('userWhatsApp').value = state.whatsapp || '';
+            document.getElementById('userEmail').value = state.email || '';
+            renderCalendarEvents();
+            renderRadarRides();
+            renderAlgoStrategies();
+            renderStory();
+            renderPersonalNodes();
+            renderDebtGrid();
+            renderTransactions();
+            renderBusinessBoard();
+            renderPlanningTasks();
+            renderLearnedSkills();
+            recalculateMetrics();
+        }
+
+        window.onload = initDashboard;
+    </script>
+</body>
+</html>
