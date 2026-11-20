@@ -3269,5 +3269,642 @@
 
         window.onload = initDashboard;
     </script>
+    <!-- SHIV-PREM COMPLETE UPDATE PATCH START -->
+<style id="sp-complete-update-style">
+  #sp-top-bar {
+    position: fixed;
+    top: 10px;
+    right: 12px;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: #0f172a;
+    color: #f8fafc;
+    border: 1px solid #334155;
+    font-family: system-ui, -apple-system, sans-serif;
+    font-size: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  }
+  #sp-save-now-btn {
+    background: #16a34a;
+    color: #ffffff;
+    border: none;
+    border-radius: 999px;
+    padding: 5px 12px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  #sp-save-now-btn:hover { background: #15803d; }
+  #sp-save-state-text { font-size: 11px; color: #cbd5e1; white-space: nowrap; }
+
+  /* Light / White Mode Top-Nav 3-Bar & Menu Fix */
+  body.sp-light-active,
+  body.sp-light-active header,
+  body.sp-light-active nav {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+  }
+  body.sp-light-active button[aria-label*="menu" i],
+  body.sp-light-active button[class*="menu" i],
+  body.sp-light-active button[class*="hamburger" i],
+  body.sp-light-active button[class*="nav" i],
+  body.sp-light-active [class*="menu" i],
+  body.sp-light-active [class*="drawer" i],
+  body.sp-light-active [class*="dropdown" i],
+  body.sp-light-active [class*="sidebar" i] {
+    color: #0f172a !important;
+    background-color: #ffffff !important;
+    border-color: #cbd5e1 !important;
+  }
+  body.sp-light-active button[aria-label*="menu" i] *,
+  body.sp-light-active button[class*="menu" i] *,
+  body.sp-light-active button[class*="hamburger" i] *,
+  body.sp-light-active [class*="menu" i] *,
+  body.sp-light-active [class*="drawer" i] *,
+  body.sp-light-active [class*="dropdown" i] * {
+    color: #0f172a !important;
+    fill: currentColor !important;
+    stroke: currentColor !important;
+  }
+  body.sp-light-active #sp-top-bar {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    border-color: #cbd5e1 !important;
+  }
+  body.sp-light-active #sp-save-state-text { color: #334155 !important; }
+
+  /* Hero Banner Icon/Robot & Even Horizontal Progress Table */
+  .sp-hero-upgrade {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 14px 0;
+    padding: 14px 16px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #1e293b, #0f172a);
+    color: #f8fafc;
+    border: 1px solid #334155;
+    font-family: system-ui, -apple-system, sans-serif;
+  }
+  body.sp-light-active .sp-hero-upgrade {
+    background: linear-gradient(135deg, #f8fafc, #e2e8f0) !important;
+    color: #0f172a !important;
+    border-color: #cbd5e1 !important;
+  }
+  .sp-hero-left { display: flex; align-items: center; gap: 12px; }
+  .sp-hero-badge {
+    width: 46px; height: 46px; border-radius: 12px;
+    display: grid; place-items: center; font-size: 24px;
+    background: #2563eb; color: #fff; flex-shrink: 0;
+  }
+  .sp-hero-title { font-size: 16px; font-weight: 700; margin: 0; }
+  .sp-hero-sub { font-size: 12px; opacity: 0.85; margin: 2px 0 0; }
+
+  .sp-horiz-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 10px;
+    width: 100%;
+    margin-top: 8px;
+  }
+  .sp-horiz-cell {
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    text-align: center;
+  }
+  body.sp-light-active .sp-horiz-cell {
+    background: #ffffff !important;
+    border-color: #cbd5e1 !important;
+  }
+  .sp-horiz-cell strong { display: block; font-size: 15px; margin-top: 4px; }
+
+  /* Goals, Systematic Step-by-Step Plan & Smart Bot Panel */
+  .sp-panel-wrap {
+    margin: 16px 0;
+    padding: 16px;
+    border-radius: 14px;
+    background: #111827;
+    color: #f9fafb;
+    border: 1px solid #374151;
+    font-family: system-ui, -apple-system, sans-serif;
+  }
+  body.sp-light-active .sp-panel-wrap {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    border-color: #cbd5e1 !important;
+  }
+  .sp-goals-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 12px;
+    margin-top: 12px;
+  }
+  .sp-goal-card {
+    padding: 12px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(148, 163, 184, 0.25);
+  }
+  body.sp-light-active .sp-goal-card {
+    background: #f8fafc !important;
+    border-color: #cbd5e1 !important;
+  }
+  .sp-goal-card label { display: block; font-size: 12px; font-weight: 700; margin-bottom: 6px; }
+  .sp-goal-card input[type="text"],
+  .sp-goal-card input[type="number"],
+  .sp-bot-input-row input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 7px 9px;
+    border-radius: 8px;
+    border: 1px solid #475569;
+    background: #0f172a;
+    color: #f8fafc;
+    font-size: 12px;
+    margin-bottom: 6px;
+  }
+  body.sp-light-active .sp-goal-card input,
+  body.sp-light-active .sp-bot-input-row input {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    border-color: #94a3b8 !important;
+  }
+  .sp-prog-bar {
+    height: 8px; border-radius: 999px; background: rgba(148, 163, 184, 0.25); overflow: hidden; margin: 6px 0;
+  }
+  .sp-prog-fill {
+    height: 100%; background: #3b82f6; width: 0%; transition: width 0.25s ease;
+  }
+  .sp-steps-list {
+    margin: 6px 0 0; padding-left: 16px; font-size: 12px; line-height: 1.45;
+  }
+  .sp-pred-box {
+    margin-top: 12px; padding: 12px; border-radius: 10px;
+    background: rgba(37, 99, 235, 0.14); border: 1px solid rgba(59, 130, 246, 0.4);
+    font-size: 12.5px; line-height: 1.5;
+  }
+  .sp-bot-log {
+    max-height: 220px; overflow-y: auto; padding: 10px; border-radius: 10px;
+    background: rgba(15, 23, 42, 0.55); border: 1px solid rgba(148, 163, 184, 0.25);
+    margin: 10px 0; font-size: 12.5px;
+  }
+  body.sp-light-active .sp-bot-log {
+    background: #f1f5f9 !important;
+    color: #0f172a !important;
+  }
+  .sp-bot-msg { margin-bottom: 8px; padding: 8px 10px; border-radius: 8px; }
+  .sp-bot-user { background: rgba(37, 99, 235, 0.22); text-align: right; }
+  .sp-bot-ai { background: rgba(16, 185, 129, 0.16); }
+  .sp-bot-input-row { display: flex; gap: 8px; align-items: center; }
+  .sp-bot-input-row input { margin-bottom: 0; flex: 1; }
+  .sp-btn-blue {
+    background: #2563eb; color: #fff; border: none; border-radius: 8px;
+    padding: 8px 12px; font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap;
+  }
+  .sp-btn-blue:hover { background: #1d4ed8; }
+</style>
+
+<script id="sp-complete-update-script">
+(function () {
+  const STORE_KEY = "SHIV_PREM_FULL_STATE_V2";
+  const HORIZONS = [
+    { id: "monthly", label: "Monthly Goal (1M)", defaultSteps: ["Define top 3 monthly targets", "Track weekly cashflow & tasks", "Review & adjust on Day 28"] },
+    { id: "qtr3", label: "Short-Term (3 Months)", defaultSteps: ["Build core system/habit", "Hit 90-day milestone checkpoint", "Audit bottlenecks at Week 12"] },
+    { id: "qtr6", label: "Short-Term (6 Months)", defaultSteps: ["Scale repeatable workflow", "Reach mid-year revenue/skill target", "Strengthen reserve & risk buffer"] },
+    { id: "yr1", label: "Long-Term (1 Year)", defaultSteps: ["Complete annual roadmap pillars", "Automate recurring processes", "Benchmark Year-1 results vs plan"] },
+    { id: "yr5", label: "Long-Term (5 Years)", defaultSteps: ["Expand business/wealth assets", "Build leadership & team leverage", "Reinvest compounding surplus"] },
+    { id: "yr10", label: "Long-Term (10 Years)", defaultSteps: ["Establish enduring wealth/brand", "Transition to high-leverage impact", "Decade review & legacy plan"] }
+  ];
+
+  let dirty = false;
+  let timer = null;
+
+  function defaultState() {
+    const goals = {};
+    HORIZONS.forEach((h) => {
+      goals[h.id] = { title: "", progress: 0, steps: h.defaultSteps.slice() };
+    });
+    return {
+      goals,
+      geminiApiKey: "",
+      inputs: {},
+      chat: [
+        {
+          role: "ai",
+          text: "Hello! I am ready to chat normally and analyze your dashboard numbers, goals, and step-by-step growth plan. Enter your data and ask me anything."
+        }
+      ],
+      updatedAt: ""
+    };
+  }
+
+  let state = defaultState();
+
+  function hideEmptySections() {
+    document.querySelectorAll("section, article, main > div").forEach((el) => {
+      if (el.id && el.id.startsWith("sp-")) return;
+      const text = (el.innerText || "").trim();
+      const hasControls = el.querySelector("input, textarea, select, canvas, svg, table");
+      if (!text && !hasControls && el.offsetHeight === 0) {
+        el.style.display = "none";
+      }
+    });
+  }
+
+  function detectLightMode() {
+    const htmlTheme = (document.documentElement.getAttribute("data-theme") || "").toLowerCase();
+    const bodyTheme = (document.body.getAttribute("data-theme") || "").toLowerCase();
+    const cls = (document.body.className + " " + document.documentElement.className).toLowerCase();
+    const isLight =
+      htmlTheme === "light" ||
+      bodyTheme === "light" ||
+      cls.includes("light-theme") ||
+      cls.includes("light-mode") ||
+      cls.includes("theme-light");
+
+    document.body.classList.toggle("sp-light-active", isLight);
+  }
+
+  function snapshotInputs() {
+    const map = {};
+    document.querySelectorAll("input, textarea, select").forEach((el, i) => {
+      if (el.dataset.spIgnore === "1" || el.type === "password") return;
+      const k = el.id || el.name || `inp_${i}`;
+      if (el.type === "checkbox" || el.type === "radio") {
+        map[k] = { checked: el.checked, value: el.value };
+      } else {
+        map[k] = { value: el.value };
+      }
+    });
+    return map;
+  }
+
+  function applyInputSnapshot(map) {
+    if (!map) return;
+    document.querySelectorAll("input, textarea, select").forEach((el, i) => {
+      if (el.dataset.spIgnore === "1" || el.type === "password") return;
+      const k = el.id || el.name || `inp_${i}`;
+      const item = map[k];
+      if (!item) return;
+      if (el.type === "checkbox" || el.type === "radio") {
+        el.checked = Boolean(item.checked);
+      } else if (typeof item.value === "string") {
+        el.value = item.value;
+      }
+    });
+  }
+
+  function setStatus(msg) {
+    const el = document.getElementById("sp-save-state-text");
+    if (!el) return;
+    const t = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+    el.textContent = `${msg} · ${t}`;
+  }
+
+  function saveAll(reason) {
+    setStatus("Saving...");
+    try {
+      state.inputs = snapshotInputs();
+      state.updatedAt = new Date().toISOString();
+      localStorage.setItem(STORE_KEY, JSON.stringify(state));
+      if (typeof window.saveState === "function") {
+        window.saveState();
+      }
+      dirty = false;
+      updateDashboardSummary();
+      setStatus(reason || "Saved");
+    } catch (e) {
+      console.error("Save failed:", e);
+      setStatus("Save error");
+    }
+  }
+
+  function scheduleSave() {
+    dirty = true;
+    setStatus("Editing (auto-save in 20s)...");
+    if (timer) clearTimeout(timer);
+    timer = setTimeout(() => {
+      if (dirty) saveAll("Auto-saved (20s)");
+    }, 20000);
+  }
+
+  function buildTopBar() {
+    if (document.getElementById("sp-top-bar")) return;
+    const bar = document.createElement("div");
+    bar.id = "sp-top-bar";
+
+    const btn = document.createElement("button");
+    btn.id = "sp-save-now-btn";
+    btn.type = "button";
+    btn.dataset.spIgnore = "1";
+    btn.textContent = "Save / Update";
+    btn.addEventListener("click", () => saveAll("Saved manually"));
+
+    const span = document.createElement("span");
+    span.id = "sp-save-state-text";
+    span.textContent = "Ready";
+
+    bar.appendChild(btn);
+    bar.appendChild(span);
+    document.body.appendChild(bar);
+  }
+
+  function buildHeroAndHorizontalRow() {
+    if (document.getElementById("sp-hero-banner")) return;
+    const hero = document.createElement("div");
+    hero.id = "sp-hero-banner";
+    hero.className = "sp-hero-upgrade";
+    hero.innerHTML = `
+      <div class="sp-hero-left">
+        <div class="sp-hero-badge" id="sp-hero-robot-icon">🤖</div>
+        <div>
+          <h2 class="sp-hero-title">Shiv-Prem Growth & Wealth AI Command</h2>
+          <p class="sp-hero-sub">Systematic milestones, step-by-step execution & live data predictions</p>
+        </div>
+      </div>
+      <div class="sp-horiz-grid" id="sp-horiz-metrics">
+        <div class="sp-horiz-cell"><span>Active Goals</span><strong id="sp-m-goals">0 / 6</strong></div>
+        <div class="sp-horiz-cell"><span>Avg Progress</span><strong id="sp-m-avg">0%</strong></div>
+        <div class="sp-horiz-cell"><span>Next Step</span><strong id="sp-m-next">Set Goal</strong></div>
+        <div class="sp-horiz-cell"><span>Growth Outlook</span><strong id="sp-m-outlook">Baseline</strong></div>
+      </div>
+    `;
+    document.body.insertBefore(hero, document.body.firstChild);
+  }
+
+  function buildGoalsAndBotPanel() {
+    if (document.getElementById("sp-goals-bot-panel")) return;
+    const panel = document.createElement("div");
+    panel.id = "sp-goals-bot-panel";
+    panel.className = "sp-panel-wrap";
+
+    const cardsHtml = HORIZONS.map((h) => {
+      const g = state.goals[h.id] || { title: "", progress: 0, steps: h.defaultSteps };
+      const stepsHtml = (g.steps || h.defaultSteps)
+        .map((s) => `<li>${escapeHtml(s)}</li>`)
+        .join("");
+      return `
+        <div class="sp-goal-card" data-horizon="${h.id}">
+          <label>${h.label}</label>
+          <input type="text" data-sp-ignore="1" class="sp-goal-title" placeholder="Enter ${h.label.toLowerCase()}..." value="${escapeAttr(g.title)}" />
+          <input type="number" data-sp-ignore="1" class="sp-goal-prog" min="0" max="100" placeholder="Progress % (0-100)" value="${Number(g.progress) || 0}" />
+          <div class="sp-prog-bar"><div class="sp-prog-fill" style="width:${Math.max(0, Math.min(100, Number(g.progress) || 0))}%"></div></div>
+          <div style="font-size:11px;font-weight:700;margin-top:4px;">AI Step-by-Step Tasks:</div>
+          <ul class="sp-steps-list">${stepsHtml}</ul>
+        </div>
+      `;
+    }).join("");
+
+    panel.innerHTML = `
+      <h3 style="margin:0 0 4px;">Systematic Growth Goals (Monthly, 3M, 6M, 1Y, 5Y, 10Y)</h3>
+      <p style="margin:0;font-size:12px;opacity:0.85;">Enter goals and % progress—AI breaks them into small steps and predicts personal & business growth.</p>
+      <div class="sp-goals-grid">${cardsHtml}</div>
+      <div class="sp-pred-box" id="sp-predictions-box"></div>
+
+      <hr style="border:none;border-top:1px solid rgba(148,163,184,0.25);margin:16px 0;" />
+      <h3 style="margin:0 0 6px;">AI Assistant (General Chat + Your Dashboard Analysis)</h3>
+      <input type="text" data-sp-ignore="1" id="sp-gemini-key" placeholder="Optional Gemini API Key (leave empty for smart dashboard + general assistant)" value="${escapeAttr(state.geminiApiKey || "")}" style="width:100%;box-sizing:border-box;padding:7px 9px;border-radius:8px;border:1px solid #475569;background:#0f172a;color:#f8fafc;font-size:12px;" />
+      <div class="sp-bot-log" id="sp-bot-log"></div>
+      <div class="sp-bot-input-row">
+        <input type="text" data-sp-ignore="1" id="sp-bot-input" placeholder="Ask anything or ask about your goals, progress, personal & business growth..." />
+        <button type="button" class="sp-btn-blue" id="sp-bot-send">Send</button>
+      </div>
+    `;
+
+    const topBar = document.getElementById("sp-top-bar");
+    document.body.insertBefore(panel, topBar || null);
+
+    panel.querySelectorAll(".sp-goal-card").forEach((card) => {
+      const hid = card.dataset.horizon;
+      const titleInp = card.querySelector(".sp-goal-title");
+      const progInp = card.querySelector(".sp-goal-prog");
+      const fill = card.querySelector(".sp-prog-fill");
+      const list = card.querySelector(".sp-steps-list");
+
+      function syncCard() {
+        const t = titleInp.value.trim();
+        const p = Math.max(0, Math.min(100, Number(progInp.value) || 0));
+        progInp.value = p;
+        fill.style.width = `${p}%`;
+        const base = HORIZONS.find((x) => x.id === hid);
+        const generatedSteps = t
+          ? [
+              `Step 1: Break "${t}" into daily 30-min actions`,
+              `Step 2: Complete milestone check at ${Math.min(100, p + 25)}% progress`,
+              `Step 3: Resolve top blocker & log result before next review`
+            ]
+          : base.defaultSteps.slice();
+        list.innerHTML = generatedSteps.map((s) => `<li>${escapeHtml(s)}</li>`).join("");
+        state.goals[hid] = { title: titleInp.value, progress: p, steps: generatedSteps };
+        updateDashboardSummary();
+        scheduleSave();
+      }
+
+      titleInp.addEventListener("input", syncCard);
+      progInp.addEventListener("input", syncCard);
+    });
+
+    const keyInp = document.getElementById("sp-gemini-key");
+    keyInp.addEventListener("input", () => {
+      state.geminiApiKey = keyInp.value.trim();
+      scheduleSave();
+    });
+
+    const sendBtn = document.getElementById("sp-bot-send");
+    const chatInp = document.getElementById("sp-bot-input");
+    sendBtn.addEventListener("click", handleBotSend);
+    chatInp.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") handleBotSend();
+    });
+
+    renderChat();
+    updateDashboardSummary();
+  }
+
+  function updateDashboardSummary() {
+    let activeCount = 0;
+    let sumProg = 0;
+    let nextStepText = "Add goal";
+
+    HORIZONS.forEach((h) => {
+      const g = state.goals[h.id] || { title: "", progress: 0, steps: h.defaultSteps };
+      if (g.title && g.title.trim()) {
+        activeCount += 1;
+        if (nextStepText === "Add goal" && g.steps && g.steps[0]) {
+          nextStepText = g.steps[0];
+        }
+      }
+      sumProg += Number(g.progress) || 0;
+    });
+
+    const avg = Math.round(sumProg / HORIZONS.length);
+    const outlook = avg >= 70 ? "High Momentum" : avg >= 35 ? "Steady Climb" : "Foundation Phase";
+
+    const gEl = document.getElementById("sp-m-goals");
+    const aEl = document.getElementById("sp-m-avg");
+    const nEl = document.getElementById("sp-m-next");
+    const oEl = document.getElementById("sp-m-outlook");
+    if (gEl) gEl.textContent = `${activeCount} / ${HORIZONS.length}`;
+    if (aEl) aEl.textContent = `${avg}%`;
+    if (nEl) nEl.textContent = nextStepText;
+    if (oEl) oEl.textContent = outlook;
+
+    const predBox = document.getElementById("sp-predictions-box");
+    if (predBox) {
+      const yr1Goal = state.goals.yr1?.title || "Year-1 milestone";
+      const yr5Goal = state.goals.yr5?.title || "Year-5 expansion";
+      const yr10Goal = state.goals.yr10?.title || "Year-10 compounding";
+      predBox.innerHTML = `
+        <strong>AI Personal & Business Growth Predictions:</strong><br/>
+        • <strong>Personal Growth:</strong> At ${avg}% average completion, consistent daily micro-steps build strong discipline toward <em>${escapeHtml(yr1Goal)}</em> and long-term balance.<br/>
+        • <strong>Business & Wealth Outlook:</strong> ${outlook} — prioritizing 3M & 6M execution directly accelerates <em>${escapeHtml(yr5Goal)}</em> and <em>${escapeHtml(yr10Goal)}</em>.
+      `;
+    }
+  }
+
+  function renderChat() {
+    const log = document.getElementById("sp-bot-log");
+    if (!log) return;
+    log.innerHTML = state.chat
+      .map(
+        (m) =>
+          `<div class="sp-bot-msg ${m.role === "user" ? "sp-bot-user" : "sp-bot-ai"}"><strong>${m.role === "user" ? "You" : "AI"}:</strong> ${escapeHtml(m.text)}</div>`
+      )
+      .join("");
+    log.scrollTop = log.scrollHeight;
+  }
+
+  function buildDashboardContextText() {
+    const lines = HORIZONS.map((h) => {
+      const g = state.goals[h.id] || {};
+      return `${h.label}: "${g.title || "Not set"}" (${g.progress || 0}%)`;
+    });
+    const filledInputs = Object.entries(state.inputs || {})
+      .filter(([, v]) => v && typeof v.value === "string" && v.value.trim() !== "")
+      .slice(0, 15)
+      .map(([k, v]) => `${k}: ${v.value}`);
+    return `Goals -> ${lines.join(" | ")}. Dashboard inputs -> ${filledInputs.length ? filledInputs.join(" | ") : "None entered yet"}.`;
+  }
+
+  async function handleBotSend() {
+    const inp = document.getElementById("sp-bot-input");
+    if (!inp) return;
+    const q = inp.value.trim();
+    if (!q) return;
+    inp.value = "";
+
+    state.chat.push({ role: "user", text: q });
+    renderChat();
+
+    const ctx = buildDashboardContextText();
+    let reply = "";
+
+    if (state.geminiApiKey) {
+      try {
+        const res = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${encodeURIComponent(state.geminiApiKey)}`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              contents: [
+                {
+                  parts: [
+                    {
+                      text: `You are a helpful conversational assistant and growth analyst. Answer naturally and concisely. Use this dashboard data when relevant: ${ctx}\n\nUser message: ${q}`
+                    }
+                  ]
+                }
+              ]
+            })
+          }
+        );
+        const data = await res.json();
+        reply = data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
+      } catch (err) {
+        console.warn("Gemini call fallback:", err);
+      }
+    }
+
+    if (!reply) {
+      const lower = q.toLowerCase();
+      if (lower.includes("goal") || lower.includes("plan") || lower.includes("progress") || lower.includes("predict") || lower.includes("business") || lower.includes("personal")) {
+        reply = `Based on your current dashboard: ${ctx}. Recommendation: Pick one active goal today, complete its first small step, and keep progress updating every week.`;
+      } else {
+        reply = `Sure—let's talk! On your dashboard right now, ${ctx}. How can I help you with your next step or any general question?`;
+      }
+    }
+
+    state.chat.push({ role: "ai", text: reply });
+    renderChat();
+    scheduleSave();
+  }
+
+  function escapeHtml(s) {
+    return String(s || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function escapeAttr(s) {
+    return escapeHtml(s).replace(/'/g, "&#39;");
+  }
+
+  function loadSaved() {
+    try {
+      const raw = localStorage.getItem(STORE_KEY);
+      if (!raw) return;
+      const parsed = JSON.parse(raw);
+      if (parsed && typeof parsed === "object") {
+        state = Object.assign(defaultState(), parsed, {
+          goals: Object.assign(defaultState().goals, parsed.goals || {}),
+          chat: Array.isArray(parsed.chat) && parsed.chat.length ? parsed.chat : defaultState().chat
+        });
+      }
+    } catch (e) {
+      console.warn("Load skipped:", e);
+    }
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    loadSaved();
+    detectLightMode();
+    hideEmptySections();
+    buildTopBar();
+    buildHeroAndHorizontalRow();
+    buildGoalsAndBotPanel();
+    applyInputSnapshot(state.inputs);
+    updateDashboardSummary();
+
+    document.addEventListener("input", (e) => {
+      if (e.target && e.target.dataset && e.target.dataset.spIgnore === "1") return;
+      scheduleSave();
+    }, true);
+
+    document.addEventListener("change", (e) => {
+      detectLightMode();
+      if (e.target && e.target.dataset && e.target.dataset.spIgnore === "1") return;
+      scheduleSave();
+    }, true);
+
+    const obs = new MutationObserver(() => {
+      detectLightMode();
+    });
+    obs.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme", "class"] });
+    obs.observe(document.body, { attributes: true, attributeFilter: ["data-theme", "class"] });
+  });
+})();
+</script>
+<!-- SHIV-PREM COMPLETE UPDATE PATCH END -->
 </body>
 </html>
