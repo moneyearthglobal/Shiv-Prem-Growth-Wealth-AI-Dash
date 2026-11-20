@@ -4090,6 +4090,398 @@
 })();
 </script>
 <!-- SHIV-PREM CLEAN UNIFIED FIX END -->
+    <!-- SHIV-PREM FULL DASHBOARD AUTO-SYNC ANIMATED BANNER START -->
+<style id="sp-full-auto-banner-style">
+  #sp-top-journey-banner {
+    width: 100%;
+    margin: 0 0 16px 0;
+    padding: 20px 18px;
+    border-radius: 16px;
+    background: radial-gradient(circle at 22% 50%, rgba(59, 130, 246, 0.16), rgba(0, 0, 0, 0.96) 65%), #050507;
+    color: #ffffff;
+    border: 1.5px solid #27272a;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45);
+    font-family: 'Oswald', 'Inter', system-ui, sans-serif;
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+  }
+
+  @keyframes spGlowPulse {
+    0%, 100% {
+      text-shadow: 0 0 14px rgba(255, 255, 255, 0.35), 0 0 26px rgba(59, 130, 246, 0.25);
+    }
+    50% {
+      text-shadow: 0 0 22px rgba(255, 255, 255, 0.7), 0 0 38px rgba(59, 130, 246, 0.5);
+    }
+  }
+
+  @keyframes spSegmentSweep {
+    0% {
+      background-position: 0% 0%;
+    }
+    100% {
+      background-position: 120px 0%;
+    }
+  }
+
+  @keyframes spMarkerFloat {
+    0%, 100% {
+      transform: translate(-50%, -50%) scale(1);
+    }
+    50% {
+      transform: translate(-50%, -50%) scale(1.22);
+    }
+  }
+
+  .sp-tjb-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px 32px;
+    position: relative;
+    z-index: 2;
+  }
+  .sp-tjb-brand-col {
+    text-align: left;
+  }
+  .sp-tjb-main-title {
+    font-family: 'Anton', 'Oswald', sans-serif;
+    font-size: clamp(32px, 5vw, 52px);
+    line-height: 0.98;
+    letter-spacing: 0.03em;
+    color: #ffffff;
+    animation: spGlowPulse 2.8s ease-in-out infinite;
+    margin: 0;
+  }
+  .sp-tjb-sub-bracket {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    color: #cbd5e1;
+    margin-top: 6px;
+    text-transform: uppercase;
+  }
+  .sp-tjb-journey-col {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 280px;
+    flex: 1.3;
+    max-width: 580px;
+  }
+  .sp-tjb-pillars {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(11px, 1.5vw, 13px);
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    color: #f8fafc;
+  }
+  .sp-tjb-tagline {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    color: #cbd5e1;
+    text-transform: uppercase;
+  }
+  .sp-tjb-timeline {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 2px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .sp-tjb-year {
+    font-size: 15px;
+    font-weight: 800;
+    color: #ffffff;
+  }
+  .sp-tjb-meter-wrap {
+    flex: 1;
+    min-width: 150px;
+    text-align: center;
+  }
+  .sp-tjb-loading-txt {
+    font-size: 10px;
+    color: #e2e8f0;
+    margin-bottom: 4px;
+    font-weight: 700;
+  }
+  .sp-tjb-bar-outer {
+    position: relative;
+    width: 100%;
+    height: 14px;
+    border: 1.5px solid #e2e8f0;
+    padding: 2px;
+    background: #09090b;
+    box-sizing: border-box;
+    border-radius: 3px;
+  }
+  .sp-tjb-bar-inner {
+    height: 100%;
+    width: 10%;
+    background-size: 20px 100%;
+    animation: spSegmentSweep 1.2s linear infinite;
+    transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.4s ease;
+  }
+  .sp-tjb-marker {
+    position: absolute;
+    top: 50%;
+    left: 10%;
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: #ffffff;
+    border: 2px solid #09090b;
+    box-shadow: 0 0 10px #ffffff;
+    animation: spMarkerFloat 1.6s ease-in-out infinite;
+    transition: left 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    pointer-events: none;
+  }
+  .sp-tjb-join-txt {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: #cbd5e1;
+    margin-top: 4px;
+    text-transform: uppercase;
+  }
+  .sp-tjb-graphic-strip {
+    margin-top: 4px;
+    background: rgba(15, 23, 42, 0.65);
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    border-radius: 8px;
+    padding: 4px 8px;
+  }
+  .sp-tjb-aspect-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+  }
+  .sp-tjb-pill {
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(148, 163, 184, 0.28);
+    color: #e2e8f0;
+  }
+</style>
+
+<script id="sp-full-auto-banner-script">
+(function () {
+  function mountTopJourneyBanner() {
+    if (document.getElementById("sp-top-journey-banner")) return;
+
+    var banner = document.createElement("div");
+    banner.id = "sp-top-journey-banner";
+    banner.innerHTML =
+      '<div class="sp-tjb-inner">' +
+        '<div class="sp-tjb-brand-col">' +
+          '<h1 class="sp-tjb-main-title">SHIV PREM</h1>' +
+          '<div class="sp-tjb-sub-bracket">[ SYSTEM BUILDER ]</div>' +
+        "</div>" +
+        '<div class="sp-tjb-journey-col">' +
+          '<div class="sp-tjb-pillars">MONEY.SYSTEM.MINDSET.MEANING</div>' +
+          '<div class="sp-tjb-tagline">DISCOVER YOUR PURPOSE &amp; PASSION.</div>' +
+          '<div class="sp-tjb-timeline">' +
+            '<span class="sp-tjb-year">2026</span>' +
+            '<div class="sp-tjb-meter-wrap">' +
+              '<div class="sp-tjb-loading-txt" id="sp-tjb-loading-label">Loading... 0%</div>' +
+              '<div class="sp-tjb-bar-outer">' +
+                '<div class="sp-tjb-bar-inner" id="sp-tjb-bar-fill"></div>' +
+                '<div class="sp-tjb-marker" id="sp-tjb-marker-dot"></div>' +
+              "</div>" +
+              '<div class="sp-tjb-join-txt" id="sp-tjb-stage-text">JOIN THE JOURNEY • FOUNDATION PHASE</div>' +
+            "</div>" +
+            '<span class="sp-tjb-year">2030</span>' +
+          "</div>" +
+          '<div class="sp-tjb-graphic-strip">' +
+            '<svg id="sp-tjb-wave-svg" viewBox="0 0 360 28" width="100%" height="28" xmlns="http://www.w3.org/2000/svg">' +
+              '<line x1="8" y1="22" x2="352" y2="22" stroke="#334155" stroke-width="1"/>' +
+              '<polyline id="sp-tjb-wave-path" fill="none" stroke="#60a5fa" stroke-width="2.2" stroke-linecap="round" points="8,22 352,22"/>' +
+              '<circle id="sp-tjb-wave-head" cx="8" cy="22" r="4" fill="#facc15"/>' +
+            "</svg>" +
+          "</div>" +
+          '<div class="sp-tjb-aspect-pills" id="sp-tjb-aspect-pills"></div>' +
+        "</div>" +
+      "</div>";
+
+    var exportRoot = document.getElementById("dashboardExportRoot");
+    if (exportRoot && exportRoot.parentNode) {
+      exportRoot.parentNode.insertBefore(banner, exportRoot);
+    } else {
+      document.body.insertBefore(banner, document.body.firstChild);
+    }
+
+    syncBannerWithAllDashboardAspects();
+  }
+
+  function calculateCompositeScore() {
+    var st = window.state || {};
+    var totInc = 0, totExp = 0, totInv = 0, bizNet = 0;
+
+    if (typeof window.getCurrentFinancialTotals === "function") {
+      var fin = window.getCurrentFinancialTotals();
+      totInc = Number(fin.totInc || 0);
+      totExp = Number(fin.totExp || 0);
+      totInv = Number(fin.totInv || 0);
+    }
+    if (typeof window.getAllBusinessTotals === "function") {
+      var bt = window.getAllBusinessTotals();
+      bizNet = Number(bt.totalNet || 0);
+    }
+
+    // 1. Finance score (cashflow + investment toward ₹1 Cr)
+    var cashflowRatio = totInc > 0 ? Math.max(0, Math.min(1, (totInc - totExp) / totInc)) : 0;
+    var invRatio = Math.max(0, Math.min(1, totInv / 10000000));
+    var financeScore = Math.round(((cashflowRatio * 0.55) + (invRatio * 0.45)) * 100);
+
+    // 2. Debt clearance score
+    var debts = st.debts || [];
+    var initDebt = debts.reduce(function (s, d) { return s + Number(d.total || 0); }, 0);
+    var remDebt = debts.reduce(function (s, d) { return s + Number(d.remaining || 0); }, 0);
+    var debtScore = initDebt > 0
+      ? Math.max(0, Math.min(100, Math.round(((initDebt - remDebt) / initDebt) * 100)))
+      : (remDebt === 0 ? 100 : 0);
+
+    // 3. Business growth score (active accounts + positive net business contribution)
+    var bizList = st.businessAccounts || [];
+    var activeBizCount = bizList.filter(function (b) { return (b.entries || []).length > 0; }).length;
+    var bizScore = Math.max(0, Math.min(100,
+      (bizList.length > 0 ? Math.min(50, activeBizCount * 25) : 0) + (bizNet > 0 ? 50 : 15)
+    ));
+
+    // 4. Personal growth, skills & planning tasks score
+    var storiesCount = (st.customStories || []).length;
+    var skillsCount = (st.learnedSkills || []).length;
+    var personalScore = Math.max(0, Math.min(100, 15 + (storiesCount * 4) + (skillsCount * 6)));
+
+    var tasks = st.planningTasks || [];
+    var doneTasks = tasks.filter(function (t) { return t.done; }).length;
+    var taskScore = tasks.length > 0 ? Math.round((doneTasks / tasks.length) * 100) : 20;
+
+    // 5. Calendar / journal engagement score
+    var journalObj = st.dailyJournal || {};
+    var activeDays = Object.keys(journalObj).filter(function (k) {
+      var e = journalObj[k];
+      return e && !e.isLeave && (Number(e.income || 0) > 0 || Number(e.investment || 0) > 0);
+    }).length;
+    var calScore = Math.max(0, Math.min(100, Math.min(100, activeDays * 10)));
+
+    // Weighted overall score across all dashboard aspects
+    var compositePct = Math.round(
+      (financeScore * 0.25) +
+      (debtScore * 0.20) +
+      (bizScore * 0.20) +
+      (personalScore * 0.15) +
+      (taskScore * 0.10) +
+      (calScore * 0.10)
+    );
+
+    return {
+      pct: Math.max(0, Math.min(100, compositePct)),
+      financeScore: financeScore,
+      debtScore: debtScore,
+      bizScore: bizScore,
+      personalScore: personalScore,
+      taskScore: taskScore,
+      calScore: calScore
+    };
+  }
+
+  function syncBannerWithAllDashboardAspects() {
+    var fill = document.getElementById("sp-tjb-bar-fill");
+    var dot = document.getElementById("sp-tjb-marker-dot");
+    var label = document.getElementById("sp-tjb-loading-label");
+    var stageEl = document.getElementById("sp-tjb-stage-text");
+    var wavePath = document.getElementById("sp-tjb-wave-path");
+    var waveHead = document.getElementById("sp-tjb-wave-head");
+    var pillsEl = document.getElementById("sp-tjb-aspect-pills");
+    if (!fill) return;
+
+    var m = calculateCompositeScore();
+    var clamped = m.pct;
+    var visualWidth = Math.max(6, clamped);
+
+    var barColor = "#3b82f6";
+    var stageLabel = "FOUNDATION PHASE";
+    if (clamped >= 70) {
+      barColor = "#22c55e";
+      stageLabel = "HIGH MOMENTUM";
+    } else if (clamped >= 35) {
+      barColor = "#facc15";
+      stageLabel = "STEADY CLIMB";
+    }
+
+    fill.style.width = visualWidth + "%";
+    fill.style.backgroundImage =
+      "repeating-linear-gradient(90deg, " + barColor + " 0px, " + barColor + " 12px, rgba(9,9,11,0.45) 12px, rgba(9,9,11,0.45) 18px)";
+    if (dot) {
+      dot.style.left = visualWidth + "%";
+      dot.style.background = barColor;
+    }
+    if (label) {
+      label.textContent = clamped >= 100 ? "2030 Target Reached • 100%" : "Loading... " + clamped + "% (All Aspects)";
+    }
+    if (stageEl) {
+      stageEl.textContent = "JOIN THE JOURNEY • " + stageLabel;
+    }
+
+    if (wavePath && waveHead) {
+      var startX = 8;
+      var endX = 352;
+      var activeEndX = startX + ((endX - startX) * (clamped / 100));
+      var steps = 14;
+      var pts = [];
+      var lastX = startX;
+      var lastY = 22;
+
+      for (var i = 0; i <= steps; i++) {
+        var ratio = i / steps;
+        var x = startX + ((activeEndX - startX) * ratio);
+        var amp = Math.max(2, (clamped / 100) * 15);
+        var y = 22 - (ratio * amp) - Math.sin(ratio * Math.PI * 3) * 2.5;
+        y = Math.max(4, Math.min(23, y));
+        pts.push(x.toFixed(1) + "," + y.toFixed(1));
+        lastX = x;
+        lastY = y;
+      }
+      wavePath.setAttribute("points", pts.join(" "));
+      wavePath.setAttribute("stroke", barColor);
+      waveHead.setAttribute("cx", lastX.toFixed(1));
+      waveHead.setAttribute("cy", lastY.toFixed(1));
+      waveHead.setAttribute("fill", barColor);
+    }
+
+    if (pillsEl) {
+      pillsEl.innerHTML =
+        '<span class="sp-tjb-pill">Finance: ' + m.financeScore + '%</span>' +
+        '<span class="sp-tjb-pill">Debt: ' + m.debtScore + '%</span>' +
+        '<span class="sp-tjb-pill">Business: ' + m.bizScore + '%</span>' +
+        '<span class="sp-tjb-pill">Growth &amp; Skills: ' + m.personalScore + '%</span>' +
+        '<span class="sp-tjb-pill">Tasks: ' + m.taskScore + '%</span>' +
+        '<span class="sp-tjb-pill">Calendar: ' + m.calScore + '%</span>';
+    }
+  }
+
+  window.addEventListener("DOMContentLoaded", function () {
+    mountTopJourneyBanner();
+    setInterval(syncBannerWithAllDashboardAspects, 1000);
+    document.addEventListener("input", syncBannerWithAllDashboardAspects, true);
+    document.addEventListener("change", syncBannerWithAllDashboardAspects, true);
+    document.addEventListener("click", function () {
+      setTimeout(syncBannerWithAllDashboardAspects, 120);
+    }, true);
+  });
+})();
+</script>
+<!-- SHIV-PREM FULL DASHBOARD AUTO-SYNC ANIMATED BANNER END -->
 
 </body>
 </html>
