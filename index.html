@@ -296,7 +296,617 @@
                 </button>
             </div>
         </nav>
+    <!-- SHIV-PREM OUTSIDE BOT & HORIZONTAL PROGRESS GRAPHICAL PATCH START -->
+<style id="sp-outside-bot-style">
+  /* Clean White Mode Support across all panels */
+  html:not(.dark) #sp-outside-bot-section,
+  html:not(.dark) #sp-outside-bot-section .sp-ob-card {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+    border-color: #1e3a8a !important;
+  }
+  html:not(.dark) #sp-outside-bot-section .sp-ob-subtext,
+  html:not(.dark) #sp-outside-bot-section .sp-ob-meta {
+    color: #334155 !important;
+  }
+  html:not(.dark) #sp-outside-bot-section .sp-ob-log {
+    background-color: #f1f5f9 !important;
+    color: #0f172a !important;
+    border-color: #cbd5e1 !important;
+  }
+  html:not(.dark) #sp-outside-bot-section input {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+    border-color: #64748b !important;
+  }
+  html:not(.dark) #topQuickMenuDrawer,
+  html:not(.dark) #topDownloadCategoryMenu {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+    border-color: #1e3a8a !important;
+  }
+  html:not(.dark) #topQuickMenuDrawer button,
+  html:not(.dark) #topDownloadCategoryMenu button {
+    color: #0f172a !important;
+  }
 
+  /* Outside Bot Section */
+  #sp-outside-bot-section {
+    margin: 20px 0;
+    padding: 16px;
+    border-radius: 16px;
+    background: #12151e;
+    color: #f8fafc;
+    border: 2px solid #3b82f6;
+    box-shadow: 5px 5px 0px #000000;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  .sp-ob-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.25);
+  }
+  .sp-ob-bot-identity {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .sp-ob-robot-frame {
+    width: 58px;
+    height: 58px;
+    border-radius: 14px;
+    background: #ffffff;
+    border: 2px solid #3b82f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 3px 3px 0px #facc15;
+  }
+  .sp-ob-expr-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 800;
+    background: rgba(59, 130, 246, 0.2);
+    color: #60a5fa;
+    border: 1px solid rgba(96, 165, 250, 0.4);
+  }
+
+  /* Complete Horizontal Progress Table */
+  .sp-horiz-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    margin: 14px 0;
+  }
+  table.sp-complete-horiz-table {
+    width: 100%;
+    min-width: 720px;
+    table-layout: fixed;
+    border-collapse: separate;
+    border-spacing: 8px 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+  }
+  table.sp-complete-horiz-table th {
+    background: rgba(59, 130, 246, 0.16);
+    color: #facc15;
+    padding: 8px 6px;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 11px;
+    text-transform: uppercase;
+  }
+  html:not(.dark) table.sp-complete-horiz-table th {
+    background: #dbeafe;
+    color: #1e3a8a;
+  }
+  table.sp-complete-horiz-table td {
+    background: rgba(15, 23, 42, 0.75);
+    border: 1.5px solid rgba(148, 163, 184, 0.25);
+    border-radius: 10px;
+    padding: 10px 8px;
+    text-align: center;
+    vertical-align: middle;
+  }
+  html:not(.dark) table.sp-complete-horiz-table td {
+    background: #f8fafc;
+    color: #0f172a;
+    border-color: #cbd5e1;
+  }
+  .sp-td-metric {
+    font-size: 14px;
+    font-weight: 800;
+    display: block;
+    margin-bottom: 6px;
+  }
+  .sp-td-bar-bg {
+    width: 100%;
+    height: 7px;
+    border-radius: 999px;
+    background: rgba(148, 163, 184, 0.25);
+    overflow: hidden;
+  }
+  .sp-td-bar-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 999px;
+    transition: width 0.35s ease;
+  }
+
+  /* Graphical Expression + Outside Bot Chat */
+  .sp-ob-main-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 14px;
+    margin-top: 12px;
+  }
+  @media (max-width: 900px) {
+    .sp-ob-main-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .sp-ob-card {
+    background: #090a0f;
+    border: 1.5px solid #1e293b;
+    border-radius: 12px;
+    padding: 12px;
+  }
+  .sp-ob-log {
+    height: 170px;
+    overflow-y: auto;
+    padding: 10px;
+    border-radius: 10px;
+    background: #12151e;
+    border: 1px solid #334155;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    margin-bottom: 10px;
+  }
+  .sp-ob-msg {
+    margin-bottom: 8px;
+    padding: 7px 10px;
+    border-radius: 8px;
+    line-height: 1.45;
+  }
+  .sp-ob-msg-user {
+    background: #facc15;
+    color: #090a0f;
+    font-weight: 700;
+    text-align: right;
+  }
+  .sp-ob-msg-bot {
+    background: rgba(59, 130, 246, 0.16);
+    border-left: 3px solid #3b82f6;
+  }
+  .sp-ob-form {
+    display: flex;
+    gap: 8px;
+  }
+  .sp-ob-form input {
+    flex: 1;
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: 1.5px solid #334155;
+    background: #12151e;
+    color: #ffffff;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+  }
+  .sp-ob-send {
+    padding: 8px 16px;
+    border-radius: 10px;
+    border: none;
+    background: #3b82f6;
+    color: #ffffff;
+    font-weight: 800;
+    font-size: 12px;
+    cursor: pointer;
+  }
+  .sp-ob-send:hover {
+    background: #2563eb;
+  }
+
+  /* Single Top Auto-Save (15s) + Manual Save Pill */
+  #sp-clean-save-pill {
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    z-index: 60;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 10px;
+    border-radius: 999px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    background: #12151e;
+    color: #f8fafc;
+    border: 1.5px solid #3b82f6;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  }
+  html:not(.dark) #sp-clean-save-pill {
+    background: #ffffff;
+    color: #0f172a;
+    border-color: #1e3a8a;
+  }
+  #sp-clean-save-btn {
+    background: #22c55e;
+    color: #052e16;
+    font-weight: 800;
+    padding: 3px 10px;
+    border-radius: 999px;
+    cursor: pointer;
+    border: none;
+  }
+</style>
+
+<script id="sp-outside-bot-script">
+(function () {
+  // Remove any duplicate boxes from earlier patches
+  ["sp-top-bar", "sp-hero-banner", "sp-goals-bot-panel", "sp-refine-savebar", "sp-refined-hero", "sp-common-bot-box", "sp-single-save-pill"].forEach(function (id) {
+    var old = document.getElementById(id);
+    if (old) old.remove();
+  });
+
+  var AUTO_SAVE_MS = 15000;
+  var saveTimer = null;
+  var dirtyFlag = false;
+
+  function setSaveLabel(txt) {
+    var el = document.getElementById("sp-clean-save-status");
+    if (!el) return;
+    var t = new Date().toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+    el.textContent = txt + " • " + t;
+  }
+
+  function runSave(tag) {
+    setSaveLabel("Saving...");
+    try {
+      if (typeof window.saveState === "function") {
+        window.saveState();
+      }
+      dirtyFlag = false;
+      refreshOutsideBotAndTable();
+      setSaveLabel(tag || "Saved");
+    } catch (e) {
+      setSaveLabel("Save issue");
+    }
+  }
+
+  function scheduleSave() {
+    dirtyFlag = true;
+    setSaveLabel("Auto-save in 15s...");
+    if (saveTimer) clearTimeout(saveTimer);
+    saveTimer = setTimeout(function () {
+      if (dirtyFlag) runSave("Auto-saved");
+    }, AUTO_SAVE_MS);
+  }
+
+  function mountSavePill() {
+    if (document.getElementById("sp-clean-save-pill")) return;
+    var pill = document.createElement("div");
+    pill.id = "sp-clean-save-pill";
+
+    var btn = document.createElement("button");
+    btn.id = "sp-clean-save-btn";
+    btn.type = "button";
+    btn.textContent = "Save / Update";
+    btn.addEventListener("click", function () {
+      runSave("Saved manually");
+    });
+
+    var st = document.createElement("span");
+    st.id = "sp-clean-save-status";
+    st.textContent = "15s Auto-Save Ready";
+
+    pill.appendChild(btn);
+    pill.appendChild(st);
+    document.body.appendChild(pill);
+  }
+
+  // Blue robot SVG matching user's uploaded icon with dynamic eye/mouth graphical expression
+  function renderBlueRobotSvg(exprType) {
+    var mouthPath = "M 34 62 Q 50 70 66 62";
+    var eyeRadius = 7.5;
+    var antennaColor = "#2563eb";
+    if (exprType === "peak") {
+      mouthPath = "M 32 59 Q 50 75 68 59";
+      eyeRadius = 8.2;
+      antennaColor = "#16a34a";
+    } else if (exprType === "low") {
+      mouthPath = "M 35 67 Q 50 57 65 67";
+      eyeRadius = 7;
+      antennaColor = "#ef4444";
+    }
+
+    return (
+      '<svg viewBox="0 0 100 100" width="46" height="46" xmlns="http://www.w3.org/2000/svg" aria-label="Blue Bot">' +
+      '<line x1="50" y1="10" x2="50" y2="24" stroke="' + antennaColor + '" stroke-width="5" stroke-linecap="round"/>' +
+      '<circle cx="50" cy="9" r="5.5" fill="' + antennaColor + '"/>' +
+      '<rect x="20" y="24" width="60" height="52" rx="14" fill="#2563eb"/>' +
+      '<rect x="11" y="40" width="9" height="20" rx="4" fill="#2563eb"/>' +
+      '<rect x="80" y="40" width="9" height="20" rx="4" fill="#2563eb"/>' +
+      '<circle cx="37" cy="46" r="' + eyeRadius + '" fill="#ffffff"/>' +
+      '<circle cx="63" cy="46" r="' + eyeRadius + '" fill="#ffffff"/>' +
+      '<path d="' + mouthPath + '" stroke="#ffffff" stroke-width="4" stroke-linecap="round" fill="none"/>' +
+      "</svg>"
+    );
+  }
+
+  function computeDashboardMetrics() {
+    var st = window.state || {};
+    var totInc = 0, totExp = 0, totInv = 0;
+
+    if (typeof window.getCurrentFinancialTotals === "function") {
+      var fin = window.getCurrentFinancialTotals();
+      totInc = Number(fin.totInc || 0);
+      totExp = Number(fin.totExp || 0);
+      totInv = Number(fin.totInv || 0);
+    }
+
+    var remDebt = (st.debts || []).reduce(function (s, d) { return s + Number(d.remaining || 0); }, 0);
+    var initDebt = (st.debts || []).reduce(function (s, d) { return s + Number(d.total || 0); }, 0);
+    var netWorth = totInv - remDebt;
+
+    var overallPct = 0;
+    var pctText = document.getElementById("overallProgressPct");
+    if (pctText) {
+      overallPct = parseInt(String(pctText.textContent || "0").replace(/[^0-9]/g, ""), 10) || 0;
+    }
+
+    var personalPct = Math.min(100, Math.max(10, 15 + ((st.customStories || []).length * 3)));
+    var finLifePct = overallPct;
+    var skillPct = Math.min(100, Math.max(15, 20 + ((st.learnedSkills || []).length * 5)));
+
+    var tasks = st.planningTasks || [];
+    var doneTasks = tasks.filter(function (t) { return t.done; }).length;
+    var planPct = tasks.length > 0 ? Math.round((doneTasks / tasks.length) * 100) : 0;
+
+    var debtClearedPct = initDebt > 0
+      ? Math.min(100, Math.max(0, Math.round(((initDebt - remDebt) / initDebt) * 100)))
+      : (remDebt === 0 ? 100 : 0);
+
+    var cashflowHealthPct = totInc > 0
+      ? Math.min(100, Math.max(0, Math.round(((totInc - totExp) / totInc) * 100)))
+      : 0;
+
+    return {
+      totInc: totInc,
+      totExp: totExp,
+      totInv: totInv,
+      remDebt: remDebt,
+      netWorth: netWorth,
+      overallPct: overallPct,
+      personalPct: personalPct,
+      finLifePct: finLifePct,
+      skillPct: skillPct,
+      planPct: planPct,
+      debtClearedPct: debtClearedPct,
+      cashflowHealthPct: cashflowHealthPct
+    };
+  }
+
+  function mountOutsideBotSection() {
+    if (document.getElementById("sp-outside-bot-section")) return;
+    var root = document.getElementById("dashboardExportRoot") || document.body;
+
+    var sec = document.createElement("section");
+    sec.id = "sp-outside-bot-section";
+    sec.innerHTML =
+      '<div class="sp-ob-header">' +
+        '<div class="sp-ob-bot-identity">' +
+          '<div class="sp-ob-robot-frame" id="sp-ob-robot-svg-box">' + renderBlueRobotSvg("steady") + "</div>" +
+          '<div>' +
+            '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">' +
+              '<strong style="font-size:16px;letter-spacing:0.02em;">OUTSIDE PROGRESS & PERFORMANCE AI BOT</strong>' +
+              '<span class="sp-ob-expr-badge" id="sp-ob-expr-tag">STEADY RECOVERY</span>' +
+            '</div>' +
+            '<div class="sp-ob-subtext" id="sp-ob-expr-caption" style="font-size:12px;color:#94a3b8;margin-top:3px;">Graphical expression synced with overall dashboard progress</div>' +
+          "</div>" +
+        "</div>" +
+        '<div class="sp-ob-meta" id="sp-ob-live-summary" style="font-family:\'JetBrains Mono\',monospace;font-size:11px;color:#facc15;"></div>' +
+      "</div>" +
+
+      '<div class="sp-horiz-table-wrap">' +
+        '<table class="sp-complete-horiz-table" id="sp-complete-horizontal-progress-table">' +
+          "<thead>" +
+            "<tr>" +
+              "<th>Overall Dash</th>" +
+              "<th>Personal</th>" +
+              "<th>Finance & Life</th>" +
+              "<th>Skill System</th>" +
+              "<th>Debt Cleared</th>" +
+              "<th>Tasks Done</th>" +
+              "<th>Cashflow</th>" +
+            "</tr>" +
+          "</thead>" +
+          "<tbody>" +
+            "<tr>" +
+              '<td><span class="sp-td-metric" id="sp-ht-overall">0%</span><div class="sp-td-bar-bg"><div class="sp-td-bar-fill" id="sp-hb-overall" style="background:#3b82f6;"></div></div></td>' +
+              '<td><span class="sp-td-metric" id="sp-ht-personal">0%</span><div class="sp-td-bar-bg"><div class="sp-td-bar-fill" id="sp-hb-personal" style="background:#60a5fa;"></div></div></td>' +
+              '<td><span class="sp-td-metric" id="sp-ht-finlife">0%</span><div class="sp-td-bar-bg"><div class="sp-td-bar-fill" id="sp-hb-finlife" style="background:#22c55e;"></div></div></td>' +
+              '<td><span class="sp-td-metric" id="sp-ht-skill">0%</span><div class="sp-td-bar-bg"><div class="sp-td-bar-fill" id="sp-hb-skill" style="background:#facc15;"></div></div></td>' +
+              '<td><span class="sp-td-metric" id="sp-ht-debt">0%</span><div class="sp-td-bar-bg"><div class="sp-td-bar-fill" id="sp-hb-debt" style="background:#ef4444;"></div></div></td>' +
+              '<td><span class="sp-td-metric" id="sp-ht-tasks">0%</span><div class="sp-td-bar-bg"><div class="sp-td-bar-fill" id="sp-hb-tasks" style="background:#a855f7;"></div></div></td>' +
+              '<td><span class="sp-td-metric" id="sp-ht-cash">0%</span><div class="sp-td-bar-bg"><div class="sp-td-bar-fill" id="sp-hb-cash" style="background:#14b8a6;"></div></div></td>' +
+            "</tr>" +
+          "</tbody>" +
+        "</table>" +
+      "</div>" +
+
+      '<div class="sp-ob-main-grid">' +
+        '<div class="sp-ob-card">' +
+          '<div style="font-family:\'JetBrains Mono\',monospace;font-size:11px;font-weight:800;color:#facc15;margin-bottom:8px;">GRAPHICAL PERFORMANCE EXPRESSION</div>' +
+          '<svg id="sp-ob-perf-graph" viewBox="0 0 360 120" width="100%" height="120" xmlns="http://www.w3.org/2000/svg">' +
+            '<line x1="20" y1="100" x2="340" y2="100" stroke="#334155" stroke-width="1.5"/>' +
+            '<g id="sp-ob-graph-bars"></g>' +
+            '<polyline id="sp-ob-graph-line" fill="none" stroke="#facc15" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" points=""/>' +
+          "</svg>" +
+          '<div id="sp-ob-graph-note" class="sp-ob-meta" style="font-family:\'JetBrains Mono\',monospace;font-size:11px;color:#94a3b8;margin-top:6px;"></div>' +
+        "</div>" +
+
+        '<div class="sp-ob-card">' +
+          '<div class="sp-ob-log" id="sp-ob-chat-log">' +
+            '<div class="sp-ob-msg sp-ob-msg-bot"><strong>Bot:</strong> Hi! Ask me anything general or ask for a breakdown of your horizontal progress table & overall dashboard performance.</div>' +
+          "</div>" +
+          '<form class="sp-ob-form" id="sp-ob-chat-form">' +
+            '<input type="text" id="sp-ob-chat-input" placeholder="Chat normally or ask about progress table & dashboard..." required />' +
+            '<button type="submit" class="sp-ob-send">SEND</button>' +
+          "</form>" +
+        "</div>" +
+      "</div>";
+
+    root.appendChild(sec);
+
+    var form = document.getElementById("sp-ob-chat-form");
+    var input = document.getElementById("sp-ob-chat-input");
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var q = (input.value || "").trim();
+      if (!q) return;
+      input.value = "";
+      appendOutsideBotMessage("user", q);
+      var reply = buildOutsideBotReply(q);
+      appendOutsideBotMessage("bot", reply);
+    });
+  }
+
+  function appendOutsideBotMessage(role, text) {
+    var log = document.getElementById("sp-ob-chat-log");
+    if (!log) return;
+    var div = document.createElement("div");
+    div.className = "sp-ob-msg " + (role === "user" ? "sp-ob-msg-user" : "sp-ob-msg-bot");
+    var safeText = String(text || "").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    div.innerHTML = "<strong>" + (role === "user" ? "You" : "Bot") + ":</strong> " + safeText;
+    log.appendChild(div);
+    log.scrollTop = log.scrollHeight;
+  }
+
+  function buildOutsideBotReply(userQuery) {
+    var m = computeDashboardMetrics();
+    var inr = typeof window.formatINR === "function" ? window.formatINR : function (v) { return "₹" + v; };
+    var low = String(userQuery || "").toLowerCase().trim();
+
+    var tableSnapshot =
+      "Overall " + m.overallPct + "% | Personal " + m.personalPct + "% | Finance & Life " + m.finLifePct +
+      "% | Skill " + m.skillPct + "% | Debt Cleared " + m.debtClearedPct + "% | Tasks " + m.planPct +
+      "% | Cashflow " + m.cashflowHealthPct + "%";
+
+    if (/^(hi|hello|hey|vanakkam|வணக்கம்|ஹாய்)/i.test(low)) {
+      return "Hey! Good to talk with you. Right now your horizontal progress shows: " + tableSnapshot +
+        " (Net worth: " + inr(m.netWorth) + "). What would you like to chat about or improve next?";
+    }
+
+    if (low.indexOf("progress") !== -1 || low.indexOf("table") !== -1 || low.indexOf("perform") !== -1 || low.indexOf("analy") !== -1 || low.indexOf("dash") !== -1) {
+      var weakest = "Cashflow";
+      var lowestVal = m.cashflowHealthPct;
+      if (m.debtClearedPct < lowestVal) { lowestVal = m.debtClearedPct; weakest = "Debt Cleared"; }
+      if (m.planPct < lowestVal) { lowestVal = m.planPct; weakest = "Tasks Done"; }
+      return "Overall dashboard performance (" + tableSnapshot + "): Net worth is " + inr(m.netWorth) +
+        " (Income " + inr(m.totInc) + ", Expense " + inr(m.totExp) + ", Debt left " + inr(m.remDebt) +
+        "). Biggest immediate leverage area: " + weakest + " (" + lowestVal + "%).";
+    }
+
+    return "Let's chat! Regarding \"" + userQuery + "\" — based on your live progress (" + tableSnapshot +
+      "), keeping cashflow positive and clearing priority debt step-by-step will lift your overall bar fastest. How can I help next?";
+  }
+
+  function refreshOutsideBotAndTable() {
+    var m = computeDashboardMetrics();
+    var inr = typeof window.formatINR === "function" ? window.formatINR : function (v) { return "₹" + v; };
+
+    var pairs = [
+      ["sp-ht-overall", "sp-hb-overall", m.overallPct],
+      ["sp-ht-personal", "sp-hb-personal", m.personalPct],
+      ["sp-ht-finlife", "sp-hb-finlife", m.finLifePct],
+      ["sp-ht-skill", "sp-hb-skill", m.skillPct],
+      ["sp-ht-debt", "sp-hb-debt", m.debtClearedPct],
+      ["sp-ht-tasks", "sp-hb-tasks", m.planPct],
+      ["sp-ht-cash", "sp-hb-cash", m.cashflowHealthPct]
+    ];
+
+    pairs.forEach(function (p) {
+      var txtEl = document.getElementById(p[0]);
+      var barEl = document.getElementById(p[1]);
+      var val = Math.max(0, Math.min(100, Number(p[2] || 0)));
+      if (txtEl) txtEl.textContent = val + "%";
+      if (barEl) barEl.style.width = val + "%";
+    });
+
+    var exprType = "steady";
+    var exprLabel = "STEADY RECOVERY";
+    var exprCaption = "Gradual climb — keep consistency active";
+    if (m.overallPct >= 70 && m.netWorth >= 0) {
+      exprType = "peak";
+      exprLabel = "HIGH MOMENTUM";
+      exprCaption = "Strong overall dashboard & wealth momentum";
+    } else if (m.overallPct < 25 || m.netWorth < -2000000) {
+      exprType = "low";
+      exprLabel = "REBUILD FOCUS";
+      exprCaption = "Heavy debt/pressure stage — small daily steps matter most";
+    }
+
+    var svgBox = document.getElementById("sp-ob-robot-svg-box");
+    var badge = document.getElementById("sp-ob-expr-tag");
+    var cap = document.getElementById("sp-ob-expr-caption");
+    var sum = document.getElementById("sp-ob-live-summary");
+    if (svgBox) svgBox.innerHTML = renderBlueRobotSvg(exprType);
+    if (badge) badge.textContent = exprLabel;
+    if (cap) cap.textContent = exprCaption;
+    if (sum) sum.textContent = "Net Worth: " + inr(m.netWorth) + " • Overall: " + m.overallPct + "%";
+
+    // Render graphical bars + trend polyline inside outside bot card
+    var barsGroup = document.getElementById("sp-ob-graph-bars");
+    var lineEl = document.getElementById("sp-ob-graph-line");
+    var noteEl = document.getElementById("sp-ob-graph-note");
+    if (barsGroup && lineEl) {
+      var vals = [m.overallPct, m.personalPct, m.finLifePct, m.skillPct, m.debtClearedPct, m.planPct, m.cashflowHealthPct];
+      var colors = ["#3b82f6", "#60a5fa", "#22c55e", "#facc15", "#ef4444", "#a855f7", "#14b8a6"];
+      var barsHtml = "";
+      var pts = [];
+      for (var i = 0; i < vals.length; i++) {
+        var v = Math.max(4, Math.min(100, vals[i]));
+        var h = Math.round((v / 100) * 76);
+        var x = 28 + i * 44;
+        var y = 100 - h;
+        barsHtml += '<rect x="' + x + '" y="' + y + '" width="22" height="' + h + '" rx="4" fill="' + colors[i] + '" opacity="0.85"/>';
+        pts.push((x + 11) + "," + y);
+      }
+      barsGroup.innerHTML = barsHtml;
+      lineEl.setAttribute("points", pts.join(" "));
+    }
+    if (noteEl) {
+      noteEl.textContent = "Expression: " + exprLabel + " | Inc " + inr(m.totInc) + " | Exp " + inr(m.totExp) + " | Debt " + inr(m.remDebt);
+    }
+  }
+
+  window.addEventListener("DOMContentLoaded", function () {
+    mountSavePill();
+    mountOutsideBotSection();
+    refreshOutsideBotAndTable();
+
+    setInterval(refreshOutsideBotAndTable, 1500);
+    document.addEventListener("input", function () {
+      refreshOutsideBotAndTable();
+      scheduleSave();
+    }, true);
+    document.addEventListener("change", function () {
+      refreshOutsideBotAndTable();
+      scheduleSave();
+    }, true);
+  });
+})();
+</script>
+<!-- SHIV-PREM OUTSIDE BOT & HORIZONTAL PROGRESS GRAPHICAL PATCH END -->
         <!-- 2. PROFILE HERO BANNER -->
         <header class="comic-card rounded-2xl p-4 sm:p-6 border-cyberBlue relative overflow-hidden">
             <div class="flex flex-col lg:flex-row items-center lg:items-start justify-between gap-6">
@@ -3480,616 +4090,6 @@
 })();
 </script>
 <!-- SHIV-PREM CLEAN UNIFIED FIX END -->
-    <!-- SHIV-PREM OUTSIDE BOT & HORIZONTAL PROGRESS GRAPHICAL PATCH START -->
-<style id="sp-outside-bot-style">
-  /* Clean White Mode Support across all panels */
-  html:not(.dark) #sp-outside-bot-section,
-  html:not(.dark) #sp-outside-bot-section .sp-ob-card {
-    background-color: #ffffff !important;
-    color: #0f172a !important;
-    border-color: #1e3a8a !important;
-  }
-  html:not(.dark) #sp-outside-bot-section .sp-ob-subtext,
-  html:not(.dark) #sp-outside-bot-section .sp-ob-meta {
-    color: #334155 !important;
-  }
-  html:not(.dark) #sp-outside-bot-section .sp-ob-log {
-    background-color: #f1f5f9 !important;
-    color: #0f172a !important;
-    border-color: #cbd5e1 !important;
-  }
-  html:not(.dark) #sp-outside-bot-section input {
-    background-color: #ffffff !important;
-    color: #0f172a !important;
-    border-color: #64748b !important;
-  }
-  html:not(.dark) #topQuickMenuDrawer,
-  html:not(.dark) #topDownloadCategoryMenu {
-    background-color: #ffffff !important;
-    color: #0f172a !important;
-    border-color: #1e3a8a !important;
-  }
-  html:not(.dark) #topQuickMenuDrawer button,
-  html:not(.dark) #topDownloadCategoryMenu button {
-    color: #0f172a !important;
-  }
 
-  /* Outside Bot Section */
-  #sp-outside-bot-section {
-    margin: 20px 0;
-    padding: 16px;
-    border-radius: 16px;
-    background: #12151e;
-    color: #f8fafc;
-    border: 2px solid #3b82f6;
-    box-shadow: 5px 5px 0px #000000;
-    font-family: 'Inter', system-ui, sans-serif;
-  }
-  .sp-ob-header {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid rgba(148, 163, 184, 0.25);
-  }
-  .sp-ob-bot-identity {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .sp-ob-robot-frame {
-    width: 58px;
-    height: 58px;
-    border-radius: 14px;
-    background: #ffffff;
-    border: 2px solid #3b82f6;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    box-shadow: 3px 3px 0px #facc15;
-  }
-  .sp-ob-expr-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 4px 10px;
-    border-radius: 999px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    font-weight: 800;
-    background: rgba(59, 130, 246, 0.2);
-    color: #60a5fa;
-    border: 1px solid rgba(96, 165, 250, 0.4);
-  }
-
-  /* Complete Horizontal Progress Table */
-  .sp-horiz-table-wrap {
-    width: 100%;
-    overflow-x: auto;
-    margin: 14px 0;
-  }
-  table.sp-complete-horiz-table {
-    width: 100%;
-    min-width: 720px;
-    table-layout: fixed;
-    border-collapse: separate;
-    border-spacing: 8px 0;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-  }
-  table.sp-complete-horiz-table th {
-    background: rgba(59, 130, 246, 0.16);
-    color: #facc15;
-    padding: 8px 6px;
-    border-radius: 8px;
-    text-align: center;
-    font-size: 11px;
-    text-transform: uppercase;
-  }
-  html:not(.dark) table.sp-complete-horiz-table th {
-    background: #dbeafe;
-    color: #1e3a8a;
-  }
-  table.sp-complete-horiz-table td {
-    background: rgba(15, 23, 42, 0.75);
-    border: 1.5px solid rgba(148, 163, 184, 0.25);
-    border-radius: 10px;
-    padding: 10px 8px;
-    text-align: center;
-    vertical-align: middle;
-  }
-  html:not(.dark) table.sp-complete-horiz-table td {
-    background: #f8fafc;
-    color: #0f172a;
-    border-color: #cbd5e1;
-  }
-  .sp-td-metric {
-    font-size: 14px;
-    font-weight: 800;
-    display: block;
-    margin-bottom: 6px;
-  }
-  .sp-td-bar-bg {
-    width: 100%;
-    height: 7px;
-    border-radius: 999px;
-    background: rgba(148, 163, 184, 0.25);
-    overflow: hidden;
-  }
-  .sp-td-bar-fill {
-    height: 100%;
-    width: 0%;
-    border-radius: 999px;
-    transition: width 0.35s ease;
-  }
-
-  /* Graphical Expression + Outside Bot Chat */
-  .sp-ob-main-grid {
-    display: grid;
-    grid-template-columns: 1fr 1.4fr;
-    gap: 14px;
-    margin-top: 12px;
-  }
-  @media (max-width: 900px) {
-    .sp-ob-main-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-  .sp-ob-card {
-    background: #090a0f;
-    border: 1.5px solid #1e293b;
-    border-radius: 12px;
-    padding: 12px;
-  }
-  .sp-ob-log {
-    height: 170px;
-    overflow-y: auto;
-    padding: 10px;
-    border-radius: 10px;
-    background: #12151e;
-    border: 1px solid #334155;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    margin-bottom: 10px;
-  }
-  .sp-ob-msg {
-    margin-bottom: 8px;
-    padding: 7px 10px;
-    border-radius: 8px;
-    line-height: 1.45;
-  }
-  .sp-ob-msg-user {
-    background: #facc15;
-    color: #090a0f;
-    font-weight: 700;
-    text-align: right;
-  }
-  .sp-ob-msg-bot {
-    background: rgba(59, 130, 246, 0.16);
-    border-left: 3px solid #3b82f6;
-  }
-  .sp-ob-form {
-    display: flex;
-    gap: 8px;
-  }
-  .sp-ob-form input {
-    flex: 1;
-    padding: 8px 12px;
-    border-radius: 10px;
-    border: 1.5px solid #334155;
-    background: #12151e;
-    color: #ffffff;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-  }
-  .sp-ob-send {
-    padding: 8px 16px;
-    border-radius: 10px;
-    border: none;
-    background: #3b82f6;
-    color: #ffffff;
-    font-weight: 800;
-    font-size: 12px;
-    cursor: pointer;
-  }
-  .sp-ob-send:hover {
-    background: #2563eb;
-  }
-
-  /* Single Top Auto-Save (15s) + Manual Save Pill */
-  #sp-clean-save-pill {
-    position: fixed;
-    top: 12px;
-    right: 12px;
-    z-index: 60;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 5px 10px;
-    border-radius: 999px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    background: #12151e;
-    color: #f8fafc;
-    border: 1.5px solid #3b82f6;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
-  }
-  html:not(.dark) #sp-clean-save-pill {
-    background: #ffffff;
-    color: #0f172a;
-    border-color: #1e3a8a;
-  }
-  #sp-clean-save-btn {
-    background: #22c55e;
-    color: #052e16;
-    font-weight: 800;
-    padding: 3px 10px;
-    border-radius: 999px;
-    cursor: pointer;
-    border: none;
-  }
-</style>
-
-<script id="sp-outside-bot-script">
-(function () {
-  // Remove any duplicate boxes from earlier patches
-  ["sp-top-bar", "sp-hero-banner", "sp-goals-bot-panel", "sp-refine-savebar", "sp-refined-hero", "sp-common-bot-box", "sp-single-save-pill"].forEach(function (id) {
-    var old = document.getElementById(id);
-    if (old) old.remove();
-  });
-
-  var AUTO_SAVE_MS = 15000;
-  var saveTimer = null;
-  var dirtyFlag = false;
-
-  function setSaveLabel(txt) {
-    var el = document.getElementById("sp-clean-save-status");
-    if (!el) return;
-    var t = new Date().toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
-    el.textContent = txt + " • " + t;
-  }
-
-  function runSave(tag) {
-    setSaveLabel("Saving...");
-    try {
-      if (typeof window.saveState === "function") {
-        window.saveState();
-      }
-      dirtyFlag = false;
-      refreshOutsideBotAndTable();
-      setSaveLabel(tag || "Saved");
-    } catch (e) {
-      setSaveLabel("Save issue");
-    }
-  }
-
-  function scheduleSave() {
-    dirtyFlag = true;
-    setSaveLabel("Auto-save in 15s...");
-    if (saveTimer) clearTimeout(saveTimer);
-    saveTimer = setTimeout(function () {
-      if (dirtyFlag) runSave("Auto-saved");
-    }, AUTO_SAVE_MS);
-  }
-
-  function mountSavePill() {
-    if (document.getElementById("sp-clean-save-pill")) return;
-    var pill = document.createElement("div");
-    pill.id = "sp-clean-save-pill";
-
-    var btn = document.createElement("button");
-    btn.id = "sp-clean-save-btn";
-    btn.type = "button";
-    btn.textContent = "Save / Update";
-    btn.addEventListener("click", function () {
-      runSave("Saved manually");
-    });
-
-    var st = document.createElement("span");
-    st.id = "sp-clean-save-status";
-    st.textContent = "15s Auto-Save Ready";
-
-    pill.appendChild(btn);
-    pill.appendChild(st);
-    document.body.appendChild(pill);
-  }
-
-  // Blue robot SVG matching user's uploaded icon with dynamic eye/mouth graphical expression
-  function renderBlueRobotSvg(exprType) {
-    var mouthPath = "M 34 62 Q 50 70 66 62";
-    var eyeRadius = 7.5;
-    var antennaColor = "#2563eb";
-    if (exprType === "peak") {
-      mouthPath = "M 32 59 Q 50 75 68 59";
-      eyeRadius = 8.2;
-      antennaColor = "#16a34a";
-    } else if (exprType === "low") {
-      mouthPath = "M 35 67 Q 50 57 65 67";
-      eyeRadius = 7;
-      antennaColor = "#ef4444";
-    }
-
-    return (
-      '<svg viewBox="0 0 100 100" width="46" height="46" xmlns="http://www.w3.org/2000/svg" aria-label="Blue Bot">' +
-      '<line x1="50" y1="10" x2="50" y2="24" stroke="' + antennaColor + '" stroke-width="5" stroke-linecap="round"/>' +
-      '<circle cx="50" cy="9" r="5.5" fill="' + antennaColor + '"/>' +
-      '<rect x="20" y="24" width="60" height="52" rx="14" fill="#2563eb"/>' +
-      '<rect x="11" y="40" width="9" height="20" rx="4" fill="#2563eb"/>' +
-      '<rect x="80" y="40" width="9" height="20" rx="4" fill="#2563eb"/>' +
-      '<circle cx="37" cy="46" r="' + eyeRadius + '" fill="#ffffff"/>' +
-      '<circle cx="63" cy="46" r="' + eyeRadius + '" fill="#ffffff"/>' +
-      '<path d="' + mouthPath + '" stroke="#ffffff" stroke-width="4" stroke-linecap="round" fill="none"/>' +
-      "</svg>"
-    );
-  }
-
-  function computeDashboardMetrics() {
-    var st = window.state || {};
-    var totInc = 0, totExp = 0, totInv = 0;
-
-    if (typeof window.getCurrentFinancialTotals === "function") {
-      var fin = window.getCurrentFinancialTotals();
-      totInc = Number(fin.totInc || 0);
-      totExp = Number(fin.totExp || 0);
-      totInv = Number(fin.totInv || 0);
-    }
-
-    var remDebt = (st.debts || []).reduce(function (s, d) { return s + Number(d.remaining || 0); }, 0);
-    var initDebt = (st.debts || []).reduce(function (s, d) { return s + Number(d.total || 0); }, 0);
-    var netWorth = totInv - remDebt;
-
-    var overallPct = 0;
-    var pctText = document.getElementById("overallProgressPct");
-    if (pctText) {
-      overallPct = parseInt(String(pctText.textContent || "0").replace(/[^0-9]/g, ""), 10) || 0;
-    }
-
-    var personalPct = Math.min(100, Math.max(10, 15 + ((st.customStories || []).length * 3)));
-    var finLifePct = overallPct;
-    var skillPct = Math.min(100, Math.max(15, 20 + ((st.learnedSkills || []).length * 5)));
-
-    var tasks = st.planningTasks || [];
-    var doneTasks = tasks.filter(function (t) { return t.done; }).length;
-    var planPct = tasks.length > 0 ? Math.round((doneTasks / tasks.length) * 100) : 0;
-
-    var debtClearedPct = initDebt > 0
-      ? Math.min(100, Math.max(0, Math.round(((initDebt - remDebt) / initDebt) * 100)))
-      : (remDebt === 0 ? 100 : 0);
-
-    var cashflowHealthPct = totInc > 0
-      ? Math.min(100, Math.max(0, Math.round(((totInc - totExp) / totInc) * 100)))
-      : 0;
-
-    return {
-      totInc: totInc,
-      totExp: totExp,
-      totInv: totInv,
-      remDebt: remDebt,
-      netWorth: netWorth,
-      overallPct: overallPct,
-      personalPct: personalPct,
-      finLifePct: finLifePct,
-      skillPct: skillPct,
-      planPct: planPct,
-      debtClearedPct: debtClearedPct,
-      cashflowHealthPct: cashflowHealthPct
-    };
-  }
-
-  function mountOutsideBotSection() {
-    if (document.getElementById("sp-outside-bot-section")) return;
-    var root = document.getElementById("dashboardExportRoot") || document.body;
-
-    var sec = document.createElement("section");
-    sec.id = "sp-outside-bot-section";
-    sec.innerHTML =
-      '<div class="sp-ob-header">' +
-        '<div class="sp-ob-bot-identity">' +
-          '<div class="sp-ob-robot-frame" id="sp-ob-robot-svg-box">' + renderBlueRobotSvg("steady") + "</div>" +
-          '<div>' +
-            '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">' +
-              '<strong style="font-size:16px;letter-spacing:0.02em;">OUTSIDE PROGRESS & PERFORMANCE AI BOT</strong>' +
-              '<span class="sp-ob-expr-badge" id="sp-ob-expr-tag">STEADY RECOVERY</span>' +
-            '</div>' +
-            '<div class="sp-ob-subtext" id="sp-ob-expr-caption" style="font-size:12px;color:#94a3b8;margin-top:3px;">Graphical expression synced with overall dashboard progress</div>' +
-          "</div>" +
-        "</div>" +
-        '<div class="sp-ob-meta" id="sp-ob-live-summary" style="font-family:\'JetBrains Mono\',monospace;font-size:11px;color:#facc15;"></div>' +
-      "</div>" +
-
-      '<div class="sp-horiz-table-wrap">' +
-        '<table class="sp-complete-horiz-table" id="sp-complete-horizontal-progress-table">' +
-          "<thead>" +
-            "<tr>" +
-              "<th>Overall Dash</th>" +
-              "<th>Personal</th>" +
-              "<th>Finance & Life</th>" +
-              "<th>Skill System</th>" +
-              "<th>Debt Cleared</th>" +
-              "<th>Tasks Done</th>" +
-              "<th>Cashflow</th>" +
-            "</tr>" +
-          "</thead>" +
-          "<tbody>" +
-            "<tr>" +
-              '<td><span class="sp-td-metric" id="sp-ht-overall">0%</span><div class="sp-td-bar-bg"><div class="sp-td-bar-fill" id="sp-hb-overall" style="background:#3b82f6;"></div></div></td>' +
-              '<td><span class="sp-td-metric" id="sp-ht-personal">0%</span><div class="sp-td-bar-bg"><div class="sp-td-bar-fill" id="sp-hb-personal" style="background:#60a5fa;"></div></div></td>' +
-              '<td><span class="sp-td-metric" id="sp-ht-finlife">0%</span><div class="sp-td-bar-bg"><div class="sp-td-bar-fill" id="sp-hb-finlife" style="background:#22c55e;"></div></div></td>' +
-              '<td><span class="sp-td-metric" id="sp-ht-skill">0%</span><div class="sp-td-bar-bg"><div class="sp-td-bar-fill" id="sp-hb-skill" style="background:#facc15;"></div></div></td>' +
-              '<td><span class="sp-td-metric" id="sp-ht-debt">0%</span><div class="sp-td-bar-bg"><div class="sp-td-bar-fill" id="sp-hb-debt" style="background:#ef4444;"></div></div></td>' +
-              '<td><span class="sp-td-metric" id="sp-ht-tasks">0%</span><div class="sp-td-bar-bg"><div class="sp-td-bar-fill" id="sp-hb-tasks" style="background:#a855f7;"></div></div></td>' +
-              '<td><span class="sp-td-metric" id="sp-ht-cash">0%</span><div class="sp-td-bar-bg"><div class="sp-td-bar-fill" id="sp-hb-cash" style="background:#14b8a6;"></div></div></td>' +
-            "</tr>" +
-          "</tbody>" +
-        "</table>" +
-      "</div>" +
-
-      '<div class="sp-ob-main-grid">' +
-        '<div class="sp-ob-card">' +
-          '<div style="font-family:\'JetBrains Mono\',monospace;font-size:11px;font-weight:800;color:#facc15;margin-bottom:8px;">GRAPHICAL PERFORMANCE EXPRESSION</div>' +
-          '<svg id="sp-ob-perf-graph" viewBox="0 0 360 120" width="100%" height="120" xmlns="http://www.w3.org/2000/svg">' +
-            '<line x1="20" y1="100" x2="340" y2="100" stroke="#334155" stroke-width="1.5"/>' +
-            '<g id="sp-ob-graph-bars"></g>' +
-            '<polyline id="sp-ob-graph-line" fill="none" stroke="#facc15" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" points=""/>' +
-          "</svg>" +
-          '<div id="sp-ob-graph-note" class="sp-ob-meta" style="font-family:\'JetBrains Mono\',monospace;font-size:11px;color:#94a3b8;margin-top:6px;"></div>' +
-        "</div>" +
-
-        '<div class="sp-ob-card">' +
-          '<div class="sp-ob-log" id="sp-ob-chat-log">' +
-            '<div class="sp-ob-msg sp-ob-msg-bot"><strong>Bot:</strong> Hi! Ask me anything general or ask for a breakdown of your horizontal progress table & overall dashboard performance.</div>' +
-          "</div>" +
-          '<form class="sp-ob-form" id="sp-ob-chat-form">' +
-            '<input type="text" id="sp-ob-chat-input" placeholder="Chat normally or ask about progress table & dashboard..." required />' +
-            '<button type="submit" class="sp-ob-send">SEND</button>' +
-          "</form>" +
-        "</div>" +
-      "</div>";
-
-    root.appendChild(sec);
-
-    var form = document.getElementById("sp-ob-chat-form");
-    var input = document.getElementById("sp-ob-chat-input");
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      var q = (input.value || "").trim();
-      if (!q) return;
-      input.value = "";
-      appendOutsideBotMessage("user", q);
-      var reply = buildOutsideBotReply(q);
-      appendOutsideBotMessage("bot", reply);
-    });
-  }
-
-  function appendOutsideBotMessage(role, text) {
-    var log = document.getElementById("sp-ob-chat-log");
-    if (!log) return;
-    var div = document.createElement("div");
-    div.className = "sp-ob-msg " + (role === "user" ? "sp-ob-msg-user" : "sp-ob-msg-bot");
-    var safeText = String(text || "").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    div.innerHTML = "<strong>" + (role === "user" ? "You" : "Bot") + ":</strong> " + safeText;
-    log.appendChild(div);
-    log.scrollTop = log.scrollHeight;
-  }
-
-  function buildOutsideBotReply(userQuery) {
-    var m = computeDashboardMetrics();
-    var inr = typeof window.formatINR === "function" ? window.formatINR : function (v) { return "₹" + v; };
-    var low = String(userQuery || "").toLowerCase().trim();
-
-    var tableSnapshot =
-      "Overall " + m.overallPct + "% | Personal " + m.personalPct + "% | Finance & Life " + m.finLifePct +
-      "% | Skill " + m.skillPct + "% | Debt Cleared " + m.debtClearedPct + "% | Tasks " + m.planPct +
-      "% | Cashflow " + m.cashflowHealthPct + "%";
-
-    if (/^(hi|hello|hey|vanakkam|வணக்கம்|ஹாய்)/i.test(low)) {
-      return "Hey! Good to talk with you. Right now your horizontal progress shows: " + tableSnapshot +
-        " (Net worth: " + inr(m.netWorth) + "). What would you like to chat about or improve next?";
-    }
-
-    if (low.indexOf("progress") !== -1 || low.indexOf("table") !== -1 || low.indexOf("perform") !== -1 || low.indexOf("analy") !== -1 || low.indexOf("dash") !== -1) {
-      var weakest = "Cashflow";
-      var lowestVal = m.cashflowHealthPct;
-      if (m.debtClearedPct < lowestVal) { lowestVal = m.debtClearedPct; weakest = "Debt Cleared"; }
-      if (m.planPct < lowestVal) { lowestVal = m.planPct; weakest = "Tasks Done"; }
-      return "Overall dashboard performance (" + tableSnapshot + "): Net worth is " + inr(m.netWorth) +
-        " (Income " + inr(m.totInc) + ", Expense " + inr(m.totExp) + ", Debt left " + inr(m.remDebt) +
-        "). Biggest immediate leverage area: " + weakest + " (" + lowestVal + "%).";
-    }
-
-    return "Let's chat! Regarding \"" + userQuery + "\" — based on your live progress (" + tableSnapshot +
-      "), keeping cashflow positive and clearing priority debt step-by-step will lift your overall bar fastest. How can I help next?";
-  }
-
-  function refreshOutsideBotAndTable() {
-    var m = computeDashboardMetrics();
-    var inr = typeof window.formatINR === "function" ? window.formatINR : function (v) { return "₹" + v; };
-
-    var pairs = [
-      ["sp-ht-overall", "sp-hb-overall", m.overallPct],
-      ["sp-ht-personal", "sp-hb-personal", m.personalPct],
-      ["sp-ht-finlife", "sp-hb-finlife", m.finLifePct],
-      ["sp-ht-skill", "sp-hb-skill", m.skillPct],
-      ["sp-ht-debt", "sp-hb-debt", m.debtClearedPct],
-      ["sp-ht-tasks", "sp-hb-tasks", m.planPct],
-      ["sp-ht-cash", "sp-hb-cash", m.cashflowHealthPct]
-    ];
-
-    pairs.forEach(function (p) {
-      var txtEl = document.getElementById(p[0]);
-      var barEl = document.getElementById(p[1]);
-      var val = Math.max(0, Math.min(100, Number(p[2] || 0)));
-      if (txtEl) txtEl.textContent = val + "%";
-      if (barEl) barEl.style.width = val + "%";
-    });
-
-    var exprType = "steady";
-    var exprLabel = "STEADY RECOVERY";
-    var exprCaption = "Gradual climb — keep consistency active";
-    if (m.overallPct >= 70 && m.netWorth >= 0) {
-      exprType = "peak";
-      exprLabel = "HIGH MOMENTUM";
-      exprCaption = "Strong overall dashboard & wealth momentum";
-    } else if (m.overallPct < 25 || m.netWorth < -2000000) {
-      exprType = "low";
-      exprLabel = "REBUILD FOCUS";
-      exprCaption = "Heavy debt/pressure stage — small daily steps matter most";
-    }
-
-    var svgBox = document.getElementById("sp-ob-robot-svg-box");
-    var badge = document.getElementById("sp-ob-expr-tag");
-    var cap = document.getElementById("sp-ob-expr-caption");
-    var sum = document.getElementById("sp-ob-live-summary");
-    if (svgBox) svgBox.innerHTML = renderBlueRobotSvg(exprType);
-    if (badge) badge.textContent = exprLabel;
-    if (cap) cap.textContent = exprCaption;
-    if (sum) sum.textContent = "Net Worth: " + inr(m.netWorth) + " • Overall: " + m.overallPct + "%";
-
-    // Render graphical bars + trend polyline inside outside bot card
-    var barsGroup = document.getElementById("sp-ob-graph-bars");
-    var lineEl = document.getElementById("sp-ob-graph-line");
-    var noteEl = document.getElementById("sp-ob-graph-note");
-    if (barsGroup && lineEl) {
-      var vals = [m.overallPct, m.personalPct, m.finLifePct, m.skillPct, m.debtClearedPct, m.planPct, m.cashflowHealthPct];
-      var colors = ["#3b82f6", "#60a5fa", "#22c55e", "#facc15", "#ef4444", "#a855f7", "#14b8a6"];
-      var barsHtml = "";
-      var pts = [];
-      for (var i = 0; i < vals.length; i++) {
-        var v = Math.max(4, Math.min(100, vals[i]));
-        var h = Math.round((v / 100) * 76);
-        var x = 28 + i * 44;
-        var y = 100 - h;
-        barsHtml += '<rect x="' + x + '" y="' + y + '" width="22" height="' + h + '" rx="4" fill="' + colors[i] + '" opacity="0.85"/>';
-        pts.push((x + 11) + "," + y);
-      }
-      barsGroup.innerHTML = barsHtml;
-      lineEl.setAttribute("points", pts.join(" "));
-    }
-    if (noteEl) {
-      noteEl.textContent = "Expression: " + exprLabel + " | Inc " + inr(m.totInc) + " | Exp " + inr(m.totExp) + " | Debt " + inr(m.remDebt);
-    }
-  }
-
-  window.addEventListener("DOMContentLoaded", function () {
-    mountSavePill();
-    mountOutsideBotSection();
-    refreshOutsideBotAndTable();
-
-    setInterval(refreshOutsideBotAndTable, 1500);
-    document.addEventListener("input", function () {
-      refreshOutsideBotAndTable();
-      scheduleSave();
-    }, true);
-    document.addEventListener("change", function () {
-      refreshOutsideBotAndTable();
-      scheduleSave();
-    }, true);
-  });
-})();
-</script>
-<!-- SHIV-PREM OUTSIDE BOT & HORIZONTAL PROGRESS GRAPHICAL PATCH END -->
 </body>
 </html>
