@@ -3269,1021 +3269,216 @@
 
         window.onload = initDashboard;
     </script>
-    <!-- SHIV-PREM COMPLETE UPDATE PATCH START -->
-<style id="sp-complete-update-style">
-  #sp-top-bar {
+  <!-- SHIV-PREM CLEAN UNIFIED FIX START -->
+<style id="sp-unified-fix-style">
+  /* 1. White Mode Fix for Top Quick Menu (3-Bar Drawer) & Text Contrast */
+  html:not(.dark) #topQuickMenuDrawer,
+  html:not(.dark) #topDownloadCategoryMenu {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+    border-color: #1e3a8a !important;
+  }
+  html:not(.dark) #topQuickMenuDrawer button,
+  html:not(.dark) #topDownloadCategoryMenu button {
+    color: #0f172a !important;
+  }
+  html:not(.dark) #topQuickMenuDrawer button:hover,
+  html:not(.dark) #topDownloadCategoryMenu button:hover {
+    background-color: #e2e8f0 !important;
+    color: #0f172a !important;
+  }
+
+  /* 2. Even Horizontal Progress / Table Alignment */
+  table,
+  .sp-even-horizontal-row {
+    width: 100%;
+  }
+  table th,
+  table td {
+    vertical-align: middle;
+  }
+
+  /* 3. Single Compact Top Auto-Save / Manual Save Pill (No Duplicate Boxes) */
+  #sp-single-save-pill {
     position: fixed;
-    top: 10px;
+    top: 12px;
     right: 12px;
-    z-index: 99999;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 6px 12px;
-    border-radius: 999px;
-    background: #0f172a;
-    color: #f8fafc;
-    border: 1px solid #334155;
-    font-family: system-ui, -apple-system, sans-serif;
-    font-size: 12px;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
-  }
-  #sp-save-now-btn {
-    background: #16a34a;
-    color: #ffffff;
-    border: none;
-    border-radius: 999px;
-    padding: 5px 12px;
-    font-size: 12px;
-    font-weight: 700;
-    cursor: pointer;
-  }
-  #sp-save-now-btn:hover { background: #15803d; }
-  #sp-save-state-text { font-size: 11px; color: #cbd5e1; white-space: nowrap; }
-
-  /* Light / White Mode Top-Nav 3-Bar & Menu Fix */
-  body.sp-light-active,
-  body.sp-light-active header,
-  body.sp-light-active nav {
-    background-color: #ffffff !important;
-    color: #0f172a !important;
-  }
-  body.sp-light-active button[aria-label*="menu" i],
-  body.sp-light-active button[class*="menu" i],
-  body.sp-light-active button[class*="hamburger" i],
-  body.sp-light-active button[class*="nav" i],
-  body.sp-light-active [class*="menu" i],
-  body.sp-light-active [class*="drawer" i],
-  body.sp-light-active [class*="dropdown" i],
-  body.sp-light-active [class*="sidebar" i] {
-    color: #0f172a !important;
-    background-color: #ffffff !important;
-    border-color: #cbd5e1 !important;
-  }
-  body.sp-light-active button[aria-label*="menu" i] *,
-  body.sp-light-active button[class*="menu" i] *,
-  body.sp-light-active button[class*="hamburger" i] *,
-  body.sp-light-active [class*="menu" i] *,
-  body.sp-light-active [class*="drawer" i] *,
-  body.sp-light-active [class*="dropdown" i] * {
-    color: #0f172a !important;
-    fill: currentColor !important;
-    stroke: currentColor !important;
-  }
-  body.sp-light-active #sp-top-bar {
-    background: #ffffff !important;
-    color: #0f172a !important;
-    border-color: #cbd5e1 !important;
-  }
-  body.sp-light-active #sp-save-state-text { color: #334155 !important; }
-
-  /* Hero Banner Icon/Robot & Even Horizontal Progress Table */
-  .sp-hero-upgrade {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    margin: 14px 0;
-    padding: 14px 16px;
-    border-radius: 14px;
-    background: linear-gradient(135deg, #1e293b, #0f172a);
-    color: #f8fafc;
-    border: 1px solid #334155;
-    font-family: system-ui, -apple-system, sans-serif;
-  }
-  body.sp-light-active .sp-hero-upgrade {
-    background: linear-gradient(135deg, #f8fafc, #e2e8f0) !important;
-    color: #0f172a !important;
-    border-color: #cbd5e1 !important;
-  }
-  .sp-hero-left { display: flex; align-items: center; gap: 12px; }
-  .sp-hero-badge {
-    width: 46px; height: 46px; border-radius: 12px;
-    display: grid; place-items: center; font-size: 24px;
-    background: #2563eb; color: #fff; flex-shrink: 0;
-  }
-  .sp-hero-title { font-size: 16px; font-weight: 700; margin: 0; }
-  .sp-hero-sub { font-size: 12px; opacity: 0.85; margin: 2px 0 0; }
-
-  .sp-horiz-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-    gap: 10px;
-    width: 100%;
-    margin-top: 8px;
-  }
-  .sp-horiz-cell {
-    padding: 10px 12px;
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(148, 163, 184, 0.25);
-    text-align: center;
-  }
-  body.sp-light-active .sp-horiz-cell {
-    background: #ffffff !important;
-    border-color: #cbd5e1 !important;
-  }
-  .sp-horiz-cell strong { display: block; font-size: 15px; margin-top: 4px; }
-
-  /* Goals, Systematic Step-by-Step Plan & Smart Bot Panel */
-  .sp-panel-wrap {
-    margin: 16px 0;
-    padding: 16px;
-    border-radius: 14px;
-    background: #111827;
-    color: #f9fafb;
-    border: 1px solid #374151;
-    font-family: system-ui, -apple-system, sans-serif;
-  }
-  body.sp-light-active .sp-panel-wrap {
-    background: #ffffff !important;
-    color: #0f172a !important;
-    border-color: #cbd5e1 !important;
-  }
-  .sp-goals-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-    gap: 12px;
-    margin-top: 12px;
-  }
-  .sp-goal-card {
-    padding: 12px;
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(148, 163, 184, 0.25);
-  }
-  body.sp-light-active .sp-goal-card {
-    background: #f8fafc !important;
-    border-color: #cbd5e1 !important;
-  }
-  .sp-goal-card label { display: block; font-size: 12px; font-weight: 700; margin-bottom: 6px; }
-  .sp-goal-card input[type="text"],
-  .sp-goal-card input[type="number"],
-  .sp-bot-input-row input {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 7px 9px;
-    border-radius: 8px;
-    border: 1px solid #475569;
-    background: #0f172a;
-    color: #f8fafc;
-    font-size: 12px;
-    margin-bottom: 6px;
-  }
-  body.sp-light-active .sp-goal-card input,
-  body.sp-light-active .sp-bot-input-row input {
-    background: #ffffff !important;
-    color: #0f172a !important;
-    border-color: #94a3b8 !important;
-  }
-  .sp-prog-bar {
-    height: 8px; border-radius: 999px; background: rgba(148, 163, 184, 0.25); overflow: hidden; margin: 6px 0;
-  }
-  .sp-prog-fill {
-    height: 100%; background: #3b82f6; width: 0%; transition: width 0.25s ease;
-  }
-  .sp-steps-list {
-    margin: 6px 0 0; padding-left: 16px; font-size: 12px; line-height: 1.45;
-  }
-  .sp-pred-box {
-    margin-top: 12px; padding: 12px; border-radius: 10px;
-    background: rgba(37, 99, 235, 0.14); border: 1px solid rgba(59, 130, 246, 0.4);
-    font-size: 12.5px; line-height: 1.5;
-  }
-  .sp-bot-log {
-    max-height: 220px; overflow-y: auto; padding: 10px; border-radius: 10px;
-    background: rgba(15, 23, 42, 0.55); border: 1px solid rgba(148, 163, 184, 0.25);
-    margin: 10px 0; font-size: 12.5px;
-  }
-  body.sp-light-active .sp-bot-log {
-    background: #f1f5f9 !important;
-    color: #0f172a !important;
-  }
-  .sp-bot-msg { margin-bottom: 8px; padding: 8px 10px; border-radius: 8px; }
-  .sp-bot-user { background: rgba(37, 99, 235, 0.22); text-align: right; }
-  .sp-bot-ai { background: rgba(16, 185, 129, 0.16); }
-  .sp-bot-input-row { display: flex; gap: 8px; align-items: center; }
-  .sp-bot-input-row input { margin-bottom: 0; flex: 1; }
-  .sp-btn-blue {
-    background: #2563eb; color: #fff; border: none; border-radius: 8px;
-    padding: 8px 12px; font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap;
-  }
-  .sp-btn-blue:hover { background: #1d4ed8; }
-</style>
-
-<script id="sp-complete-update-script">
-(function () {
-  const STORE_KEY = "SHIV_PREM_FULL_STATE_V2";
-  const HORIZONS = [
-    { id: "monthly", label: "Monthly Goal (1M)", defaultSteps: ["Define top 3 monthly targets", "Track weekly cashflow & tasks", "Review & adjust on Day 28"] },
-    { id: "qtr3", label: "Short-Term (3 Months)", defaultSteps: ["Build core system/habit", "Hit 90-day milestone checkpoint", "Audit bottlenecks at Week 12"] },
-    { id: "qtr6", label: "Short-Term (6 Months)", defaultSteps: ["Scale repeatable workflow", "Reach mid-year revenue/skill target", "Strengthen reserve & risk buffer"] },
-    { id: "yr1", label: "Long-Term (1 Year)", defaultSteps: ["Complete annual roadmap pillars", "Automate recurring processes", "Benchmark Year-1 results vs plan"] },
-    { id: "yr5", label: "Long-Term (5 Years)", defaultSteps: ["Expand business/wealth assets", "Build leadership & team leverage", "Reinvest compounding surplus"] },
-    { id: "yr10", label: "Long-Term (10 Years)", defaultSteps: ["Establish enduring wealth/brand", "Transition to high-leverage impact", "Decade review & legacy plan"] }
-  ];
-
-  let dirty = false;
-  let timer = null;
-
-  function defaultState() {
-    const goals = {};
-    HORIZONS.forEach((h) => {
-      goals[h.id] = { title: "", progress: 0, steps: h.defaultSteps.slice() };
-    });
-    return {
-      goals,
-      geminiApiKey: "",
-      inputs: {},
-      chat: [
-        {
-          role: "ai",
-          text: "Hello! I am ready to chat normally and analyze your dashboard numbers, goals, and step-by-step growth plan. Enter your data and ask me anything."
-        }
-      ],
-      updatedAt: ""
-    };
-  }
-
-  let state = defaultState();
-
-  function hideEmptySections() {
-    document.querySelectorAll("section, article, main > div").forEach((el) => {
-      if (el.id && el.id.startsWith("sp-")) return;
-      const text = (el.innerText || "").trim();
-      const hasControls = el.querySelector("input, textarea, select, canvas, svg, table");
-      if (!text && !hasControls && el.offsetHeight === 0) {
-        el.style.display = "none";
-      }
-    });
-  }
-
-  function detectLightMode() {
-    const htmlTheme = (document.documentElement.getAttribute("data-theme") || "").toLowerCase();
-    const bodyTheme = (document.body.getAttribute("data-theme") || "").toLowerCase();
-    const cls = (document.body.className + " " + document.documentElement.className).toLowerCase();
-    const isLight =
-      htmlTheme === "light" ||
-      bodyTheme === "light" ||
-      cls.includes("light-theme") ||
-      cls.includes("light-mode") ||
-      cls.includes("theme-light");
-
-    document.body.classList.toggle("sp-light-active", isLight);
-  }
-
-  function snapshotInputs() {
-    const map = {};
-    document.querySelectorAll("input, textarea, select").forEach((el, i) => {
-      if (el.dataset.spIgnore === "1" || el.type === "password") return;
-      const k = el.id || el.name || `inp_${i}`;
-      if (el.type === "checkbox" || el.type === "radio") {
-        map[k] = { checked: el.checked, value: el.value };
-      } else {
-        map[k] = { value: el.value };
-      }
-    });
-    return map;
-  }
-
-  function applyInputSnapshot(map) {
-    if (!map) return;
-    document.querySelectorAll("input, textarea, select").forEach((el, i) => {
-      if (el.dataset.spIgnore === "1" || el.type === "password") return;
-      const k = el.id || el.name || `inp_${i}`;
-      const item = map[k];
-      if (!item) return;
-      if (el.type === "checkbox" || el.type === "radio") {
-        el.checked = Boolean(item.checked);
-      } else if (typeof item.value === "string") {
-        el.value = item.value;
-      }
-    });
-  }
-
-  function setStatus(msg) {
-    const el = document.getElementById("sp-save-state-text");
-    if (!el) return;
-    const t = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" });
-    el.textContent = `${msg} · ${t}`;
-  }
-
-  function saveAll(reason) {
-    setStatus("Saving...");
-    try {
-      state.inputs = snapshotInputs();
-      state.updatedAt = new Date().toISOString();
-      localStorage.setItem(STORE_KEY, JSON.stringify(state));
-      if (typeof window.saveState === "function") {
-        window.saveState();
-      }
-      dirty = false;
-      updateDashboardSummary();
-      setStatus(reason || "Saved");
-    } catch (e) {
-      console.error("Save failed:", e);
-      setStatus("Save error");
-    }
-  }
-
-  function scheduleSave() {
-    dirty = true;
-    setStatus("Editing (auto-save in 20s)...");
-    if (timer) clearTimeout(timer);
-    timer = setTimeout(() => {
-      if (dirty) saveAll("Auto-saved (20s)");
-    }, 20000);
-  }
-
-  function buildTopBar() {
-    if (document.getElementById("sp-top-bar")) return;
-    const bar = document.createElement("div");
-    bar.id = "sp-top-bar";
-
-    const btn = document.createElement("button");
-    btn.id = "sp-save-now-btn";
-    btn.type = "button";
-    btn.dataset.spIgnore = "1";
-    btn.textContent = "Save / Update";
-    btn.addEventListener("click", () => saveAll("Saved manually"));
-
-    const span = document.createElement("span");
-    span.id = "sp-save-state-text";
-    span.textContent = "Ready";
-
-    bar.appendChild(btn);
-    bar.appendChild(span);
-    document.body.appendChild(bar);
-  }
-
-  function buildHeroAndHorizontalRow() {
-    if (document.getElementById("sp-hero-banner")) return;
-    const hero = document.createElement("div");
-    hero.id = "sp-hero-banner";
-    hero.className = "sp-hero-upgrade";
-    hero.innerHTML = `
-      <div class="sp-hero-left">
-        <div class="sp-hero-badge" id="sp-hero-robot-icon">🤖</div>
-        <div>
-          <h2 class="sp-hero-title">Shiv-Prem Growth & Wealth AI Command</h2>
-          <p class="sp-hero-sub">Systematic milestones, step-by-step execution & live data predictions</p>
-        </div>
-      </div>
-      <div class="sp-horiz-grid" id="sp-horiz-metrics">
-        <div class="sp-horiz-cell"><span>Active Goals</span><strong id="sp-m-goals">0 / 6</strong></div>
-        <div class="sp-horiz-cell"><span>Avg Progress</span><strong id="sp-m-avg">0%</strong></div>
-        <div class="sp-horiz-cell"><span>Next Step</span><strong id="sp-m-next">Set Goal</strong></div>
-        <div class="sp-horiz-cell"><span>Growth Outlook</span><strong id="sp-m-outlook">Baseline</strong></div>
-      </div>
-    `;
-    document.body.insertBefore(hero, document.body.firstChild);
-  }
-
-  function buildGoalsAndBotPanel() {
-    if (document.getElementById("sp-goals-bot-panel")) return;
-    const panel = document.createElement("div");
-    panel.id = "sp-goals-bot-panel";
-    panel.className = "sp-panel-wrap";
-
-    const cardsHtml = HORIZONS.map((h) => {
-      const g = state.goals[h.id] || { title: "", progress: 0, steps: h.defaultSteps };
-      const stepsHtml = (g.steps || h.defaultSteps)
-        .map((s) => `<li>${escapeHtml(s)}</li>`)
-        .join("");
-      return `
-        <div class="sp-goal-card" data-horizon="${h.id}">
-          <label>${h.label}</label>
-          <input type="text" data-sp-ignore="1" class="sp-goal-title" placeholder="Enter ${h.label.toLowerCase()}..." value="${escapeAttr(g.title)}" />
-          <input type="number" data-sp-ignore="1" class="sp-goal-prog" min="0" max="100" placeholder="Progress % (0-100)" value="${Number(g.progress) || 0}" />
-          <div class="sp-prog-bar"><div class="sp-prog-fill" style="width:${Math.max(0, Math.min(100, Number(g.progress) || 0))}%"></div></div>
-          <div style="font-size:11px;font-weight:700;margin-top:4px;">AI Step-by-Step Tasks:</div>
-          <ul class="sp-steps-list">${stepsHtml}</ul>
-        </div>
-      `;
-    }).join("");
-
-    panel.innerHTML = `
-      <h3 style="margin:0 0 4px;">Systematic Growth Goals (Monthly, 3M, 6M, 1Y, 5Y, 10Y)</h3>
-      <p style="margin:0;font-size:12px;opacity:0.85;">Enter goals and % progress—AI breaks them into small steps and predicts personal & business growth.</p>
-      <div class="sp-goals-grid">${cardsHtml}</div>
-      <div class="sp-pred-box" id="sp-predictions-box"></div>
-
-      <hr style="border:none;border-top:1px solid rgba(148,163,184,0.25);margin:16px 0;" />
-      <h3 style="margin:0 0 6px;">AI Assistant (General Chat + Your Dashboard Analysis)</h3>
-      <input type="text" data-sp-ignore="1" id="sp-gemini-key" placeholder="Optional Gemini API Key (leave empty for smart dashboard + general assistant)" value="${escapeAttr(state.geminiApiKey || "")}" style="width:100%;box-sizing:border-box;padding:7px 9px;border-radius:8px;border:1px solid #475569;background:#0f172a;color:#f8fafc;font-size:12px;" />
-      <div class="sp-bot-log" id="sp-bot-log"></div>
-      <div class="sp-bot-input-row">
-        <input type="text" data-sp-ignore="1" id="sp-bot-input" placeholder="Ask anything or ask about your goals, progress, personal & business growth..." />
-        <button type="button" class="sp-btn-blue" id="sp-bot-send">Send</button>
-      </div>
-    `;
-
-    const topBar = document.getElementById("sp-top-bar");
-    document.body.insertBefore(panel, topBar || null);
-
-    panel.querySelectorAll(".sp-goal-card").forEach((card) => {
-      const hid = card.dataset.horizon;
-      const titleInp = card.querySelector(".sp-goal-title");
-      const progInp = card.querySelector(".sp-goal-prog");
-      const fill = card.querySelector(".sp-prog-fill");
-      const list = card.querySelector(".sp-steps-list");
-
-      function syncCard() {
-        const t = titleInp.value.trim();
-        const p = Math.max(0, Math.min(100, Number(progInp.value) || 0));
-        progInp.value = p;
-        fill.style.width = `${p}%`;
-        const base = HORIZONS.find((x) => x.id === hid);
-        const generatedSteps = t
-          ? [
-              `Step 1: Break "${t}" into daily 30-min actions`,
-              `Step 2: Complete milestone check at ${Math.min(100, p + 25)}% progress`,
-              `Step 3: Resolve top blocker & log result before next review`
-            ]
-          : base.defaultSteps.slice();
-        list.innerHTML = generatedSteps.map((s) => `<li>${escapeHtml(s)}</li>`).join("");
-        state.goals[hid] = { title: titleInp.value, progress: p, steps: generatedSteps };
-        updateDashboardSummary();
-        scheduleSave();
-      }
-
-      titleInp.addEventListener("input", syncCard);
-      progInp.addEventListener("input", syncCard);
-    });
-
-    const keyInp = document.getElementById("sp-gemini-key");
-    keyInp.addEventListener("input", () => {
-      state.geminiApiKey = keyInp.value.trim();
-      scheduleSave();
-    });
-
-    const sendBtn = document.getElementById("sp-bot-send");
-    const chatInp = document.getElementById("sp-bot-input");
-    sendBtn.addEventListener("click", handleBotSend);
-    chatInp.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") handleBotSend();
-    });
-
-    renderChat();
-    updateDashboardSummary();
-  }
-
-  function updateDashboardSummary() {
-    let activeCount = 0;
-    let sumProg = 0;
-    let nextStepText = "Add goal";
-
-    HORIZONS.forEach((h) => {
-      const g = state.goals[h.id] || { title: "", progress: 0, steps: h.defaultSteps };
-      if (g.title && g.title.trim()) {
-        activeCount += 1;
-        if (nextStepText === "Add goal" && g.steps && g.steps[0]) {
-          nextStepText = g.steps[0];
-        }
-      }
-      sumProg += Number(g.progress) || 0;
-    });
-
-    const avg = Math.round(sumProg / HORIZONS.length);
-    const outlook = avg >= 70 ? "High Momentum" : avg >= 35 ? "Steady Climb" : "Foundation Phase";
-
-    const gEl = document.getElementById("sp-m-goals");
-    const aEl = document.getElementById("sp-m-avg");
-    const nEl = document.getElementById("sp-m-next");
-    const oEl = document.getElementById("sp-m-outlook");
-    if (gEl) gEl.textContent = `${activeCount} / ${HORIZONS.length}`;
-    if (aEl) aEl.textContent = `${avg}%`;
-    if (nEl) nEl.textContent = nextStepText;
-    if (oEl) oEl.textContent = outlook;
-
-    const predBox = document.getElementById("sp-predictions-box");
-    if (predBox) {
-      const yr1Goal = state.goals.yr1?.title || "Year-1 milestone";
-      const yr5Goal = state.goals.yr5?.title || "Year-5 expansion";
-      const yr10Goal = state.goals.yr10?.title || "Year-10 compounding";
-      predBox.innerHTML = `
-        <strong>AI Personal & Business Growth Predictions:</strong><br/>
-        • <strong>Personal Growth:</strong> At ${avg}% average completion, consistent daily micro-steps build strong discipline toward <em>${escapeHtml(yr1Goal)}</em> and long-term balance.<br/>
-        • <strong>Business & Wealth Outlook:</strong> ${outlook} — prioritizing 3M & 6M execution directly accelerates <em>${escapeHtml(yr5Goal)}</em> and <em>${escapeHtml(yr10Goal)}</em>.
-      `;
-    }
-  }
-
-  function renderChat() {
-    const log = document.getElementById("sp-bot-log");
-    if (!log) return;
-    log.innerHTML = state.chat
-      .map(
-        (m) =>
-          `<div class="sp-bot-msg ${m.role === "user" ? "sp-bot-user" : "sp-bot-ai"}"><strong>${m.role === "user" ? "You" : "AI"}:</strong> ${escapeHtml(m.text)}</div>`
-      )
-      .join("");
-    log.scrollTop = log.scrollHeight;
-  }
-
-  function buildDashboardContextText() {
-    const lines = HORIZONS.map((h) => {
-      const g = state.goals[h.id] || {};
-      return `${h.label}: "${g.title || "Not set"}" (${g.progress || 0}%)`;
-    });
-    const filledInputs = Object.entries(state.inputs || {})
-      .filter(([, v]) => v && typeof v.value === "string" && v.value.trim() !== "")
-      .slice(0, 15)
-      .map(([k, v]) => `${k}: ${v.value}`);
-    return `Goals -> ${lines.join(" | ")}. Dashboard inputs -> ${filledInputs.length ? filledInputs.join(" | ") : "None entered yet"}.`;
-  }
-
-  async function handleBotSend() {
-    const inp = document.getElementById("sp-bot-input");
-    if (!inp) return;
-    const q = inp.value.trim();
-    if (!q) return;
-    inp.value = "";
-
-    state.chat.push({ role: "user", text: q });
-    renderChat();
-
-    const ctx = buildDashboardContextText();
-    let reply = "";
-
-    if (state.geminiApiKey) {
-      try {
-        const res = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${encodeURIComponent(state.geminiApiKey)}`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              contents: [
-                {
-                  parts: [
-                    {
-                      text: `You are a helpful conversational assistant and growth analyst. Answer naturally and concisely. Use this dashboard data when relevant: ${ctx}\n\nUser message: ${q}`
-                    }
-                  ]
-                }
-              ]
-            })
-          }
-        );
-        const data = await res.json();
-        reply = data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
-      } catch (err) {
-        console.warn("Gemini call fallback:", err);
-      }
-    }
-
-    if (!reply) {
-      const lower = q.toLowerCase();
-      if (lower.includes("goal") || lower.includes("plan") || lower.includes("progress") || lower.includes("predict") || lower.includes("business") || lower.includes("personal")) {
-        reply = `Based on your current dashboard: ${ctx}. Recommendation: Pick one active goal today, complete its first small step, and keep progress updating every week.`;
-      } else {
-        reply = `Sure—let's talk! On your dashboard right now, ${ctx}. How can I help you with your next step or any general question?`;
-      }
-    }
-
-    state.chat.push({ role: "ai", text: reply });
-    renderChat();
-    scheduleSave();
-  }
-
-  function escapeHtml(s) {
-    return String(s || "")
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;");
-  }
-
-  function escapeAttr(s) {
-    return escapeHtml(s).replace(/'/g, "&#39;");
-  }
-
-  function loadSaved() {
-    try {
-      const raw = localStorage.getItem(STORE_KEY);
-      if (!raw) return;
-      const parsed = JSON.parse(raw);
-      if (parsed && typeof parsed === "object") {
-        state = Object.assign(defaultState(), parsed, {
-          goals: Object.assign(defaultState().goals, parsed.goals || {}),
-          chat: Array.isArray(parsed.chat) && parsed.chat.length ? parsed.chat : defaultState().chat
-        });
-      }
-    } catch (e) {
-      console.warn("Load skipped:", e);
-    }
-  }
-
-  window.addEventListener("DOMContentLoaded", () => {
-    loadSaved();
-    detectLightMode();
-    hideEmptySections();
-    buildTopBar();
-    buildHeroAndHorizontalRow();
-    buildGoalsAndBotPanel();
-    applyInputSnapshot(state.inputs);
-    updateDashboardSummary();
-
-    document.addEventListener("input", (e) => {
-      if (e.target && e.target.dataset && e.target.dataset.spIgnore === "1") return;
-      scheduleSave();
-    }, true);
-
-    document.addEventListener("change", (e) => {
-      detectLightMode();
-      if (e.target && e.target.dataset && e.target.dataset.spIgnore === "1") return;
-      scheduleSave();
-    }, true);
-
-    const obs = new MutationObserver(() => {
-      detectLightMode();
-    });
-    obs.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme", "class"] });
-    obs.observe(document.body, { attributes: true, attributeFilter: ["data-theme", "class"] });
-  });
-})();
-</script>
-<!-- SHIV-PREM COMPLETE UPDATE PATCH END -->
-    <!-- SHIV-PREM TARGETED REFINEMENT UPDATE START -->
-<style id="sp-refine-style">
-  /* 1. Even Horizontal Progress Table */
-  table.sp-even-table,
-  .sp-progress-table table {
-    width: 100% !important;
-    table-layout: fixed !important;
-    border-collapse: collapse !important;
-  }
-  table.sp-even-table th,
-  table.sp-even-table td {
-    text-align: center !important;
-    vertical-align: middle !important;
-    padding: 10px 8px !important;
-    word-break: break-word;
-  }
-
-  /* 2. White / Light Mode: Left Bar & 3-Bar Button + Inner Content */
-  body.sp-light-mode aside,
-  body.sp-light-mode [class*="sidebar" i],
-  body.sp-light-mode [class*="left-bar" i],
-  body.sp-light-mode [class*="drawer" i],
-  body.sp-light-mode [class*="menu" i] {
-    background-color: #ffffff !important;
-    color: #ffffff !important;
-  }
-  body.sp-light-mode [class*="hamburger" i],
-  body.sp-light-mode [class*="menu-btn" i],
-  body.sp-light-mode [class*="toggle" i],
-  body.sp-light-mode button[aria-label*="menu" i] {
-    background-color: #0f172a !important;
-    color: #ffffff !important;
-    border-color: #ffffff !important;
-  }
-  body.sp-light-mode [class*="hamburger" i] *,
-  body.sp-light-mode [class*="menu-btn" i] *,
-  body.sp-light-mode [class*="toggle" i] *,
-  body.sp-light-mode button[aria-label*="menu" i] * {
-    color: #ffffff !important;
-    fill: #ffffff !important;
-    stroke: #ffffff !important;
-  }
-
-  /* 3. Hero Banner Icon, Robot & Horizontal Strip */
-  .sp-refined-hero {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    padding: 14px 16px;
-    margin: 12px 0;
-    border-radius: 14px;
-    background: linear-gradient(120deg, #1d4ed8, #0f172a);
-    color: #ffffff;
-    font-family: system-ui, -apple-system, sans-serif;
-  }
-  .sp-refined-hero-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-  .sp-hero-brand {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .sp-hero-icon-swap,
-  .sp-hero-bot-swap {
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
+    z-index: 60;
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    background: rgba(255, 255, 255, 0.16);
-    cursor: pointer;
-    border: 1px solid rgba(255, 255, 255, 0.28);
-  }
-  .sp-even-row {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 10px;
-  }
-  @media (max-width: 640px) {
-    .sp-even-row {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
-  .sp-even-box {
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 10px;
-    padding: 8px 10px;
-    text-align: center;
-  }
-  .sp-even-box span {
-    display: block;
+    gap: 8px;
+    padding: 5px 10px;
+    border-radius: 999px;
+    font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
-    opacity: 0.85;
+    background: #12151e;
+    color: #f8fafc;
+    border: 1.5px solid #3b82f6;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
   }
-  .sp-even-box strong {
-    display: block;
-    font-size: 14px;
-    margin-top: 3px;
+  html:not(.dark) #sp-single-save-pill {
+    background: #ffffff;
+    color: #0f172a;
+    border-color: #1e3a8a;
   }
-
-  /* 4. Top Save/Update Bar */
-  #sp-refine-savebar {
-    position: fixed;
-    top: 10px;
-    right: 12px;
-    z-index: 99999;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: #0f172a;
-    color: #ffffff;
-    padding: 6px 12px;
-    border-radius: 999px;
-    font-size: 12px;
-    border: 1px solid #334155;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
-  }
-  #sp-refine-savebtn {
+  #sp-single-save-btn {
     background: #22c55e;
     color: #052e16;
-    border: none;
+    font-weight: 800;
+    padding: 3px 10px;
     border-radius: 999px;
-    padding: 4px 11px;
-    font-weight: 700;
     cursor: pointer;
+    border: none;
+  }
+  #sp-single-save-btn:hover {
+    background: #4ade80;
   }
 </style>
 
-<script id="sp-refine-script">
+<script id="sp-unified-fix-script">
 (function () {
-  const ICONS = ["🚀", "💎", "📈", "⚡"];
-  const ROBOTS = ["🤖", "🦾", "🛸", "🧠"];
-  const KEY = "SHIV_PREM_REFINE_DATA_V1";
-  let iconIdx = 0;
-  let botIdx = 0;
-  let pendingSave = false;
-  let saveTimer = null;
+  // Remove any leftover duplicate boxes from earlier patches if present
+  ["sp-top-bar", "sp-hero-banner", "sp-goals-bot-panel", "sp-refine-savebar", "sp-refined-hero", "sp-common-bot-box"].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) el.remove();
+  });
 
-  function loadData() {
+  var AUTO_SAVE_MS = 15000; // 15 seconds (within 10-30s)
+  var saveTimer = null;
+  var hasUnsaved = false;
+
+  function setSaveIndicator(msg) {
+    var statusEl = document.getElementById("sp-single-status");
+    if (!statusEl) return;
+    var now = new Date().toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+    statusEl.textContent = msg + " • " + now;
+  }
+
+  function triggerSaveNow(label) {
+    setSaveIndicator("Saving...");
     try {
-      return JSON.parse(localStorage.getItem(KEY) || "{}") || {};
-    } catch (_) {
-      return {};
-    }
-  }
-
-  let mem = loadData();
-  if (typeof mem.iconIdx === "number") iconIdx = mem.iconIdx % ICONS.length;
-  if (typeof mem.botIdx === "number") botIdx = mem.botIdx % ROBOTS.length;
-
-  function setBadge(text) {
-    const el = document.getElementById("sp-refine-status");
-    if (el) {
-      const ts = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" });
-      el.textContent = `${text} (${ts})`;
-    }
-  }
-
-  function collectDashSummary() {
-    const vals = [];
-    document.querySelectorAll("input, textarea, select").forEach((el) => {
-      if (el.dataset.noSummary === "1" || el.type === "password") return;
-      const v = (el.value || "").trim();
-      if (v) {
-        const label = el.labels?.[0]?.innerText?.trim() || el.placeholder || el.name || el.id || "Field";
-        vals.push(`${label}: ${v}`);
-      }
-    });
-    return vals.length ? vals.slice(0, 12).join(" | ") : "No dashboard values entered yet";
-  }
-
-  function syncHeroStats() {
-    const inputs = Array.from(document.querySelectorAll("input, textarea, select")).filter(
-      (el) => el.dataset.noSummary !== "1" && el.type !== "password"
-    );
-    const filled = inputs.filter((el) => String(el.value || "").trim() !== "").length;
-    const pct = inputs.length ? Math.round((filled / inputs.length) * 100) : 0;
-
-    const cEl = document.getElementById("sp-ref-count");
-    const pEl = document.getElementById("sp-ref-pct");
-    const sEl = document.getElementById("sp-ref-status");
-    if (cEl) cEl.textContent = `${filled} / ${inputs.length}`;
-    if (pEl) pEl.textContent = `${pct}%`;
-    if (sEl) sEl.textContent = pct >= 60 ? "On Track" : pct > 0 ? "In Progress" : "Ready";
-  }
-
-  function runSave(label) {
-    setBadge("Saving...");
-    try {
-      mem.iconIdx = iconIdx;
-      mem.botIdx = botIdx;
-      mem.updatedAt = new Date().toISOString();
-      localStorage.setItem(KEY, JSON.stringify(mem));
       if (typeof window.saveState === "function") {
         window.saveState();
       }
-      pendingSave = false;
-      syncHeroStats();
-      setBadge(label || "Saved");
-    } catch (e) {
-      console.error(e);
-      setBadge("Save error");
+      hasUnsaved = false;
+      setSaveIndicator(label || "Saved");
+    } catch (err) {
+      console.error("Save error:", err);
+      setSaveIndicator("Save issue");
     }
   }
 
-  function queueAutoSave() {
-    pendingSave = true;
-    setBadge("Auto-saving in 15s...");
+  function scheduleAutoSave() {
+    hasUnsaved = true;
+    setSaveIndicator("Auto-save in 15s...");
     if (saveTimer) clearTimeout(saveTimer);
-    saveTimer = setTimeout(() => {
-      if (pendingSave) runSave("Auto-saved (15s)");
-    }, 15000); // 10-30s interval
+    saveTimer = setTimeout(function () {
+      if (hasUnsaved) {
+        triggerSaveNow("Auto-saved");
+      }
+    }, AUTO_SAVE_MS);
   }
 
-  function applyWhiteModeCheck() {
-    const t = (document.documentElement.getAttribute("data-theme") || document.body.getAttribute("data-theme") || "").toLowerCase();
-    const cls = (document.body.className + " " + document.documentElement.className).toLowerCase();
-    const isLight = t === "light" || cls.includes("light");
-    document.body.classList.toggle("sp-light-mode", isLight);
-  }
+  function mountSingleSavePill() {
+    if (document.getElementById("sp-single-save-pill")) return;
+    var pill = document.createElement("div");
+    pill.id = "sp-single-save-pill";
 
-  function mountHero() {
-    if (document.getElementById("sp-refined-hero")) return;
-    const wrap = document.createElement("div");
-    wrap.id = "sp-refined-hero";
-    wrap.className = "sp-refined-hero";
-    wrap.innerHTML = `
-      <div class="sp-refined-hero-top">
-        <div class="sp-hero-brand">
-          <button type="button" data-no-summary="1" id="sp-icon-btn" class="sp-hero-icon-swap" title="Change Banner Icon">${ICONS[iconIdx]}</button>
-          <button type="button" data-no-summary="1" id="sp-bot-btn" class="sp-hero-bot-swap" title="Change Banner Robot">${ROBOTS[botIdx]}</button>
-          <div>
-            <div style="font-size:15px;font-weight:700;">Shiv-Prem Growth & Wealth AI Dashboard</div>
-            <div style="font-size:12px;opacity:0.85;">Tap icon or robot to switch • Auto-save 15s & manual save active</div>
-          </div>
-        </div>
-      </div>
-      <div class="sp-even-row">
-        <div class="sp-even-box"><span>Entered Fields</span><strong id="sp-ref-count">0 / 0</strong></div>
-        <div class="sp-even-box"><span>Completion</span><strong id="sp-ref-pct">0%</strong></div>
-        <div class="sp-even-box"><span>Save Mode</span><strong>15s + Manual</strong></div>
-        <div class="sp-even-box"><span>Progress State</span><strong id="sp-ref-status">Ready</strong></div>
-      </div>
-    `;
-    document.body.insertBefore(wrap, document.body.firstChild);
-
-    document.getElementById("sp-icon-btn").addEventListener("click", () => {
-      iconIdx = (iconIdx + 1) % ICONS.length;
-      document.getElementById("sp-icon-btn").textContent = ICONS[iconIdx];
-      queueAutoSave();
-    });
-
-    document.getElementById("sp-bot-btn").addEventListener("click", () => {
-      botIdx = (botIdx + 1) % ROBOTS.length;
-      document.getElementById("sp-bot-btn").textContent = ROBOTS[botIdx];
-      queueAutoSave();
-    });
-  }
-
-  function mountSaveBar() {
-    if (document.getElementById("sp-refine-savebar")) return;
-    const bar = document.createElement("div");
-    bar.id = "sp-refine-savebar";
-
-    const btn = document.createElement("button");
-    btn.id = "sp-refine-savebtn";
+    var btn = document.createElement("button");
+    btn.id = "sp-single-save-btn";
     btn.type = "button";
-    btn.dataset.noSummary = "1";
     btn.textContent = "Save / Update";
-    btn.addEventListener("click", () => runSave("Updated manually"));
-
-    const st = document.createElement("span");
-    st.id = "sp-refine-status";
-    st.textContent = "Ready";
-
-    bar.appendChild(btn);
-    bar.appendChild(st);
-    document.body.appendChild(bar);
-  }
-
-  function enhanceTables() {
-    document.querySelectorAll("table").forEach((tbl) => {
-      tbl.classList.add("sp-even-table");
+    btn.addEventListener("click", function () {
+      triggerSaveNow("Saved manually");
     });
+
+    var status = document.createElement("span");
+    status.id = "sp-single-status";
+    status.textContent = "15s Auto-Save Ready";
+
+    pill.appendChild(btn);
+    pill.appendChild(status);
+    document.body.appendChild(pill);
   }
 
-  function smartCommonAndDashboardReply(userText) {
-    const q = userText.trim();
-    const low = q.toLowerCase();
-    const summary = collectDashSummary();
+  function buildDashboardSnapshotText(isTa) {
+    try {
+      if (typeof window.getCurrentFinancialTotals === "function" && window.state) {
+        var fin = window.getCurrentFinancialTotals();
+        var remDebt = (window.state.debts || []).reduce(function (s, d) {
+          return s + Number(d.remaining || 0);
+        }, 0);
+        var netWorth = fin.totInv - remDebt;
+        var bizCount = (window.state.businessAccounts || []).length;
+        var tasksPending = (window.state.planningTasks || []).filter(function (t) { return !t.done; }).length;
+        var inr = typeof window.formatINR === "function" ? window.formatINR : function (v) { return "₹" + v; };
 
-    if (low.includes("hi") || low.includes("hello") || low.includes("hey") || low.includes("vanakkam")) {
-      return `Hey! Good to chat with you. Looking at your dashboard right now: ${summary}. What would you like to work on or ask about?`;
+        if (isTa) {
+          return "டேஷ்போர்டு சுருக்கம்: நிகர சொத்து " + inr(netWorth) +
+            ", மொத்த வரவு " + inr(fin.totInc) +
+            ", செலவு " + inr(fin.totExp) +
+            ", முதலீடு " + inr(fin.totInv) +
+            ", மீதமுள்ள கடன் " + (remDebt > 0 ? "-" + inr(remDebt) : "₹0") +
+            ", பிசினஸ் கணக்குகள் " + bizCount +
+            ", நிலுவைப் பணிகள் " + tasksPending + ".";
+        }
+        return "Dashboard summary: Net worth " + inr(netWorth) +
+          ", income " + inr(fin.totInc) +
+          ", expenses " + inr(fin.totExp) +
+          ", investments " + inr(fin.totInv) +
+          ", remaining debt " + (remDebt > 0 ? "-" + inr(remDebt) : "₹0") +
+          ", businesses " + bizCount +
+          ", pending tasks " + tasksPending + ".";
+      }
+    } catch (_) {}
+    return "";
+  }
+
+  // Enhance existing bot reply to converse naturally + include dashboard analysis
+  var origBotFn = window.smartBotAnalyzeAndUpdate;
+  window.smartBotAnalyzeAndUpdate = function (q, lang) {
+    var isTa = lang === "ta" || (window.state && window.state.lang === "ta");
+    var lower = String(q || "").toLowerCase().trim();
+    var snap = buildDashboardSnapshotText(isTa);
+
+    var hasAmount = /(?:₹|rs\.?|inr)?\s*\d[\d,]*/i.test(lower);
+    var wantsUpdate =
+      lower.indexOf("அப்டேட்") !== -1 ||
+      lower.indexOf("சேர்") !== -1 ||
+      lower.indexOf("சம்பாதி") !== -1 ||
+      lower.indexOf("update") !== -1 ||
+      lower.indexOf("add ") === 0 ||
+      lower.indexOf("earned") !== -1;
+
+    if (hasAmount && wantsUpdate && typeof origBotFn === "function") {
+      return origBotFn(q, lang);
     }
-    if (low.includes("analysis") || low.includes("data") || low.includes("dashboard") || low.includes("report") || low.includes("progress")) {
-      return `Here is your dashboard analysis: ${summary}. Focus on completing the remaining empty fields and updating numbers weekly so your growth trend stays clear.`;
+
+    var isGreeting = /^(hi|hello|hey|vanakkam|வணக்கம்|ஹாய்|ஹலோ)/i.test(lower);
+    if (isGreeting) {
+      return isTa
+        ? "வணக்கம்! இயல்பாகப் பேசவும், உங்கள் டேஷ்போர்டு நிலையை அலசிப் பார்க்கவும் தயாராக இருக்கிறேன். " + snap + " இன்று எதைப் பற்றி பேசலாம் அல்லது அப்டேட் செய்யலாம்?"
+        : "Hey! Good to chat with you. " + snap + " What would you like to talk about or check on your dashboard today?";
     }
-    return `Let's talk! Regarding "${q}" — based on your current dashboard data (${summary}), I can help you plan next steps, review your numbers, or chat about any general topic. What do you want to explore next?`;
-  }
 
-  function hookExistingOrFallbackBot() {
-    // Expose helper globally so any existing bot handler can also call it
-    window.shivPremSmartBotReply = smartCommonAndDashboardReply;
+    if (typeof origBotFn === "function") {
+      var baseReply = origBotFn(q, lang);
+      if (snap && baseReply.indexOf(snap) === -1) {
+        return baseReply + " " + snap;
+      }
+      return baseReply;
+    }
 
-    // If no existing bot input is present, provide a compact conversational bar at bottom
-    const existingInput = document.querySelector("#bot-input, #chat-input, [data-bot-input]");
-    if (existingInput || document.getElementById("sp-common-bot-box")) return;
+    return snap || (isTa ? "சொல்லுங்கள், நான் உதவத் தயாராக இருக்கிறேன்." : "Sure, let's chat! How can I help?");
+  };
 
-    const box = document.createElement("div");
-    box.id = "sp-common-bot-box";
-    box.style.cssText =
-      "margin:14px 0;padding:12px;border-radius:12px;border:1px solid #334155;background:#0f172a;color:#f8fafc;font-family:system-ui,sans-serif;";
-    box.innerHTML = `
-      <div style="font-weight:700;font-size:13px;margin-bottom:6px;">Dashboard & General Assistant</div>
-      <div id="sp-common-bot-msgs" style="max-height:180px;overflow-y:auto;font-size:12.5px;margin-bottom:8px;">
-        <div style="margin-bottom:6px;"><strong>Bot:</strong> Hi! Ask me anything general or ask about your dashboard analysis.</div>
-      </div>
-      <div style="display:flex;gap:8px;">
-        <input id="sp-common-bot-in" data-no-summary="1" type="text" placeholder="Type a message or ask about your dashboard..." style="flex:1;padding:7px 10px;border-radius:8px;border:1px solid #475569;background:#1e293b;color:#fff;font-size:12px;" />
-        <button id="sp-common-bot-go" data-no-summary="1" type="button" style="padding:7px 14px;border-radius:8px;border:none;background:#2563eb;color:#fff;font-weight:600;cursor:pointer;">Ask</button>
-      </div>
-    `;
-    document.body.appendChild(box);
-
-    const send = () => {
-      const inp = document.getElementById("sp-common-bot-in");
-      const log = document.getElementById("sp-common-bot-msgs");
-      const txt = (inp?.value || "").trim();
-      if (!txt || !log) return;
-      inp.value = "";
-      const ans = smartCommonAndDashboardReply(txt);
-      log.innerHTML += `<div style="margin-bottom:5px;"><strong>You:</strong> ${txt.replace(/</g, "&lt;")}</div>`;
-      log.innerHTML += `<div style="margin-bottom:8px;color:#86efac;"><strong>Bot:</strong> ${ans.replace(/</g, "&lt;")}</div>`;
-      log.scrollTop = log.scrollHeight;
-    };
-
-    document.getElementById("sp-common-bot-go").addEventListener("click", send);
-    document.getElementById("sp-common-bot-in").addEventListener("keydown", (e) => {
-      if (e.key === "Enter") send();
-    });
-  }
-
-  window.addEventListener("DOMContentLoaded", () => {
-    applyWhiteModeCheck();
-    mountHero();
-    mountSaveBar();
-    enhanceTables();
-    hookExistingOrFallbackBot();
-    syncHeroStats();
-
-    document.addEventListener("input", (e) => {
-      if (e.target?.dataset?.noSummary === "1") return;
-      syncHeroStats();
-      queueAutoSave();
-    }, true);
-
-    document.addEventListener("change", (e) => {
-      applyWhiteModeCheck();
-      if (e.target?.dataset?.noSummary === "1") return;
-      syncHeroStats();
-      queueAutoSave();
-    }, true);
-
-    new MutationObserver(applyWhiteModeCheck).observe(document.body, {
-      attributes: true,
-      attributeFilter: ["class", "data-theme"]
-    });
+  window.addEventListener("DOMContentLoaded", function () {
+    mountSingleSavePill();
+    document.addEventListener("input", scheduleAutoSave, true);
+    document.addEventListener("change", scheduleAutoSave, true);
   });
 })();
 </script>
-<!-- SHIV-PREM TARGETED REFINEMENT UPDATE END -->
+<!-- SHIV-PREM CLEAN UNIFIED FIX END -->
 </body>
 </html>
