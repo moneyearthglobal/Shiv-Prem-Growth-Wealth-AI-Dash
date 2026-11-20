@@ -3906,5 +3906,384 @@
 })();
 </script>
 <!-- SHIV-PREM COMPLETE UPDATE PATCH END -->
+    <!-- SHIV-PREM TARGETED REFINEMENT UPDATE START -->
+<style id="sp-refine-style">
+  /* 1. Even Horizontal Progress Table */
+  table.sp-even-table,
+  .sp-progress-table table {
+    width: 100% !important;
+    table-layout: fixed !important;
+    border-collapse: collapse !important;
+  }
+  table.sp-even-table th,
+  table.sp-even-table td {
+    text-align: center !important;
+    vertical-align: middle !important;
+    padding: 10px 8px !important;
+    word-break: break-word;
+  }
+
+  /* 2. White / Light Mode: Left Bar & 3-Bar Button + Inner Content */
+  body.sp-light-mode aside,
+  body.sp-light-mode [class*="sidebar" i],
+  body.sp-light-mode [class*="left-bar" i],
+  body.sp-light-mode [class*="drawer" i],
+  body.sp-light-mode [class*="menu" i] {
+    background-color: #ffffff !important;
+    color: #ffffff !important;
+  }
+  body.sp-light-mode [class*="hamburger" i],
+  body.sp-light-mode [class*="menu-btn" i],
+  body.sp-light-mode [class*="toggle" i],
+  body.sp-light-mode button[aria-label*="menu" i] {
+    background-color: #0f172a !important;
+    color: #ffffff !important;
+    border-color: #ffffff !important;
+  }
+  body.sp-light-mode [class*="hamburger" i] *,
+  body.sp-light-mode [class*="menu-btn" i] *,
+  body.sp-light-mode [class*="toggle" i] *,
+  body.sp-light-mode button[aria-label*="menu" i] * {
+    color: #ffffff !important;
+    fill: #ffffff !important;
+    stroke: #ffffff !important;
+  }
+
+  /* 3. Hero Banner Icon, Robot & Horizontal Strip */
+  .sp-refined-hero {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 14px 16px;
+    margin: 12px 0;
+    border-radius: 14px;
+    background: linear-gradient(120deg, #1d4ed8, #0f172a);
+    color: #ffffff;
+    font-family: system-ui, -apple-system, sans-serif;
+  }
+  .sp-refined-hero-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .sp-hero-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .sp-hero-icon-swap,
+  .sp-hero-bot-swap {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    background: rgba(255, 255, 255, 0.16);
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+  }
+  .sp-even-row {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+  }
+  @media (max-width: 640px) {
+    .sp-even-row {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  .sp-even-box {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    padding: 8px 10px;
+    text-align: center;
+  }
+  .sp-even-box span {
+    display: block;
+    font-size: 11px;
+    opacity: 0.85;
+  }
+  .sp-even-box strong {
+    display: block;
+    font-size: 14px;
+    margin-top: 3px;
+  }
+
+  /* 4. Top Save/Update Bar */
+  #sp-refine-savebar {
+    position: fixed;
+    top: 10px;
+    right: 12px;
+    z-index: 99999;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #0f172a;
+    color: #ffffff;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    border: 1px solid #334155;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+  }
+  #sp-refine-savebtn {
+    background: #22c55e;
+    color: #052e16;
+    border: none;
+    border-radius: 999px;
+    padding: 4px 11px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+</style>
+
+<script id="sp-refine-script">
+(function () {
+  const ICONS = ["🚀", "💎", "📈", "⚡"];
+  const ROBOTS = ["🤖", "🦾", "🛸", "🧠"];
+  const KEY = "SHIV_PREM_REFINE_DATA_V1";
+  let iconIdx = 0;
+  let botIdx = 0;
+  let pendingSave = false;
+  let saveTimer = null;
+
+  function loadData() {
+    try {
+      return JSON.parse(localStorage.getItem(KEY) || "{}") || {};
+    } catch (_) {
+      return {};
+    }
+  }
+
+  let mem = loadData();
+  if (typeof mem.iconIdx === "number") iconIdx = mem.iconIdx % ICONS.length;
+  if (typeof mem.botIdx === "number") botIdx = mem.botIdx % ROBOTS.length;
+
+  function setBadge(text) {
+    const el = document.getElementById("sp-refine-status");
+    if (el) {
+      const ts = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+      el.textContent = `${text} (${ts})`;
+    }
+  }
+
+  function collectDashSummary() {
+    const vals = [];
+    document.querySelectorAll("input, textarea, select").forEach((el) => {
+      if (el.dataset.noSummary === "1" || el.type === "password") return;
+      const v = (el.value || "").trim();
+      if (v) {
+        const label = el.labels?.[0]?.innerText?.trim() || el.placeholder || el.name || el.id || "Field";
+        vals.push(`${label}: ${v}`);
+      }
+    });
+    return vals.length ? vals.slice(0, 12).join(" | ") : "No dashboard values entered yet";
+  }
+
+  function syncHeroStats() {
+    const inputs = Array.from(document.querySelectorAll("input, textarea, select")).filter(
+      (el) => el.dataset.noSummary !== "1" && el.type !== "password"
+    );
+    const filled = inputs.filter((el) => String(el.value || "").trim() !== "").length;
+    const pct = inputs.length ? Math.round((filled / inputs.length) * 100) : 0;
+
+    const cEl = document.getElementById("sp-ref-count");
+    const pEl = document.getElementById("sp-ref-pct");
+    const sEl = document.getElementById("sp-ref-status");
+    if (cEl) cEl.textContent = `${filled} / ${inputs.length}`;
+    if (pEl) pEl.textContent = `${pct}%`;
+    if (sEl) sEl.textContent = pct >= 60 ? "On Track" : pct > 0 ? "In Progress" : "Ready";
+  }
+
+  function runSave(label) {
+    setBadge("Saving...");
+    try {
+      mem.iconIdx = iconIdx;
+      mem.botIdx = botIdx;
+      mem.updatedAt = new Date().toISOString();
+      localStorage.setItem(KEY, JSON.stringify(mem));
+      if (typeof window.saveState === "function") {
+        window.saveState();
+      }
+      pendingSave = false;
+      syncHeroStats();
+      setBadge(label || "Saved");
+    } catch (e) {
+      console.error(e);
+      setBadge("Save error");
+    }
+  }
+
+  function queueAutoSave() {
+    pendingSave = true;
+    setBadge("Auto-saving in 15s...");
+    if (saveTimer) clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => {
+      if (pendingSave) runSave("Auto-saved (15s)");
+    }, 15000); // 10-30s interval
+  }
+
+  function applyWhiteModeCheck() {
+    const t = (document.documentElement.getAttribute("data-theme") || document.body.getAttribute("data-theme") || "").toLowerCase();
+    const cls = (document.body.className + " " + document.documentElement.className).toLowerCase();
+    const isLight = t === "light" || cls.includes("light");
+    document.body.classList.toggle("sp-light-mode", isLight);
+  }
+
+  function mountHero() {
+    if (document.getElementById("sp-refined-hero")) return;
+    const wrap = document.createElement("div");
+    wrap.id = "sp-refined-hero";
+    wrap.className = "sp-refined-hero";
+    wrap.innerHTML = `
+      <div class="sp-refined-hero-top">
+        <div class="sp-hero-brand">
+          <button type="button" data-no-summary="1" id="sp-icon-btn" class="sp-hero-icon-swap" title="Change Banner Icon">${ICONS[iconIdx]}</button>
+          <button type="button" data-no-summary="1" id="sp-bot-btn" class="sp-hero-bot-swap" title="Change Banner Robot">${ROBOTS[botIdx]}</button>
+          <div>
+            <div style="font-size:15px;font-weight:700;">Shiv-Prem Growth & Wealth AI Dashboard</div>
+            <div style="font-size:12px;opacity:0.85;">Tap icon or robot to switch • Auto-save 15s & manual save active</div>
+          </div>
+        </div>
+      </div>
+      <div class="sp-even-row">
+        <div class="sp-even-box"><span>Entered Fields</span><strong id="sp-ref-count">0 / 0</strong></div>
+        <div class="sp-even-box"><span>Completion</span><strong id="sp-ref-pct">0%</strong></div>
+        <div class="sp-even-box"><span>Save Mode</span><strong>15s + Manual</strong></div>
+        <div class="sp-even-box"><span>Progress State</span><strong id="sp-ref-status">Ready</strong></div>
+      </div>
+    `;
+    document.body.insertBefore(wrap, document.body.firstChild);
+
+    document.getElementById("sp-icon-btn").addEventListener("click", () => {
+      iconIdx = (iconIdx + 1) % ICONS.length;
+      document.getElementById("sp-icon-btn").textContent = ICONS[iconIdx];
+      queueAutoSave();
+    });
+
+    document.getElementById("sp-bot-btn").addEventListener("click", () => {
+      botIdx = (botIdx + 1) % ROBOTS.length;
+      document.getElementById("sp-bot-btn").textContent = ROBOTS[botIdx];
+      queueAutoSave();
+    });
+  }
+
+  function mountSaveBar() {
+    if (document.getElementById("sp-refine-savebar")) return;
+    const bar = document.createElement("div");
+    bar.id = "sp-refine-savebar";
+
+    const btn = document.createElement("button");
+    btn.id = "sp-refine-savebtn";
+    btn.type = "button";
+    btn.dataset.noSummary = "1";
+    btn.textContent = "Save / Update";
+    btn.addEventListener("click", () => runSave("Updated manually"));
+
+    const st = document.createElement("span");
+    st.id = "sp-refine-status";
+    st.textContent = "Ready";
+
+    bar.appendChild(btn);
+    bar.appendChild(st);
+    document.body.appendChild(bar);
+  }
+
+  function enhanceTables() {
+    document.querySelectorAll("table").forEach((tbl) => {
+      tbl.classList.add("sp-even-table");
+    });
+  }
+
+  function smartCommonAndDashboardReply(userText) {
+    const q = userText.trim();
+    const low = q.toLowerCase();
+    const summary = collectDashSummary();
+
+    if (low.includes("hi") || low.includes("hello") || low.includes("hey") || low.includes("vanakkam")) {
+      return `Hey! Good to chat with you. Looking at your dashboard right now: ${summary}. What would you like to work on or ask about?`;
+    }
+    if (low.includes("analysis") || low.includes("data") || low.includes("dashboard") || low.includes("report") || low.includes("progress")) {
+      return `Here is your dashboard analysis: ${summary}. Focus on completing the remaining empty fields and updating numbers weekly so your growth trend stays clear.`;
+    }
+    return `Let's talk! Regarding "${q}" — based on your current dashboard data (${summary}), I can help you plan next steps, review your numbers, or chat about any general topic. What do you want to explore next?`;
+  }
+
+  function hookExistingOrFallbackBot() {
+    // Expose helper globally so any existing bot handler can also call it
+    window.shivPremSmartBotReply = smartCommonAndDashboardReply;
+
+    // If no existing bot input is present, provide a compact conversational bar at bottom
+    const existingInput = document.querySelector("#bot-input, #chat-input, [data-bot-input]");
+    if (existingInput || document.getElementById("sp-common-bot-box")) return;
+
+    const box = document.createElement("div");
+    box.id = "sp-common-bot-box";
+    box.style.cssText =
+      "margin:14px 0;padding:12px;border-radius:12px;border:1px solid #334155;background:#0f172a;color:#f8fafc;font-family:system-ui,sans-serif;";
+    box.innerHTML = `
+      <div style="font-weight:700;font-size:13px;margin-bottom:6px;">Dashboard & General Assistant</div>
+      <div id="sp-common-bot-msgs" style="max-height:180px;overflow-y:auto;font-size:12.5px;margin-bottom:8px;">
+        <div style="margin-bottom:6px;"><strong>Bot:</strong> Hi! Ask me anything general or ask about your dashboard analysis.</div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <input id="sp-common-bot-in" data-no-summary="1" type="text" placeholder="Type a message or ask about your dashboard..." style="flex:1;padding:7px 10px;border-radius:8px;border:1px solid #475569;background:#1e293b;color:#fff;font-size:12px;" />
+        <button id="sp-common-bot-go" data-no-summary="1" type="button" style="padding:7px 14px;border-radius:8px;border:none;background:#2563eb;color:#fff;font-weight:600;cursor:pointer;">Ask</button>
+      </div>
+    `;
+    document.body.appendChild(box);
+
+    const send = () => {
+      const inp = document.getElementById("sp-common-bot-in");
+      const log = document.getElementById("sp-common-bot-msgs");
+      const txt = (inp?.value || "").trim();
+      if (!txt || !log) return;
+      inp.value = "";
+      const ans = smartCommonAndDashboardReply(txt);
+      log.innerHTML += `<div style="margin-bottom:5px;"><strong>You:</strong> ${txt.replace(/</g, "&lt;")}</div>`;
+      log.innerHTML += `<div style="margin-bottom:8px;color:#86efac;"><strong>Bot:</strong> ${ans.replace(/</g, "&lt;")}</div>`;
+      log.scrollTop = log.scrollHeight;
+    };
+
+    document.getElementById("sp-common-bot-go").addEventListener("click", send);
+    document.getElementById("sp-common-bot-in").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") send();
+    });
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    applyWhiteModeCheck();
+    mountHero();
+    mountSaveBar();
+    enhanceTables();
+    hookExistingOrFallbackBot();
+    syncHeroStats();
+
+    document.addEventListener("input", (e) => {
+      if (e.target?.dataset?.noSummary === "1") return;
+      syncHeroStats();
+      queueAutoSave();
+    }, true);
+
+    document.addEventListener("change", (e) => {
+      applyWhiteModeCheck();
+      if (e.target?.dataset?.noSummary === "1") return;
+      syncHeroStats();
+      queueAutoSave();
+    }, true);
+
+    new MutationObserver(applyWhiteModeCheck).observe(document.body, {
+      attributes: true,
+      attributeFilter: ["class", "data-theme"]
+    });
+  });
+})();
+</script>
+<!-- SHIV-PREM TARGETED REFINEMENT UPDATE END -->
 </body>
 </html>
